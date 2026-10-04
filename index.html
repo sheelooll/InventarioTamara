@@ -1090,6 +1090,20 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
         </div>
       </div>
       <div class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-on-surface">Umbrales de stock para este producto</label>
+        <p id="edit-stock-fallback" class="font-body-sm text-body-sm text-on-surface-variant -mt-0.5">Si se deja vacío, se usan los valores globales (crítico ≤<span id="edit-global-critico">—</span>, aceptable desde <span id="edit-global-aceptable">—</span>)</p>
+        <div class="grid grid-cols-2 gap-space-sm">
+          <div class="flex flex-col gap-1">
+            <label class="font-label-sm text-label-sm text-on-surface-variant" for="edit-stock-critico">Crítico si stock ≤</label>
+            <input class="w-full h-10 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch text-right focus:outline-none focus:border-[#D96A93] transition-colors" id="edit-stock-critico" type="number" min="0" placeholder="global"/>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="font-label-sm text-label-sm text-on-surface-variant" for="edit-stock-aceptable">Aceptable desde</label>
+            <input class="w-full h-10 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch text-right focus:outline-none focus:border-[#D96A93] transition-colors" id="edit-stock-aceptable" type="number" min="1" placeholder="global"/>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1.5">
         <label class="font-label-md text-label-md text-on-surface" for="observations">Ubicación / Observaciones</label>
         <textarea class="w-full bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md rounded-lg p-space-md focus:outline-none focus:border-[#D96A93] transition-colors resize-none leading-relaxed" id="observations" rows="3"></textarea>
       </div>
@@ -2327,6 +2341,14 @@ function showEditarModal(loteId) {
   document.getElementById('edit-lote-badge').textContent = lote.lote || '—';
   const editTipo = document.getElementById('edit-prod-tipo');
   if (editTipo) editTipo.value = lote.tipo || '';
+  const scEl = document.getElementById('edit-stock-critico');
+  const saEl = document.getElementById('edit-stock-aceptable');
+  if (scEl) scEl.value = lote.stockCritico != null ? lote.stockCritico : '';
+  if (saEl) saEl.value = lote.stockAceptable != null ? lote.stockAceptable : '';
+  const gcEl = document.getElementById('edit-global-critico');
+  const gaEl = document.getElementById('edit-global-aceptable');
+  if (gcEl) gcEl.textContent = fefoSettings.stock_critico;
+  if (gaEl) gaEl.textContent = fefoSettings.stock_aceptable;
   const { estado, dias } = getEstado(lote.vencimiento);
   const labels = { vencido:'Vencido', 'critico-venc':'Crítico por vencer', 'por-vencer':'Por vencer', vigente:'Vigente' };
   const badgeClasses = {
@@ -2365,13 +2387,20 @@ async function saveEditarLote() {
   const expStr = document.getElementById('expiryDate').value;
   const ubicacion = document.getElementById('observations').value.trim();
   const tipo = document.getElementById('edit-prod-tipo')?.value || '';
+  const scStr = document.getElementById('edit-stock-critico')?.value;
+  const saStr = document.getElementById('edit-stock-aceptable')?.value;
+  const stockCritico = scStr !== '' && scStr != null ? parseInt(scStr) : null;
+  const stockAceptable = saStr !== '' && saStr != null ? parseInt(saStr) : null;
   if (!nombre || isNaN(cantidad) || cantidad < 0) { alert('Completa el nombre y la cantidad.'); return; }
+  if (stockCritico !== null && stockAceptable !== null && stockCritico >= stockAceptable) {
+    alert('El umbral crítico debe ser menor que el aceptable.'); return;
+  }
   const vencimiento = expStr ? Timestamp.fromDate(parseDateInput(expStr)) : null;
   const btn = document.getElementById('saveBatchBtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Guardando...</span>';
   try {
-    await updateDoc(doc(db, `users/${currentUser.uid}/lotes`, editingLoteId), { nombre, tipo, cantidad, unidad, lote, vencimiento, ubicacion });
+    await updateDoc(doc(db, `users/${currentUser.uid}/lotes`, editingLoteId), { nombre, tipo, cantidad, unidad, lote, vencimiento, ubicacion, stockCritico, stockAceptable });
     btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>¡Actualizado!</span>';
     setTimeout(closeEditarModal, 500);
   } catch (e) {
