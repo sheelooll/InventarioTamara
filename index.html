@@ -456,11 +456,64 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
 </main>
 
 <!-- ═══════════════ PÁGINAS PLACEHOLDER ═══════════════ -->
-<main id="page-movimientos" class="page-section flex-col items-center justify-center relative w-full px-margin pt-16 pb-safe bg-surface min-h-screen">
-  <div class="flex flex-col items-center gap-4 text-center py-20">
-    <div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-[32px] text-on-surface-variant">swap_horiz</span></div>
-    <h2 class="font-headline-md text-headline-md text-on-surface">Movimientos</h2>
-    <p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Módulo de entradas, salidas y traslados de inventario. Próximamente disponible.</p>
+<main id="page-movimientos" class="page-section flex-col relative w-full px-margin pt-16 pb-safe bg-surface">
+  <div class="flex flex-col w-full pb-10 space-y-5">
+    <!-- Header -->
+    <section class="flex items-center justify-between gap-3 pt-2">
+      <div class="flex flex-col">
+        <div class="flex items-center gap-2 text-primary"><span class="material-symbols-outlined text-[18px]">swap_horiz</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary">Trazabilidad de Stock</span></div>
+        <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Movimientos</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant">Entradas, salidas y ajustes de inventario</p>
+      </div>
+      <button onclick="showMovimientoModal()" class="h-10 px-4 rounded-lg bg-cta text-on-primary font-label-md text-label-md flex items-center gap-1.5 shadow-md hover:brightness-110 active:scale-95 transition-all shrink-0" type="button">
+        <span class="material-symbols-outlined text-[18px]">add</span><span>Registrar</span>
+      </button>
+    </section>
+    <!-- Stats -->
+    <section class="grid grid-cols-3 gap-3">
+      <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1.5">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-tertiary"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Entradas</span></div>
+        <span id="mov-stat-entrada" class="font-headline-sm text-headline-sm text-on-tertiary-container font-bold">0</span>
+        <span id="mov-stat-entrada-uds" class="font-body-sm text-body-sm text-on-surface-variant">0 uds</span>
+      </div>
+      <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1.5">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-error"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Salidas</span></div>
+        <span id="mov-stat-salida" class="font-headline-sm text-headline-sm text-error-text font-bold">0</span>
+        <span id="mov-stat-salida-uds" class="font-body-sm text-body-sm text-on-surface-variant">0 uds</span>
+      </div>
+      <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1.5">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Ajustes</span></div>
+        <span id="mov-stat-ajuste" class="font-headline-sm text-headline-sm text-warn-text font-bold">0</span>
+        <span id="mov-stat-ajuste-uds" class="font-body-sm text-body-sm text-on-surface-variant">0 ops</span>
+      </div>
+    </section>
+    <!-- Filtros -->
+    <section class="bg-surface-container rounded-xl p-4 flex flex-col gap-3">
+      <div class="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4">
+        <button class="mov-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-cta text-on-primary transition-all shadow-sm" data-tipo="all" type="button">Todos</button>
+        <button class="mov-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-tertiary-container text-on-tertiary-container hover:brightness-95 transition-all" data-tipo="entrada" type="button">Entrada</button>
+        <button class="mov-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container hover:brightness-95 transition-all" data-tipo="salida" type="button">Salida</button>
+        <button class="mov-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container hover:brightness-95 transition-all" data-tipo="ajuste" type="button">Ajuste</button>
+      </div>
+      <div class="flex gap-2 items-end">
+        <div class="flex flex-col gap-1 flex-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Desde</label><input id="mov-date-from" type="date" class="h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-code-batch text-body-md focus:outline-none focus:bg-surface-container-highest transition-colors"/></div>
+        <div class="flex flex-col gap-1 flex-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Hasta</label><input id="mov-date-to" type="date" class="h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-code-batch text-body-md focus:outline-none focus:bg-surface-container-highest transition-colors"/></div>
+        <button onclick="clearMovFilters()" class="h-10 w-10 shrink-0 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">close</span></button>
+      </div>
+    </section>
+    <!-- Historial -->
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center justify-between px-1">
+        <span class="font-label-sm text-label-sm text-on-surface-variant">Historial (más reciente primero)</span>
+        <span id="mov-count-label" class="font-code-batch text-code-batch text-on-surface-variant">0 registros</span>
+      </div>
+      <div id="mov-history" class="flex flex-col gap-2">
+        <div class="py-12 text-center text-on-surface-variant flex flex-col items-center gap-3">
+          <span class="material-symbols-outlined text-[40px] text-primary/40">swap_horiz</span>
+          <p class="font-body-md">Cargando movimientos...</p>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
 <main id="page-reportes" class="page-section flex-col items-center justify-center relative w-full px-margin pt-16 pb-safe bg-surface min-h-screen">
@@ -477,6 +530,58 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
     <p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Configuración de almacén, usuarios y parámetros FEFO. Próximamente disponible.</p>
   </div>
 </main>
+
+<!-- ═══════════════ MODAL: REGISTRAR MOVIMIENTO ═══════════════ -->
+<div id="modal-movimiento-bd" class="fixed inset-0 z-40 bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
+<div id="modal-movimiento" class="fixed inset-x-0 bottom-0 z-50 flex flex-col max-h-[92dvh] bg-surface-container-low rounded-t-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.55)] overflow-hidden" style="display:none">
+  <div class="w-full flex justify-center pt-space-sm pb-1 flex-shrink-0 cursor-grab"><div class="w-10 h-1 rounded-full bg-outline-variant/60"></div></div>
+  <div class="flex items-start justify-between px-space-lg pt-space-xs pb-space-md flex-shrink-0">
+    <div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[20px]">swap_horiz</span><h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Registrar Movimiento</h2></div><p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Entrada, salida o ajuste de stock</p></div>
+    <button id="close-mov-btn" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button>
+  </div>
+  <form class="flex flex-col px-space-lg space-y-space-md overflow-y-auto overscroll-contain pb-space-xl" onsubmit="event.preventDefault()">
+    <!-- Tipo -->
+    <div class="flex p-1 rounded-xl bg-surface-container-highest gap-1">
+      <button class="mov-tipo-btn flex-1 py-2 rounded-lg bg-tertiary text-on-tertiary font-label-md text-label-md transition-all" data-tipo="entrada" type="button">▲ Entrada</button>
+      <button class="mov-tipo-btn flex-1 py-2 rounded-lg text-on-surface-variant font-label-md text-label-md transition-all" data-tipo="salida" type="button">▼ Salida</button>
+      <button class="mov-tipo-btn flex-1 py-2 rounded-lg text-on-surface-variant font-label-md text-label-md transition-all" data-tipo="ajuste" type="button">⇄ Ajuste</button>
+    </div>
+    <div id="mov-tipo-desc" class="px-3 py-2 rounded-lg font-body-sm text-body-sm bg-tertiary-container/30 text-on-tertiary-container">Suma la cantidad al stock actual del lote</div>
+    <!-- Lote -->
+    <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface" for="mov-lote-select">Lote <span class="text-error">*</span></label>
+      <div class="relative">
+        <select id="mov-lote-select" class="w-full h-11 px-space-md pr-8 rounded-lg bg-surface-container text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:bg-surface-container-high transition-colors cursor-pointer"><option value="">— Seleccionar lote —</option></select>
+        <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+      </div>
+    </div>
+    <!-- Stock actual -->
+    <div id="mov-stock-info" class="hidden px-3 py-2.5 rounded-lg bg-surface-container-high flex items-center justify-between">
+      <span class="font-label-md text-label-md text-on-surface-variant">Stock actual:</span>
+      <span id="mov-stock-val" class="font-headline-sm text-headline-sm text-on-surface font-bold">—</span>
+    </div>
+    <!-- Cantidad -->
+    <div class="flex flex-col gap-1.5">
+      <label id="mov-qty-label" class="font-label-md text-label-md text-on-surface">Cantidad a ingresar <span class="text-error">*</span></label>
+      <input id="mov-qty" type="number" min="0" placeholder="0" class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-code-batch text-code-batch text-right focus:outline-none focus:bg-surface-container-high transition-colors"/>
+      <p id="mov-qty-error" class="text-error-text font-body-sm text-body-sm min-h-[1rem]"></p>
+    </div>
+    <!-- Fecha -->
+    <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface" for="mov-fecha">Fecha del movimiento <span class="text-error">*</span></label>
+      <input id="mov-fecha" type="date" class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-code-batch text-code-batch focus:outline-none focus:bg-surface-container-high transition-colors"/>
+    </div>
+    <!-- Nota -->
+    <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface" for="mov-nota">Nota <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
+      <input id="mov-nota" type="text" placeholder="Ej. Recepción proveedor, consumo UCI, inventario físico..." class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-high transition-colors"/>
+    </div>
+  </form>
+  <div class="flex-shrink-0 px-space-lg py-space-md bg-surface-container-high/95 backdrop-blur-md flex items-center justify-end gap-space-sm shadow-[0_-4px_16px_rgba(0,0,0,0.3)]">
+    <button id="cancel-mov-btn" class="h-11 px-space-lg rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-bright active:scale-95 transition-all" type="button">Cancelar</button>
+    <button id="save-mov-btn" onclick="saveMovimiento()" class="h-11 px-space-xl rounded-lg bg-cta text-on-primary font-headline-sm text-headline-sm hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-space-xs shadow-md" type="button"><span class="material-symbols-outlined text-[18px]">check_circle</span><span>Guardar</span></button>
+  </div>
+</div>
 
 <!-- ═══════════════ MODAL: AGREGAR PRODUCTO ═══════════════ -->
 <div id="modal-backdrop" class="fixed inset-0 z-40 bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
@@ -675,6 +780,10 @@ let allLotes = [];
 let editingLoteId = null;
 let currentFilter = 'all';
 let currentSearch = '';
+let unsubscribeMovimientos = null;
+let allMovimientos = [];
+let movTipoFilter = 'all';
+let movTipoSeleccionado = 'entrada';
 
 // ── Helpers ──
 function escHtml(str) {
@@ -719,12 +828,14 @@ function showApp(user) {
   const now = new Date();
   document.getElementById('dash-date').textContent = now.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
   subscribeToLotes();
+  subscribeToMovimientos();
   navigateTo('dashboard');
 }
 
 function showLogin() {
   currentUser = null;
   if (unsubscribeLotes) { unsubscribeLotes(); unsubscribeLotes = null; }
+  if (unsubscribeMovimientos) { unsubscribeMovimientos(); unsubscribeMovimientos = null; }
   document.querySelector('header').style.display = 'none';
   document.querySelector('nav').style.display = 'none';
   document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
@@ -896,6 +1007,187 @@ function renderLoteCard(lote) {
       </div>
     </div>
   </div>`;
+}
+
+// ── Movimientos ──
+function subscribeToMovimientos() {
+  if (!currentUser) return;
+  unsubscribeMovimientos = onSnapshot(collection(db, `users/${currentUser.uid}/movimientos`), snap => {
+    allMovimientos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    allMovimientos.sort((a, b) => (b.creadoEn?.seconds || 0) - (a.creadoEn?.seconds || 0));
+    renderMovimientos();
+  }, err => console.error('Movimientos error:', err));
+}
+
+function renderMovimientos() {
+  const dateFromVal = document.getElementById('mov-date-from')?.value;
+  const dateToVal = document.getElementById('mov-date-to')?.value;
+  let filtered = [...allMovimientos];
+  if (movTipoFilter !== 'all') filtered = filtered.filter(m => m.tipo === movTipoFilter);
+  if (dateFromVal) {
+    const from = new Date(dateFromVal + 'T00:00:00');
+    filtered = filtered.filter(m => m.fecha.toDate() >= from);
+  }
+  if (dateToVal) {
+    const to = new Date(dateToVal + 'T23:59:59');
+    filtered = filtered.filter(m => m.fecha.toDate() <= to);
+  }
+  const countEl = document.getElementById('mov-count-label');
+  if (countEl) countEl.textContent = `${filtered.length} registro${filtered.length !== 1 ? 's' : ''}`;
+  // Stats
+  const ent = allMovimientos.filter(m => m.tipo === 'entrada');
+  const sal = allMovimientos.filter(m => m.tipo === 'salida');
+  const adj = allMovimientos.filter(m => m.tipo === 'ajuste');
+  const setEl = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  setEl('mov-stat-entrada', ent.length);
+  setEl('mov-stat-salida', sal.length);
+  setEl('mov-stat-ajuste', adj.length);
+  setEl('mov-stat-entrada-uds', ent.reduce((s, m) => s + (m.cantidadMovimiento || 0), 0) + ' uds');
+  setEl('mov-stat-salida-uds', sal.reduce((s, m) => s + (m.cantidadMovimiento || 0), 0) + ' uds');
+  setEl('mov-stat-ajuste-uds', adj.length + ' ops');
+  const container = document.getElementById('mov-history');
+  if (!container) return;
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="py-12 text-center text-on-surface-variant flex flex-col items-center gap-3">
+      <span class="material-symbols-outlined text-[40px] text-primary/40">swap_horiz</span>
+      <p class="font-body-md">${allMovimientos.length === 0 ? 'No hay movimientos registrados' : 'Sin resultados para los filtros aplicados'}</p>
+      ${allMovimientos.length === 0 ? `<button onclick="showMovimientoModal()" class="h-9 px-4 rounded-lg bg-cta text-on-primary font-label-md text-label-md">+ Registrar primero</button>` : ''}
+    </div>`;
+    return;
+  }
+  container.innerHTML = filtered.map(mov => {
+    const fecha = mov.fecha.toDate();
+    const fechaStr = fecha.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const tipoBadge = { entrada: 'bg-tertiary-container text-on-tertiary-container', salida: 'bg-error-container text-on-error-container', ajuste: 'bg-secondary-container text-on-secondary-container' }[mov.tipo];
+    const tipoLabel = { entrada: '▲ Entrada', salida: '▼ Salida', ajuste: '⇄ Ajuste' }[mov.tipo];
+    const signo = mov.tipo === 'entrada' ? '+' : mov.tipo === 'salida' ? '−' : '=';
+    const cantColor = { entrada: 'text-on-tertiary-container', salida: 'text-error-text', ajuste: 'text-warn-text' }[mov.tipo];
+    return `<div class="bg-surface-container-low rounded-xl p-3 flex flex-col gap-2">
+      <div class="flex items-start justify-between gap-3">
+        <div class="flex flex-col min-w-0">
+          <span class="font-headline-sm text-headline-sm text-on-surface truncate">${escHtml(mov.productoNombre)}</span>
+          <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+            <span class="font-code-batch text-code-batch text-primary">${escHtml(mov.loteCode)}</span>
+            <span class="text-on-surface-variant font-body-sm">•</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">${fechaStr}</span>
+          </div>
+        </div>
+        <div class="flex flex-col items-end gap-1 shrink-0">
+          <span class="font-headline-sm text-headline-sm ${cantColor} font-bold">${signo}${mov.cantidadMovimiento}</span>
+          <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm ${tipoBadge}">${tipoLabel}</span>
+        </div>
+      </div>
+      <div class="flex items-center justify-between pt-1.5 border-t border-surface-container-highest/60">
+        <span class="font-body-sm text-body-sm text-on-surface-variant truncate max-w-[60%]">${mov.nota ? escHtml(mov.nota) : '—'}</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant shrink-0">${mov.cantidadAntes} → <span class="font-semibold text-on-surface">${mov.cantidadDespues}</span></span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showMovimientoModal() {
+  movTipoSeleccionado = 'entrada';
+  document.getElementById('mov-qty').value = '';
+  document.getElementById('mov-nota').value = '';
+  document.getElementById('mov-qty-error').textContent = '';
+  document.getElementById('mov-stock-info').classList.add('hidden');
+  const hoy = new Date();
+  document.getElementById('mov-fecha').value = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}-${String(hoy.getDate()).padStart(2,'0')}`;
+  const sel = document.getElementById('mov-lote-select');
+  sel.innerHTML = '<option value="">— Seleccionar lote —</option>';
+  allLotes.forEach(l => {
+    const { estado } = getEstado(l.vencimiento.toDate());
+    const opt = document.createElement('option');
+    opt.value = l.id;
+    opt.textContent = `${l.nombre} · ${l.lote} (${l.cantidad} ${l.unidad || 'uds'})`;
+    sel.appendChild(opt);
+  });
+  updateMovTipoUI('entrada');
+  document.getElementById('modal-movimiento-bd').style.display = 'block';
+  document.getElementById('modal-movimiento').style.display = 'flex';
+}
+
+function closeMovimientoModal() {
+  document.getElementById('modal-movimiento-bd').style.display = 'none';
+  document.getElementById('modal-movimiento').style.display = 'none';
+}
+
+function updateMovTipoUI(tipo) {
+  movTipoSeleccionado = tipo;
+  const cfg = {
+    entrada: { btn: 'bg-tertiary text-on-tertiary', desc: 'bg-tertiary-container/30 text-on-tertiary-container', txt: 'Suma la cantidad al stock actual del lote', lbl: 'Cantidad a ingresar *' },
+    salida:  { btn: 'bg-error text-on-error',        desc: 'bg-error-container/30 text-on-error-container',       txt: 'Resta la cantidad del stock actual del lote', lbl: 'Cantidad a retirar *' },
+    ajuste:  { btn: 'bg-secondary text-on-secondary', desc: 'bg-secondary-container/30 text-on-secondary-container', txt: 'Fija la cantidad exacta del lote (reemplaza el valor actual)', lbl: 'Nueva cantidad exacta *' }
+  };
+  document.querySelectorAll('.mov-tipo-btn').forEach(btn => {
+    const t = btn.dataset.tipo;
+    btn.className = `mov-tipo-btn flex-1 py-2 rounded-lg font-label-md text-label-md transition-all ${t === tipo ? cfg[t].btn : 'text-on-surface-variant hover:text-on-surface'}`;
+  });
+  const c = cfg[tipo];
+  const descEl = document.getElementById('mov-tipo-desc');
+  descEl.className = `px-3 py-2 rounded-lg font-body-sm text-body-sm ${c.desc}`;
+  descEl.textContent = c.txt;
+  document.getElementById('mov-qty-label').textContent = c.lbl;
+  document.getElementById('mov-qty-error').textContent = '';
+}
+
+async function saveMovimiento() {
+  const loteId = document.getElementById('mov-lote-select').value;
+  const cantStr = document.getElementById('mov-qty').value;
+  const fechaStr = document.getElementById('mov-fecha').value;
+  const nota = document.getElementById('mov-nota').value.trim();
+  const errEl = document.getElementById('mov-qty-error');
+  errEl.textContent = '';
+  if (!loteId) { errEl.textContent = 'Seleccioná un lote.'; return; }
+  if (!fechaStr) { errEl.textContent = 'Ingresá la fecha.'; return; }
+  const cant = parseInt(cantStr);
+  if (isNaN(cant) || cant < 0) { errEl.textContent = 'Ingresá una cantidad válida (número ≥ 0).'; return; }
+  if (movTipoSeleccionado !== 'ajuste' && cant === 0) { errEl.textContent = 'La cantidad debe ser mayor a 0.'; return; }
+  const lote = allLotes.find(l => l.id === loteId);
+  if (!lote) { errEl.textContent = 'Lote no encontrado.'; return; }
+  const cantidadAntes = Number(lote.cantidad) || 0;
+  let cantidadDespues;
+  if (movTipoSeleccionado === 'entrada') {
+    cantidadDespues = cantidadAntes + cant;
+  } else if (movTipoSeleccionado === 'salida') {
+    if (cant > cantidadAntes) {
+      errEl.textContent = `Stock insuficiente: solo hay ${cantidadAntes} ${lote.unidad || 'unidades'} disponibles para este lote.`;
+      return;
+    }
+    cantidadDespues = cantidadAntes - cant;
+  } else {
+    cantidadDespues = cant;
+  }
+  const btn = document.getElementById('save-mov-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Guardando...</span>';
+  try {
+    const fecha = Timestamp.fromDate(parseDateInput(fechaStr));
+    await addDoc(collection(db, `users/${currentUser.uid}/movimientos`), {
+      tipo: movTipoSeleccionado, loteId, loteCode: lote.lote, productoNombre: lote.nombre,
+      cantidadMovimiento: cant, cantidadAntes, cantidadDespues, fecha, nota, creadoEn: Timestamp.now()
+    });
+    await updateDoc(doc(db, `users/${currentUser.uid}/lotes`, loteId), { cantidad: cantidadDespues });
+    btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>¡Guardado!</span>';
+    setTimeout(closeMovimientoModal, 600);
+  } catch (e) {
+    errEl.textContent = 'Error al guardar: ' + e.message;
+  } finally {
+    setTimeout(() => { btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span><span>Guardar</span>'; }, 1400);
+  }
+}
+
+function clearMovFilters() {
+  document.getElementById('mov-date-from').value = '';
+  document.getElementById('mov-date-to').value = '';
+  movTipoFilter = 'all';
+  document.querySelectorAll('.mov-tipo-filter').forEach(b => {
+    const isAll = b.dataset.tipo === 'all';
+    b.classList.toggle('bg-cta', isAll);
+    b.classList.toggle('text-on-primary', isAll);
+    b.classList.toggle('shadow-sm', isAll);
+  });
+  renderMovimientos();
 }
 
 // ── Navegación ──
@@ -1139,6 +1431,41 @@ document.getElementById('login-pass').addEventListener('keydown', e => { if (e.k
 document.getElementById('login-email').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('login-pass').focus(); });
 document.getElementById('reg-pass2').addEventListener('keydown', e => { if (e.key === 'Enter') handleRegister(); });
 
+// ── Modal movimiento ──
+document.getElementById('close-mov-btn').addEventListener('click', closeMovimientoModal);
+document.getElementById('cancel-mov-btn').addEventListener('click', closeMovimientoModal);
+document.getElementById('modal-movimiento-bd').addEventListener('click', closeMovimientoModal);
+document.querySelectorAll('.mov-tipo-btn').forEach(btn => {
+  btn.addEventListener('click', () => updateMovTipoUI(btn.dataset.tipo));
+});
+document.getElementById('mov-lote-select').addEventListener('change', function() {
+  const lote = allLotes.find(l => l.id === this.value);
+  const infoEl = document.getElementById('mov-stock-info');
+  if (lote) {
+    document.getElementById('mov-stock-val').textContent = `${lote.cantidad} ${lote.unidad || 'uds'}`;
+    infoEl.classList.remove('hidden');
+  } else {
+    infoEl.classList.add('hidden');
+  }
+});
+
+// ── Filtros movimientos ──
+document.querySelectorAll('.mov-tipo-filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    movTipoFilter = btn.dataset.tipo;
+    document.querySelectorAll('.mov-tipo-filter').forEach(b => {
+      const active = b.dataset.tipo === movTipoFilter;
+      b.classList.toggle('bg-cta', active);
+      b.classList.toggle('text-on-primary', active);
+      b.classList.toggle('shadow-sm', active);
+      if (!active) { b.classList.remove('bg-cta', 'text-on-primary', 'shadow-sm'); }
+    });
+    renderMovimientos();
+  });
+});
+document.getElementById('mov-date-from').addEventListener('change', renderMovimientos);
+document.getElementById('mov-date-to').addEventListener('change', renderMovimientos);
+
 // Exponer globales para onclick en HTML
 window.navigateTo = navigateTo;
 window.showAgregarModal = showAgregarModal;
@@ -1151,6 +1478,9 @@ window.handleLogin = handleLogin;
 window.handleRegister = handleRegister;
 window.handleLogout = handleLogout;
 window.switchAuthTab = switchAuthTab;
+window.showMovimientoModal = showMovimientoModal;
+window.saveMovimiento = saveMovimiento;
+window.clearMovFilters = clearMovFilters;
 </script>
 </body>
 </html>
