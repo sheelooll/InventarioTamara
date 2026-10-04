@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>BatchTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-dim": "#0b1326", "on-error": "#690005", "on-secondary-fixed": "#001e2f", "inverse-surface": "#dae2fd", "on-primary-container": "#0d0096", "inverse-on-surface": "#283044", "surface-container-low": "#131b2e", "on-tertiary-container": "#000703", "secondary-fixed": "#c9e6ff", "surface-container-highest": "#2d3449", "on-surface-variant": "#c7c4d7", "outline": "#908fa0", "on-tertiary": "#003824", "on-background": "#dae2fd", "outline-variant": "#464554", "on-secondary": "#00344d", "on-surface": "#dae2fd", "surface-container": "#171f33", "surface-variant": "#2d3449", "surface-container-lowest": "#060e20", "on-secondary-container": "#00344e", "on-secondary-fixed-variant": "#004c6e", "secondary-fixed-dim": "#89ceff", "tertiary": "#4edea3", "primary-fixed": "#e1e0ff", "on-error-container": "#ffdad6", "tertiary-container": "#00885d", "on-primary-fixed": "#07006c", "surface-tint": "#c0c1ff", "error-container": "#93000a", "tertiary-fixed": "#6ffbbe", "error": "#ffb4ab", "primary": "#c0c1ff", "inverse-primary": "#494bd6", "on-tertiary-fixed-variant": "#005236", "on-primary": "#1000a9", "background": "#0b1326", "secondary": "#89ceff", "primary-fixed-dim": "#c0c1ff", "primary-container": "#8083ff", "on-primary-fixed-variant": "#2f2ebe", "surface-bright": "#31394d", "surface-container-high": "#222a3d", "surface": "#0b1326", "tertiary-fixed-dim": "#4edea3", "on-tertiary-fixed": "#002113", "secondary-container": "#00a2e6" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "margin-desktop": "2rem", "space-2xl": "2rem", "space-xs": "0.25rem", "space-xl": "1.5rem", "space-sm": "0.5rem", "space-lg": "1rem", "space-md": "0.75rem", "margin": "1rem", "gutter-desktop": "1.5rem", "gutter": "1rem" }, fontFamily: { "headline-md": ["Inter"], "body-lg": ["Inter"], "label-lg": ["Inter"], "headline-sm": ["Inter"], "body-md": ["Inter"], "body-sm": ["Inter"], "label-md": ["Inter"], "label-sm": ["Inter"], "code-batch": ["JetBrains Mono"], "headline-lg": ["Inter"], "headline-xl": ["Inter"] }, fontSize: { "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }], "body-lg": ["15px", { lineHeight: "22px", fontWeight: "400" }], "label-lg": ["13px", { lineHeight: "18px", fontWeight: "500" }], "headline-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }], "body-md": ["13px", { lineHeight: "18px", fontWeight: "400" }], "body-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }], "label-md": ["12px", { lineHeight: "16px", fontWeight: "500" }], "label-sm": ["11px", { lineHeight: "14px", fontWeight: "600" }], "code-batch": ["12px", { lineHeight: "16px", fontWeight: "500" }], "headline-lg": ["24px", { lineHeight: "32px", fontWeight: "600" }], "headline-xl": ["32px", { lineHeight: "40px", fontWeight: "700" }] } } } }</script>
+<style>
+@layer base {
+  html, body { width: 100vw; margin: 0; padding: 0; background-color: #0b1326; color: #dae2fd; }
+  body { overscroll-behavior: none; min-height: 100dvh; }
+  .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5rem); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+}
+::-webkit-scrollbar { display: none; }
+.page-section { display: none; }
+.page-section.active { display: flex; }
+</style>
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen">
+
+<!-- ═══════════════ HEADER COMPARTIDO ═══════════════ -->
+<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.25)]">
+  <div class="h-16 px-margin flex items-center justify-between gap-space-sm">
+    <div class="flex items-center gap-space-sm min-w-0">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none" class="h-8 w-8 flex-shrink-0"><rect width="40" height="40" rx="10" fill="#4F46E5"/><path d="M12 14L20 9L28 14L20 19L12 14Z" fill="#EEF2FF"/><path d="M12 17.5L20 22.5V31L12 26V17.5Z" fill="#C7D2FE"/><path d="M28 17.5L20 22.5V31L28 26V17.5Z" fill="#818CF8"/><circle cx="20" cy="19" r="2.5" fill="#4338CA"/></svg>
+      <div class="flex flex-col truncate">
+        <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-none truncate">BatchTrack</span>
+        <span class="font-label-sm text-label-sm text-on-surface-variant truncate" id="header-subtitle">Dashboard</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-space-xs">
+      <button aria-label="Búsqueda rápida" class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" type="button">
+        <span class="material-symbols-outlined text-[20px]">search</span>
+      </button>
+      <button aria-label="Alternar tema" class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" onclick="document.documentElement.classList.toggle('dark')" type="button">
+        <span class="material-symbols-outlined text-[20px] dark:hidden">dark_mode</span>
+        <span class="material-symbols-outlined text-[20px] hidden dark:block">light_mode</span>
+      </button>
+      <button aria-label="Alertas" class="relative w-11 h-11 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" type="button">
+        <span class="material-symbols-outlined text-[20px]">notifications</span>
+        <span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-error ring-2 ring-surface animate-pulse"></span>
+      </button>
+      <div class="pl-space-xs">
+        <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center ring-1 ring-surface-container-highest">
+          <span class="font-label-sm text-label-sm text-on-primary-container font-bold">CM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ PÁGINA: DASHBOARD ═══════════════ -->
+<main id="page-dashboard" class="page-section active flex-col relative w-full px-margin pt-16 pb-safe bg-surface">
+  <div class="flex flex-col w-full pb-10 space-y-5">
+    <!-- Bienvenida -->
+    <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+      <div class="flex flex-col">
+        <div class="flex items-center gap-2">
+          <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Hola, Carlos 👋</h1>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-tertiary-container/30 text-tertiary">
+            <span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-1 animate-pulse"></span>En línea
+          </span>
+        </div>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Resumen operativo del almacén central — 24 de Octubre, 2024</p>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <button class="h-9 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface flex items-center gap-1.5 transition-all text-label-md font-label-md shadow-sm" id="theme-switcher-btn" type="button">
+          <span class="material-symbols-outlined text-[18px] text-primary" id="theme-btn-icon">light_mode</span>
+          <span id="theme-btn-text">Claro</span>
+        </button>
+        <button class="h-9 px-3.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface flex items-center gap-1.5 transition-all text-label-md font-label-md shadow-sm active:scale-95" type="button">
+          <span class="material-symbols-outlined text-[18px] text-secondary">qr_code_scanner</span>
+          <span>Escanear</span>
+        </button>
+        <button onclick="showAgregarModal()" class="h-9 px-4 rounded-lg bg-primary-container text-on-primary-container hover:brightness-110 active:scale-95 font-label-md text-label-md flex items-center gap-1.5 shadow-sm transition-all" type="button">
+          <span class="material-symbols-outlined text-[18px]">add_circle</span>
+          <span>Nuevo Lote</span>
+        </button>
+      </div>
+    </section>
+    <!-- KPI Cards -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="bg-surface-container p-3.5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+        <div class="flex items-center justify-between">
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Productos</span>
+          <span class="p-1 rounded-lg bg-surface-container-high text-primary flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">inventory_2</span></span>
+        </div>
+        <div class="mt-2.5">
+          <div class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">12,480 <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">uds</span></div>
+          <div class="flex items-center gap-1.5 mt-1 font-label-sm text-label-sm text-on-surface-variant">
+            <span class="text-tertiary flex items-center font-medium">+3.2%</span><span>•</span><span>428 lotes activos</span>
+          </div>
+        </div>
+      </div>
+      <div class="bg-surface-container p-3.5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden border-l-2 border-error">
+        <div class="flex items-center justify-between">
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Vencidos</span>
+          <span class="px-1.5 py-0.5 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>Acción
+          </span>
+        </div>
+        <div class="mt-2.5">
+          <div class="font-headline-lg text-headline-lg text-error font-semibold tracking-tight">14 <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">lotes</span></div>
+          <div class="flex items-center gap-1.5 mt-1 font-label-sm text-label-sm text-error">
+            <span class="material-symbols-outlined text-[14px]">warning</span><span>Retirar de estante hoy</span>
+          </div>
+        </div>
+      </div>
+      <div class="bg-surface-container p-3.5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+        <div class="flex items-center justify-between">
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Críticos (&lt;30d)</span>
+          <span class="px-1.5 py-0.5 rounded-full text-label-sm font-label-sm bg-error-container/40 text-error flex items-center gap-1">Urgente</span>
+        </div>
+        <div class="mt-2.5">
+          <div class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">28 <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">lotes</span></div>
+          <div class="flex items-center gap-1.5 mt-1 font-label-sm text-label-sm text-on-surface-variant">
+            <span class="text-error font-medium">7%</span><span>del stock general</span>
+          </div>
+        </div>
+      </div>
+      <div class="bg-surface-container p-3.5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+        <div class="flex items-center justify-between">
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Por Vencer (&lt;90d)</span>
+          <span class="px-1.5 py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container/20 text-secondary flex items-center gap-1">Planificar</span>
+        </div>
+        <div class="mt-2.5">
+          <div class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">64 <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">lotes</span></div>
+          <div class="flex items-center gap-1.5 mt-1 font-label-sm text-label-sm text-on-surface-variant">
+            <span class="text-secondary font-medium">15%</span><span>rotación recomendada</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Distribución de Lotes -->
+    <section class="bg-surface-container p-4 rounded-xl shadow-sm flex flex-col gap-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+        <div>
+          <h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Distribución por Estado de Lotes</h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Balance global de vigencia del inventario actual (428 lotes totales)</p>
+        </div>
+        <span class="text-label-sm font-label-sm text-tertiary self-start sm:self-auto bg-tertiary-container/20 px-2 py-0.5 rounded">90% Operativo</span>
+      </div>
+      <div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden flex gap-0.5 p-0.5">
+        <div class="h-full bg-tertiary rounded-l-full transition-all duration-500" style="width:75%" title="Óptimo: 75%"></div>
+        <div class="h-full bg-secondary transition-all duration-500" style="width:15%" title="Por vencer: 15%"></div>
+        <div class="h-full bg-error transition-all duration-500" style="width:7%" title="Crítico: 7%"></div>
+        <div class="h-full bg-on-error transition-all duration-500 rounded-r-full" style="width:3%" title="Vencido: 3%"></div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-1 font-label-sm text-label-sm">
+        <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+          <span class="w-2.5 h-2.5 rounded-full bg-tertiary flex-shrink-0"></span>
+          <div class="flex flex-col min-w-0"><span class="text-on-surface font-semibold truncate">322 Lotes (75%)</span><span class="text-on-surface-variant text-[11px] truncate">Óptimo (&gt;90 días)</span></div>
+        </div>
+        <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+          <span class="w-2.5 h-2.5 rounded-full bg-secondary flex-shrink-0"></span>
+          <div class="flex flex-col min-w-0"><span class="text-on-surface font-semibold truncate">64 Lotes (15%)</span><span class="text-on-surface-variant text-[11px] truncate">Por vencer (30-90d)</span></div>
+        </div>
+        <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+          <span class="w-2.5 h-2.5 rounded-full bg-error flex-shrink-0"></span>
+          <div class="flex flex-col min-w-0"><span class="text-on-surface font-semibold truncate">28 Lotes (7%)</span><span class="text-on-surface-variant text-[11px] truncate">Crítico (&lt;30 días)</span></div>
+        </div>
+        <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+          <span class="w-2.5 h-2.5 rounded-full bg-on-error flex-shrink-0"></span>
+          <div class="flex flex-col min-w-0"><span class="text-on-surface font-semibold truncate">14 Lotes (3%)</span><span class="text-on-surface-variant text-[11px] truncate">Vencido</span></div>
+        </div>
+      </div>
+    </section>
+    <!-- Próximos a Vencer -->
+    <section class="bg-surface-container rounded-xl shadow-sm p-4 flex flex-col gap-3.5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Próximos a Vencer</h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Lotes ordenados por urgencia de expiración (FEFO)</p>
+        </div>
+        <div class="flex items-center gap-1.5 p-1 bg-surface-container-low rounded-lg self-start sm:self-auto overflow-x-auto max-w-full">
+          <button class="batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm bg-primary text-on-primary font-medium transition-all shadow-sm" onclick="filterBatchTable('todos', this)" type="button">Todos (10)</button>
+          <button class="batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" onclick="filterBatchTable('critico', this)" type="button">Críticos (&lt;30d)</button>
+          <button class="batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" onclick="filterBatchTable('por-vencer', this)" type="button">Por vencer (&lt;90d)</button>
+        </div>
+      </div>
+      <div class="flex flex-col divide-y divide-surface-container-high/60" id="batch-list-container">
+        <div class="batch-item py-2.5 flex items-center justify-between gap-3 hover:bg-surface-container-high/40 px-2 rounded-lg transition-colors" data-status="critico">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-error-container/40 text-error flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">emergency</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Amoxicilina 500mg</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">#LT-8942</span></div>
+              <span class="font-body-sm text-body-sm text-error font-medium truncate">Vence: 28 Oct (en 4 días)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container">Crítico</span>
+            <button class="w-7 h-7 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+          </div>
+        </div>
+        <div class="batch-item py-2.5 flex items-center justify-between gap-3 hover:bg-surface-container-high/40 px-2 rounded-lg transition-colors" data-status="critico">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-error-container/40 text-error flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">water_drop</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Solución Salina 0.9%</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">#LT-8810</span></div>
+              <span class="font-body-sm text-body-sm text-error font-medium truncate">Vence: 02 Nov (en 9 días)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container">Crítico</span>
+            <button class="w-7 h-7 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+          </div>
+        </div>
+        <div class="batch-item py-2.5 flex items-center justify-between gap-3 hover:bg-surface-container-high/40 px-2 rounded-lg transition-colors" data-status="critico">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-error-container/40 text-error flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">medication_liquid</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Insulina Glargina 100UI</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">#LT-9021</span></div>
+              <span class="font-body-sm text-body-sm text-error font-medium truncate">Vence: 12 Nov (en 19 días)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container">Crítico</span>
+            <button class="w-7 h-7 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+          </div>
+        </div>
+        <div class="batch-item py-2.5 flex items-center justify-between gap-3 hover:bg-surface-container-high/40 px-2 rounded-lg transition-colors" data-status="critico">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-error-container/40 text-error flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">vaccines</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Vacuna Influenza Cuadrivalente</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">#LT-7740</span></div>
+              <span class="font-body-sm text-body-sm text-error font-medium truncate">Vence: 18 Nov (en 25 días)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container">Crítico</span>
+            <button class="w-7 h-7 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+          </div>
+        </div>
+        <div class="batch-item py-2.5 flex items-center justify-between gap-3 hover:bg-surface-container-high/40 px-2 rounded-lg transition-colors" data-status="critico">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-error-container/40 text-error flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">biotech</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Reactivo PCR Multiplex</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">#LT-6519</span></div>
+              <span class="font-body-sm text-body-sm text-error font-medium truncate">Vence: 20 Nov (en 27 días)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container">Crítico</span>
+            <button class="w-7 h-7 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+          </div>
+        </div>
+        <div class="batch-item py-2.5 flex items-center justify-between gap-3 hover:bg-surface-container-high/40 px-2 rounded-lg transition-colors" data-status="por-vencer">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-secondary-container/30 text-secondary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">medication</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Heparina Sódica 5000UI</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">#LT-8311</span></div>
+              <span class="font-body-sm text-body-sm text-secondary truncate">Vence: 05 Dic (en 42 días)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container/30 text-secondary">Por vencer</span>
+            <button class="w-7 h-7 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+          </div>
+        </div>
+        <div class="batch-item py-2.5 flex items-center justify-between gap-3 hover:bg-surface-container-high/40 px-2 rounded-lg transition-colors" data-status="por-vencer">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-secondary-container/30 text-secondary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">science</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Propofol 1% 20ml</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">#LT-7922</span></div>
+              <span class="font-body-sm text-body-sm text-secondary truncate">Vence: 15 Dic (en 52 días)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container/30 text-secondary">Por vencer</span>
+            <button class="w-7 h-7 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+          </div>
+        </div>
+        <div class="batch-item py-2.5 flex items-center justify-between gap-3 hover:bg-surface-container-high/40 px-2 rounded-lg transition-colors" data-status="por-vencer">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-secondary-container/30 text-secondary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">healing</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Omeprazol IV 40mg</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">#LT-9401</span></div>
+              <span class="font-body-sm text-body-sm text-secondary truncate">Vence: 22 Dic (en 59 días)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container/30 text-secondary">Por vencer</span>
+            <button class="w-7 h-7 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+          </div>
+        </div>
+        <div class="batch-item py-2.5 flex items-center justify-between gap-3 hover:bg-surface-container-high/40 px-2 rounded-lg transition-colors" data-status="por-vencer">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-secondary-container/30 text-secondary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">sanitizer</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Paracetamol Jarabe 120mg</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">#LT-6302</span></div>
+              <span class="font-body-sm text-body-sm text-secondary truncate">Vence: 10 Ene (en 78 días)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container/30 text-secondary">Por vencer</span>
+            <button class="w-7 h-7 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+          </div>
+        </div>
+        <div class="batch-item py-2.5 flex items-center justify-between gap-3 hover:bg-surface-container-high/40 px-2 rounded-lg transition-colors" data-status="por-vencer">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-secondary-container/30 text-secondary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">inventory</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Gasas Estériles Hidrófilas</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">#LT-5109</span></div>
+              <span class="font-body-sm text-body-sm text-secondary truncate">Vence: 18 Ene (en 86 días)</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container/30 text-secondary">Por vencer</span>
+            <button class="w-7 h-7 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest" type="button"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Actividad Reciente -->
+    <section class="bg-surface-container rounded-xl shadow-sm p-4 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Actividad Reciente</h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Trazabilidad de entradas, despachos y ajustes en tiempo real</p>
+        </div>
+        <a class="font-label-md text-label-md text-primary hover:underline flex items-center gap-1" href="#">
+          <span>Ver auditoría completa</span><span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        </a>
+      </div>
+      <div class="flex flex-col space-y-2 mt-1">
+        <div class="flex items-start justify-between gap-3 p-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high transition-colors">
+          <div class="flex items-start gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-tertiary-container/30 text-tertiary flex items-center justify-center flex-shrink-0 mt-0.5"><span class="material-symbols-outlined text-[18px]">south_east</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-tertiary-container/30 text-tertiary font-semibold">Entrada</span>
+                <span class="font-label-md text-label-md text-on-surface font-medium truncate">Recepción Lote #LT-9920</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">• 500 uds Ibuprofeno 600mg</span>
+              </div>
+              <span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Registrado por C. Mendoza</span>
+            </div>
+          </div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant flex-shrink-0">Hace 25 min</span>
+        </div>
+        <div class="flex items-start justify-between gap-3 p-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high transition-colors">
+          <div class="flex items-start gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-secondary-container/30 text-secondary flex items-center justify-center flex-shrink-0 mt-0.5"><span class="material-symbols-outlined text-[18px]">north_east</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-secondary-container/30 text-secondary font-semibold">Salida</span>
+                <span class="font-label-md text-label-md text-on-surface font-medium truncate">Despacho a Farmacia UCI</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">• #LT-8942 (120 uds Amoxicilina)</span>
+              </div>
+              <span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Autorizado por L. Ramos</span>
+            </div>
+          </div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant flex-shrink-0">Hace 1 h</span>
+        </div>
+        <div class="flex items-start justify-between gap-3 p-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high transition-colors">
+          <div class="flex items-start gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-error-container/30 text-error flex items-center justify-center flex-shrink-0 mt-0.5"><span class="material-symbols-outlined text-[18px]">remove_circle_outline</span></div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-error-container/40 text-error font-semibold">Ajuste</span>
+                <span class="font-label-md text-label-md text-on-surface font-medium truncate">Baja por cuarentena #LT-7611</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">• 15 uds Vencidas retiradas</span>
+              </div>
+              <span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Validado por Auditoría Técnica</span>
+            </div>
+          </div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant flex-shrink-0">Hace 3 h</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ═══════════════ PÁGINA: INVENTARIO ═══════════════ -->
+<main id="page-inventario" class="page-section flex-col relative w-full px-margin pt-16 pb-safe bg-surface">
+  <div class="flex flex-col w-full gap-space-lg">
+    <div class="flex flex-col gap-space-md">
+      <div class="flex flex-col gap-space-xs">
+        <div class="flex items-center gap-space-xs text-primary">
+          <span class="material-symbols-outlined text-[18px]">inventory_2</span>
+          <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary">Módulo de Caducidad</span>
+        </div>
+        <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Inventario de Lotes</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant">Gestión de existencias, trazabilidad y control de caducidad (FEFO).</p>
+      </div>
+      <div class="flex items-center gap-space-sm w-full">
+        <button onclick="showAgregarModal()" class="flex-1 flex items-center justify-center gap-space-xs h-11 px-space-md rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-md active:scale-[0.98] transition-transform" type="button">
+          <span class="material-symbols-outlined text-[18px]">add_circle</span><span>+ Nuevo Lote</span>
+        </button>
+        <button class="flex items-center justify-center gap-space-xs h-11 px-space-md rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright active:scale-[0.98] transition-transform" type="button">
+          <span class="material-symbols-outlined text-[18px] text-secondary">file_download</span><span class="hidden sm:inline">Exportar</span><span class="sm:hidden text-label-sm">CSV</span>
+        </button>
+      </div>
+    </div>
+    <!-- Filter Pills -->
+    <div class="flex flex-col gap-space-xs">
+      <div class="flex items-center justify-between">
+        <span class="font-label-sm text-label-sm text-on-surface-variant">Filtrar por criticidad</span>
+        <span class="font-code-batch text-code-batch text-tertiary">FEFO Activo</span>
+      </div>
+      <div class="flex items-center gap-space-xs overflow-x-auto pb-space-xs -mx-margin px-margin">
+        <button class="inv-filter-pill flex items-center gap-1.5 px-space-md py-1.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm shrink-0 shadow-sm transition-all" data-status="all" type="button"><span>Todos</span><span class="px-1.5 rounded-full bg-on-primary/20 text-on-primary text-[10px]">146</span></button>
+        <button class="inv-filter-pill flex items-center gap-1.5 px-space-md py-1.5 rounded-full bg-error-container text-error font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="vencido" type="button"><span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span><span>Vencido</span><span class="px-1.5 rounded-full bg-on-error/40 text-error text-[10px]">14</span></button>
+        <button class="inv-filter-pill flex items-center gap-1.5 px-space-md py-1.5 rounded-full bg-[#3d0f14] text-[#ffb3b8] font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="critico" type="button"><span class="w-1.5 h-1.5 rounded-full bg-[#ff5460]"></span><span>Crítico</span><span class="px-1.5 rounded-full bg-[#1e0508] text-[#ff858d] text-[10px]">28</span></button>
+        <button class="inv-filter-pill flex items-center gap-1.5 px-space-md py-1.5 rounded-full bg-[#382404] text-[#fcd34d] font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="por-vencer" type="button"><span class="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span><span>Por vencer</span><span class="px-1.5 rounded-full bg-[#1d1202] text-[#fde68a] text-[10px]">64</span></button>
+        <button class="inv-filter-pill flex items-center gap-1.5 px-space-md py-1.5 rounded-full bg-[#082f23] text-tertiary-fixed font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="aceptable" type="button"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span><span>Aceptable</span><span class="px-1.5 rounded-full bg-[#021711] text-tertiary text-[10px]">40</span></button>
+      </div>
+    </div>
+    <!-- Search & Sort -->
+    <div class="flex flex-col gap-space-xs bg-surface-container p-space-md rounded-xl">
+      <div class="relative w-full">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+        <input class="w-full h-11 pl-10 pr-4 bg-surface-container-low rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" id="batch-search" placeholder="Buscar por producto o lote (ej. L-2024-045)..." type="text"/>
+      </div>
+      <div class="grid grid-cols-2 gap-space-xs">
+        <div class="relative">
+          <select class="w-full h-10 px-3 pr-8 bg-surface-container-low rounded-lg text-label-md font-label-md text-on-surface appearance-none focus:outline-none cursor-pointer" id="select-urgency">
+            <option value="all">Rango: Todos</option>
+            <option value="30">Próximos 30 días</option>
+            <option value="60">Próximos 60 días</option>
+            <option value="90">Próximos 90 días</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+        </div>
+        <div class="relative">
+          <select class="w-full h-10 px-3 pr-8 bg-surface-container-low rounded-lg text-label-md font-label-md text-on-surface appearance-none focus:outline-none cursor-pointer" id="select-sort">
+            <option value="fefo">Vencimiento: Más próximo</option>
+            <option value="fefo-desc">Vencimiento: Más lejano</option>
+            <option value="name">Alfabético (A-Z)</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">sort</span>
+        </div>
+      </div>
+    </div>
+    <!-- Inventory Cards -->
+    <div class="flex flex-col gap-space-xs">
+      <div class="flex items-center justify-between px-space-xs text-on-surface-variant font-label-sm text-label-sm">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary"></span><span>Prioridad FEFO Automatizada</span></div>
+        <span class="font-code-batch text-code-batch text-on-surface-variant">10 lotes visibles</span>
+      </div>
+      <div class="flex flex-col gap-space-xs" id="inventory-list">
+        <!-- Item 1 -->
+        <div class="inventory-card group relative flex flex-col gap-space-sm p-space-md rounded-xl bg-gradient-to-r from-[#2a0e13] to-surface-container-low transition-all" data-type="critico">
+          <div class="flex items-start justify-between gap-space-xs">
+            <div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface truncate">Amoxicilina 500mg</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">Cápsulas • Envase hospitalario</span></div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#521319] text-[#fca5a5] font-label-sm text-label-sm shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-[#ef4444] animate-pulse"></span>Crítico</span>
+          </div>
+          <div class="grid grid-cols-3 gap-space-xs bg-surface-container-lowest/60 p-space-sm rounded-lg items-center">
+            <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant">Lote</span><span class="font-code-batch text-code-batch text-secondary-fixed">L-2024-012</span></div>
+            <div class="flex flex-col text-center"><span class="font-label-sm text-label-sm text-on-surface-variant">Stock</span><span class="font-headline-sm text-headline-sm text-on-surface font-semibold">85 <span class="text-body-sm font-normal text-on-surface-variant">unid.</span></span></div>
+            <div class="flex flex-col text-right"><span class="font-label-sm text-label-sm text-on-surface-variant">Vencimiento</span><span class="font-code-batch text-code-batch text-[#ff858d] font-bold">28/10/2024</span><span class="text-[11px] font-medium text-[#f87171]">Vence en 4 días</span></div>
+          </div>
+          <div class="flex items-center justify-between pt-space-xs">
+            <div class="flex items-center gap-1 text-[11px] text-[#ff858d]"><span class="material-symbols-outlined text-[14px]">warning</span><span>Urgente: Distribuir primero</span></div>
+            <div class="flex items-center gap-space-xs">
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-primary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">visibility</span></button>
+              <button onclick="showEditarModal()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-secondary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">edit</span></button>
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-error hover:bg-error-container transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">delete</span></button>
+            </div>
+          </div>
+        </div>
+        <!-- Item 2 -->
+        <div class="inventory-card group relative flex flex-col gap-space-sm p-space-md rounded-xl bg-gradient-to-r from-[#2a0e13] to-surface-container-low transition-all" data-type="critico">
+          <div class="flex items-start justify-between gap-space-xs">
+            <div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface truncate">Solución Salina 0.9% 500ml</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">Infusión IV • Matraz colapsable</span></div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#521319] text-[#fca5a5] font-label-sm text-label-sm shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-[#ef4444]"></span>Crítico</span>
+          </div>
+          <div class="grid grid-cols-3 gap-space-xs bg-surface-container-lowest/60 p-space-sm rounded-lg items-center">
+            <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant">Lote</span><span class="font-code-batch text-code-batch text-secondary-fixed">L-2024-019</span></div>
+            <div class="flex flex-col text-center"><span class="font-label-sm text-label-sm text-on-surface-variant">Stock</span><span class="font-headline-sm text-headline-sm text-on-surface font-semibold">140 <span class="text-body-sm font-normal text-on-surface-variant">unid.</span></span></div>
+            <div class="flex flex-col text-right"><span class="font-label-sm text-label-sm text-on-surface-variant">Vencimiento</span><span class="font-code-batch text-code-batch text-[#ff858d] font-bold">02/11/2024</span><span class="text-[11px] font-medium text-[#f87171]">Vence en 9 días</span></div>
+          </div>
+          <div class="flex items-center justify-between pt-space-xs">
+            <span class="font-label-sm text-label-sm text-on-surface-variant">Almacén Central • Pasillo B3</span>
+            <div class="flex items-center gap-space-xs">
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-primary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">visibility</span></button>
+              <button onclick="showEditarModal()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-secondary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">edit</span></button>
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-error hover:bg-error-container transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">delete</span></button>
+            </div>
+          </div>
+        </div>
+        <!-- Item 3 Vencido -->
+        <div class="inventory-card group relative flex flex-col gap-space-sm p-space-md rounded-xl bg-gradient-to-r from-error-container/40 to-surface-container-low transition-all" data-type="vencido">
+          <div class="flex items-start justify-between gap-space-xs">
+            <div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-error truncate">Ketorolaco 30mg/ml</span><span class="font-body-sm text-body-sm text-error/80 truncate">Ampollas inyectables • Caja x 5</span></div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm shrink-0 font-bold"><span class="material-symbols-outlined text-[13px]">block</span>Vencido</span>
+          </div>
+          <div class="grid grid-cols-3 gap-space-xs bg-surface-container-lowest/80 p-space-sm rounded-lg items-center">
+            <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant">Lote</span><span class="font-code-batch text-code-batch text-error">L-2024-003</span></div>
+            <div class="flex flex-col text-center"><span class="font-label-sm text-label-sm text-on-surface-variant">Stock</span><span class="font-headline-sm text-headline-sm text-error font-semibold">30 <span class="text-body-sm font-normal text-on-surface-variant">amp.</span></span></div>
+            <div class="flex flex-col text-right"><span class="font-label-sm text-label-sm text-on-surface-variant">Vencimiento</span><span class="font-code-batch text-code-batch text-error font-bold line-through">15/10/2024</span><span class="text-[11px] font-bold text-error">Venció hace 9 días</span></div>
+          </div>
+          <div class="flex items-center justify-between pt-space-xs">
+            <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-error"><span class="material-symbols-outlined text-[14px]">report</span>En Cuarentena para Baja</span>
+            <div class="flex items-center gap-space-xs">
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-primary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">visibility</span></button>
+              <button onclick="showEditarModal()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-secondary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">edit</span></button>
+              <button class="px-2.5 h-8 flex items-center gap-1 rounded-lg bg-error text-on-error font-label-sm text-label-sm hover:brightness-110 transition-all" type="button"><span class="material-symbols-outlined text-[15px]">delete_forever</span><span>Baja</span></button>
+            </div>
+          </div>
+        </div>
+        <!-- Item 4 -->
+        <div class="inventory-card group relative flex flex-col gap-space-sm p-space-md rounded-xl bg-gradient-to-r from-[#2a0e13] to-surface-container-low transition-all" data-type="critico">
+          <div class="flex items-start justify-between gap-space-xs">
+            <div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface truncate">Insulina Glargina 100UI</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">Plumas precargadas • Cadena Frío 2-8°C</span></div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#521319] text-[#fca5a5] font-label-sm text-label-sm shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-[#ef4444]"></span>Crítico</span>
+          </div>
+          <div class="grid grid-cols-3 gap-space-xs bg-surface-container-lowest/60 p-space-sm rounded-lg items-center">
+            <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant">Lote</span><span class="font-code-batch text-code-batch text-secondary-fixed">L-2024-031</span></div>
+            <div class="flex flex-col text-center"><span class="font-label-sm text-label-sm text-on-surface-variant">Stock</span><span class="font-headline-sm text-headline-sm text-on-surface font-semibold">42 <span class="text-body-sm font-normal text-on-surface-variant">plumas</span></span></div>
+            <div class="flex flex-col text-right"><span class="font-label-sm text-label-sm text-on-surface-variant">Vencimiento</span><span class="font-code-batch text-code-batch text-[#ff858d] font-bold">12/11/2024</span><span class="text-[11px] font-medium text-[#f87171]">Vence en 19 días</span></div>
+          </div>
+          <div class="flex items-center justify-between pt-space-xs">
+            <span class="font-label-sm text-label-sm text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">ac_unit</span>Cámara Refrigerada #1</span>
+            <div class="flex items-center gap-space-xs">
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-primary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">visibility</span></button>
+              <button onclick="showEditarModal()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-secondary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">edit</span></button>
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-error hover:bg-error-container transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">delete</span></button>
+            </div>
+          </div>
+        </div>
+        <!-- Item 5 -->
+        <div class="inventory-card group relative flex flex-col gap-space-sm p-space-md rounded-xl bg-surface-container-low transition-all" data-type="por-vencer">
+          <div class="flex items-start justify-between gap-space-xs">
+            <div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface truncate">Heparina Sódica 5000UI</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">Anticoagulante • Frasco vial 5ml</span></div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#382404] text-[#fcd34d] font-label-sm text-label-sm shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span>Por vencer</span>
+          </div>
+          <div class="grid grid-cols-3 gap-space-xs bg-surface-container p-space-sm rounded-lg items-center">
+            <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant">Lote</span><span class="font-code-batch text-code-batch text-secondary-fixed">L-2024-068</span></div>
+            <div class="flex flex-col text-center"><span class="font-label-sm text-label-sm text-on-surface-variant">Stock</span><span class="font-headline-sm text-headline-sm text-on-surface font-semibold">95 <span class="text-body-sm font-normal text-on-surface-variant">viales</span></span></div>
+            <div class="flex flex-col text-right"><span class="font-label-sm text-label-sm text-on-surface-variant">Vencimiento</span><span class="font-code-batch text-code-batch text-[#fde68a] font-bold">05/12/2024</span><span class="text-[11px] font-medium text-amber-300">Vence en 42 días</span></div>
+          </div>
+          <div class="flex items-center justify-between pt-space-xs">
+            <span class="font-label-sm text-label-sm text-on-surface-variant">Quirófano General • Estante 4</span>
+            <div class="flex items-center gap-space-xs">
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-primary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">visibility</span></button>
+              <button onclick="showEditarModal()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-secondary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">edit</span></button>
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-error hover:bg-error-container transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">delete</span></button>
+            </div>
+          </div>
+        </div>
+        <!-- Item 6 -->
+        <div class="inventory-card group relative flex flex-col gap-space-sm p-space-md rounded-xl bg-surface-container-low transition-all" data-type="aceptable">
+          <div class="flex items-start justify-between gap-space-xs">
+            <div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface truncate">Gasas Estériles 10x10</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">Material de curación • Paquete x 5 sobres</span></div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#082f23] text-tertiary-fixed font-label-sm text-label-sm shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>Aceptable</span>
+          </div>
+          <div class="grid grid-cols-3 gap-space-xs bg-surface-container p-space-sm rounded-lg items-center">
+            <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant">Lote</span><span class="font-code-batch text-code-batch text-secondary-fixed">L-2025-110</span></div>
+            <div class="flex flex-col text-center"><span class="font-label-sm text-label-sm text-on-surface-variant">Stock</span><span class="font-headline-sm text-headline-sm text-on-surface font-semibold">1,200 <span class="text-body-sm font-normal text-on-surface-variant">sobres</span></span></div>
+            <div class="flex flex-col text-right"><span class="font-label-sm text-label-sm text-on-surface-variant">Vencimiento</span><span class="font-code-batch text-code-batch text-tertiary font-bold">18/06/2025</span><span class="text-[11px] font-medium text-tertiary-fixed">Vence en 237 días</span></div>
+          </div>
+          <div class="flex items-center justify-between pt-space-xs">
+            <span class="font-label-sm text-label-sm text-on-surface-variant">Depósito de Material Estéril</span>
+            <div class="flex items-center gap-space-xs">
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-primary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">visibility</span></button>
+              <button onclick="showEditarModal()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-secondary transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">edit</span></button>
+              <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-error hover:bg-error-container transition-colors" type="button"><span class="material-symbols-outlined text-[17px]">delete</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Pagination -->
+    <div class="flex flex-col gap-space-md p-space-md rounded-xl bg-surface-container">
+      <div class="flex items-center justify-between">
+        <span class="font-label-sm text-label-sm text-on-surface-variant">Mostrando <span class="text-on-surface font-semibold">1-6</span> de <span class="text-on-surface font-semibold">146</span> productos</span>
+        <select class="h-8 px-2 bg-surface-container-high rounded text-label-sm font-label-sm text-on-surface focus:outline-none"><option>10 / pág</option><option>25 / pág</option></select>
+      </div>
+      <div class="flex items-center justify-between gap-space-xs">
+        <button class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm disabled:opacity-40 transition-colors" disabled type="button"><span class="material-symbols-outlined text-[16px]">chevron_left</span><span>Anterior</span></button>
+        <div class="flex items-center gap-1">
+          <button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-semibold" type="button">1</button>
+          <button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button">2</button>
+          <button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button">3</button>
+          <span class="w-6 text-center text-on-surface-variant text-label-sm">...</span>
+          <button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button">15</button>
+        </div>
+        <button class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-bright transition-colors" type="button"><span>Siguiente</span><span class="material-symbols-outlined text-[16px]">chevron_right</span></button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════ PÁGINAS PLACEHOLDER ═══════════════ -->
+<main id="page-movimientos" class="page-section flex-col items-center justify-center relative w-full px-margin pt-16 pb-safe bg-surface min-h-screen">
+  <div class="flex flex-col items-center gap-4 text-center py-20">
+    <div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-[32px] text-on-surface-variant">swap_horiz</span></div>
+    <h2 class="font-headline-md text-headline-md text-on-surface">Movimientos</h2>
+    <p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Módulo de entradas, salidas y traslados de inventario. Próximamente disponible.</p>
+  </div>
+</main>
+<main id="page-reportes" class="page-section flex-col items-center justify-center relative w-full px-margin pt-16 pb-safe bg-surface min-h-screen">
+  <div class="flex flex-col items-center gap-4 text-center py-20">
+    <div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-[32px] text-on-surface-variant">analytics</span></div>
+    <h2 class="font-headline-md text-headline-md text-on-surface">Reportes</h2>
+    <p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Reportes de vencimiento, rotación y trazabilidad FEFO. Próximamente disponible.</p>
+  </div>
+</main>
+<main id="page-configuracion" class="page-section flex-col items-center justify-center relative w-full px-margin pt-16 pb-safe bg-surface min-h-screen">
+  <div class="flex flex-col items-center gap-4 text-center py-20">
+    <div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-[32px] text-on-surface-variant">tune</span></div>
+    <h2 class="font-headline-md text-headline-md text-on-surface">Ajustes</h2>
+    <p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Configuración de almacén, usuarios y parámetros FEFO. Próximamente disponible.</p>
+  </div>
+</main>
+
+<!-- ═══════════════ MODAL: AGREGAR PRODUCTO ═══════════════ -->
+<div id="modal-backdrop" class="fixed inset-0 z-40 bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
+<div id="modal-container" class="fixed inset-x-0 bottom-0 z-50 flex flex-col max-h-[92dvh] bg-surface-container-low rounded-t-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.55)] overflow-hidden" style="display:none">
+  <div class="w-full flex justify-center pt-space-sm pb-1 flex-shrink-0 cursor-grab"><div class="w-10 h-1 rounded-full bg-outline-variant/60"></div></div>
+  <div class="flex items-start justify-between px-space-lg pt-space-xs pb-space-md flex-shrink-0 bg-surface-container-low">
+    <div class="flex flex-col pr-space-md">
+      <div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[20px]">add_box</span><h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Agregar Producto / Lote</h2></div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Ingresa los datos para trazabilidad y cálculo FEFO</p>
+    </div>
+    <button aria-label="Cerrar modal" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high active:scale-95 transition-all" id="close-modal-btn" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button>
+  </div>
+  <form class="flex flex-col px-space-lg space-y-space-md overflow-y-auto overscroll-contain pb-space-xl" id="product-form" onsubmit="event.preventDefault();">
+    <div class="flex flex-col gap-1.5">
+      <div class="flex justify-between items-center">
+        <label class="font-label-md text-label-md text-on-surface" for="prod-name">Nombre del producto <span class="text-error">*</span></label>
+        <span class="font-label-sm text-label-sm text-primary">Farmacéutico / Perecedero</span>
+      </div>
+      <input class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-body-md text-body-md placeholder:text-outline-variant focus:outline-none focus:bg-surface-container-high transition-colors" id="prod-name" placeholder="Ej. Paracetamol 500mg Comprimidos" type="text"/>
+      <span class="font-body-sm text-body-sm text-on-surface-variant">Identificador genérico y dosificación exacta.</span>
+    </div>
+    <div class="grid grid-cols-2 gap-space-md">
+      <div class="flex flex-col gap-1.5 min-w-0">
+        <label class="font-label-md text-label-md text-on-surface truncate" for="prod-qty">Cantidad <span class="text-error">*</span></label>
+        <input class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-code-batch text-code-batch placeholder:text-outline-variant focus:outline-none focus:bg-surface-container-high transition-colors text-right pr-space-lg" id="prod-qty" min="1" placeholder="0" type="number"/>
+      </div>
+      <div class="flex flex-col gap-1.5 min-w-0">
+        <label class="font-label-md text-label-md text-on-surface truncate" for="prod-unit">Unidad de medida <span class="text-error">*</span></label>
+        <div class="relative">
+          <select class="w-full h-11 pl-space-md pr-8 rounded-lg bg-surface-container text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-high transition-colors appearance-none cursor-pointer" id="prod-unit">
+            <option value="cajas">Cajas</option><option value="unidades">Unidades</option><option value="frascos">Frascos</option><option value="ampollas">Ampollas</option><option value="kg">kg</option><option value="litros">Litros</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface" for="batch-code">Código de Lote <span class="text-error">*</span></label>
+      <input class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-code-batch text-code-batch focus:outline-none focus:bg-surface-container-high transition-colors uppercase" id="batch-code" placeholder="Ej. L-2024-098" type="text"/>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <div class="flex justify-between items-center">
+        <label class="font-label-md text-label-md text-on-surface" for="exp-date">Fecha de vencimiento <span class="text-error">*</span></label>
+        <span class="font-label-sm text-label-sm text-secondary">Criterio FEFO activo</span>
+      </div>
+      <div class="relative">
+        <input class="w-full h-11 pl-10 pr-space-md rounded-lg bg-surface-container text-on-surface font-code-batch text-code-batch focus:outline-none focus:bg-surface-container-high transition-colors" id="exp-date" placeholder="DD/MM/AAAA" type="text"/>
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">event</span>
+      </div>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface" for="prod-notes">Observaciones <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">(Opcional)</span></label>
+      <textarea class="w-full p-space-md rounded-lg bg-surface-container text-on-surface font-body-md text-body-md placeholder:text-outline-variant focus:outline-none focus:bg-surface-container-high transition-colors resize-none" id="prod-notes" placeholder="Notas de almacenamiento, temperatura, ubicación o proveedor..." rows="3"></textarea>
+    </div>
+  </form>
+  <div class="flex-shrink-0 px-space-lg py-space-md bg-surface-container-high/95 backdrop-blur-md flex items-center justify-end gap-space-sm shadow-[0_-4px_16px_rgba(0,0,0,0.3)]">
+    <button class="h-11 px-space-lg rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-bright active:scale-95 transition-all" id="cancel-btn" type="button">Cancelar</button>
+    <button class="h-11 px-space-xl rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-space-xs shadow-md" id="submit-product-btn" type="button"><span class="material-symbols-outlined text-[18px]">check_circle</span><span>Guardar producto</span></button>
+  </div>
+</div>
+
+<!-- ═══════════════ MODAL: EDITAR PRODUCTO ═══════════════ -->
+<div id="modalBackdrop" class="fixed inset-0 z-40 bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
+<div id="modalDialog" class="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] flex flex-col bg-surface-container-low rounded-t-[20px] shadow-[0_-8px_32px_rgba(0,0,0,0.6)] overflow-hidden" style="display:none">
+  <div class="w-full flex items-center justify-center pt-3 pb-1 cursor-grab"><div class="w-10 h-1 bg-surface-container-highest rounded-full"></div></div>
+  <div class="px-space-lg pt-space-xs pb-space-md flex items-start justify-between bg-surface-container-low">
+    <div class="flex flex-col min-w-0 pr-2">
+      <div class="flex items-center gap-space-sm flex-wrap">
+        <h2 class="font-headline-md text-headline-md text-on-surface tracking-tight truncate">Editar Producto / Lote</h2>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-error-container text-error font-label-sm text-label-sm"><span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>Crítico</span>
+      </div>
+      <div class="flex items-center gap-1.5 mt-0.5">
+        <span class="font-label-sm text-label-sm text-on-surface-variant">Modificando lote activo</span>
+        <span class="font-code-batch text-code-batch text-secondary bg-surface-container px-1.5 py-0.5 rounded">#LT-8942</span>
+      </div>
+    </div>
+    <button aria-label="Cerrar modal" class="w-9 h-9 -mr-1 flex items-center justify-center rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface active:bg-surface-bright transition-colors flex-shrink-0" id="closeModalBtn" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button>
+  </div>
+  <div class="overflow-y-auto px-space-lg pb-space-xl flex flex-col gap-space-lg">
+    <form class="flex flex-col gap-space-md" id="editBatchForm" onsubmit="event.preventDefault();">
+      <div class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-on-surface" for="prodName">Nombre del producto <span class="text-error">*</span></label>
+        <div class="relative flex items-center">
+          <input class="w-full bg-surface-container text-on-surface font-body-md text-body-md rounded-lg px-space-md py-2.5 pr-9 focus:outline-none focus:bg-surface-bright transition-colors" id="prodName" type="text" value="Amoxicilina 500mg"/>
+          <span class="absolute right-3 material-symbols-outlined text-secondary text-[18px]">verified</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-space-sm">
+        <div class="flex flex-col gap-1.5">
+          <label class="font-label-md text-label-md text-on-surface" for="prodQty">Cantidad <span class="text-error">*</span></label>
+          <div class="relative flex items-center">
+            <input class="w-full bg-surface-container text-on-surface font-headline-sm text-headline-sm rounded-lg px-space-md py-2 focus:outline-none focus:bg-surface-bright text-right pr-9 transition-colors" id="prodQty" type="number" value="85"/>
+            <span class="absolute right-2.5 font-label-sm text-label-sm text-on-surface-variant pointer-events-none">uds</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="font-label-md text-label-md text-on-surface" for="prodUnit">Unidad <span class="text-error">*</span></label>
+          <div class="relative flex items-center">
+            <select class="w-full bg-surface-container text-on-surface font-body-md text-body-md rounded-lg px-space-md py-2.5 pr-8 appearance-none focus:outline-none focus:bg-surface-bright transition-colors" id="prodUnit">
+              <option selected value="cajas">Cajas</option><option value="unidades">Unidades</option><option value="frascos">Frascos</option>
+            </select>
+            <span class="absolute right-2.5 material-symbols-outlined text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <div class="flex items-center justify-between">
+          <label class="font-label-md text-label-md text-on-surface" for="batchCode">Código de Lote <span class="text-error">*</span></label>
+          <span class="font-label-sm text-label-sm text-tertiary flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check_circle</span>Validado</span>
+        </div>
+        <div class="relative flex items-center">
+          <span class="absolute left-3 material-symbols-outlined text-on-surface-variant text-[18px]">barcode</span>
+          <input class="w-full bg-surface-container text-on-surface font-code-batch text-code-batch rounded-lg pl-10 pr-10 py-2.5 focus:outline-none focus:bg-surface-bright transition-colors uppercase tracking-wider" id="batchCode" type="text" value="L-2024-012"/>
+          <div class="absolute right-3 flex items-center text-tertiary"><span class="material-symbols-outlined text-[18px]">done</span></div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <div class="flex items-center justify-between">
+          <label class="font-label-md text-label-md text-on-surface" for="expiryDate">Fecha de vencimiento <span class="text-error">*</span></label>
+          <span class="font-label-sm text-label-sm text-error">Expira en 4 días</span>
+        </div>
+        <div class="relative flex items-center">
+          <span class="absolute left-3 material-symbols-outlined text-error text-[18px]">calendar_clock</span>
+          <input class="w-full bg-surface-container text-on-surface font-body-md text-body-md rounded-lg pl-10 pr-9 py-2.5 focus:outline-none focus:bg-surface-bright transition-colors" id="expiryDate" type="text" value="28/10/2024"/>
+        </div>
+      </div>
+      <div class="bg-error-container/40 p-space-md rounded-xl flex flex-col gap-space-sm relative overflow-hidden">
+        <div class="flex items-center justify-between">
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Estado calculado:</span>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-error-container text-error font-label-sm text-label-sm"><span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>Crítico</span>
+        </div>
+        <div class="flex items-start gap-space-sm bg-surface-container-lowest/60 p-space-sm rounded-lg">
+          <span class="material-symbols-outlined text-error text-[20px] flex-shrink-0 mt-0.5">warning</span>
+          <p class="font-body-sm text-body-sm text-error leading-relaxed"><strong>Vence en 4 días — ¡Urgente!</strong> Prioridad FEFO Máxima. Requiere distribución inmediata.</p>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-on-surface" for="observations">Observaciones</label>
+        <textarea class="w-full bg-surface-container text-on-surface font-body-md text-body-md rounded-lg p-space-md focus:outline-none focus:bg-surface-bright transition-colors resize-none leading-relaxed" id="observations" rows="3">Almacenado en Estante A-04, Sector Farmacia Central.</textarea>
+      </div>
+    </form>
+  </div>
+  <div class="p-space-md bg-surface-container flex items-center justify-between gap-space-sm">
+    <button class="inline-flex items-center gap-1 px-3 py-2.5 rounded-lg bg-error-container/30 text-error hover:bg-error-container/50 active:scale-95 transition-all flex-shrink-0" id="quarantineBtn" type="button">
+      <span class="material-symbols-outlined text-[18px]">gavel</span><span class="font-label-md text-label-md font-medium">Baja / Cuarentena</span>
+    </button>
+    <div class="flex items-center gap-space-xs flex-grow justify-end">
+      <button class="px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-bright active:scale-95 transition-all font-label-md text-label-md" id="cancelModalBtn" type="button">Cancelar</button>
+      <button class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:opacity-95 active:scale-95 transition-all shadow-md" id="saveBatchBtn" type="button">
+        <span class="material-symbols-outlined text-[18px]">save</span><span>Guardar cambios</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ NAVEGACIÓN INFERIOR ═══════════════ -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-low/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.35)]">
+  <div class="flex justify-around items-center h-16 px-space-xs">
+    <button onclick="navigateTo('dashboard')" class="nav-btn flex flex-col items-center justify-center gap-0.5 w-16 h-12 rounded-lg transition-all text-primary bg-surface-container/60" data-path="dashboard" type="button">
+      <span class="material-symbols-outlined text-[22px]">dashboard</span><span class="font-label-sm text-label-sm">Panel</span>
+    </button>
+    <button onclick="navigateTo('inventario')" class="nav-btn flex flex-col items-center justify-center gap-0.5 w-16 h-12 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" data-path="inventario" type="button">
+      <span class="material-symbols-outlined text-[22px]">inventory_2</span><span class="font-label-sm text-label-sm">Lotes</span>
+    </button>
+    <button onclick="navigateTo('movimientos')" class="nav-btn flex flex-col items-center justify-center gap-0.5 w-16 h-12 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" data-path="movimientos" type="button">
+      <span class="material-symbols-outlined text-[22px]">swap_horiz</span><span class="font-label-sm text-label-sm">Movs</span>
+    </button>
+    <button onclick="navigateTo('reportes')" class="nav-btn flex flex-col items-center justify-center gap-0.5 w-16 h-12 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" data-path="reportes" type="button">
+      <span class="material-symbols-outlined text-[22px]">analytics</span><span class="font-label-sm text-label-sm">Reportes</span>
+    </button>
+    <button onclick="navigateTo('configuracion')" class="nav-btn flex flex-col items-center justify-center gap-0.5 w-16 h-12 rounded-lg text-on-surface-variant hover:text-on-surface transition-all" data-path="configuracion" type="button">
+      <span class="material-symbols-outlined text-[22px]">tune</span><span class="font-label-sm text-label-sm">Ajustes</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════════ SCRIPTS ═══════════════ -->
+<script>
+  // ── Router ──
+  const pageSubtitles = { dashboard: 'Dashboard', inventario: 'Inventario de Lotes', movimientos: 'Movimientos', reportes: 'Reportes', configuracion: 'Ajustes' };
+
+  function navigateTo(path) {
+    document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + path).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      const isActive = btn.getAttribute('data-path') === path;
+      btn.classList.toggle('text-primary', isActive);
+      btn.classList.toggle('bg-surface-container/60', isActive);
+      btn.classList.toggle('text-on-surface-variant', !isActive);
+    });
+    document.getElementById('header-subtitle').textContent = pageSubtitles[path] || '';
+  }
+
+  // ── Theme switcher ──
+  const themeBtn = document.getElementById('theme-switcher-btn');
+  const themeIcon = document.getElementById('theme-btn-icon');
+  const themeText = document.getElementById('theme-btn-text');
+  function updateThemeUI() {
+    const isDark = document.documentElement.classList.contains('dark');
+    themeIcon.textContent = isDark ? 'light_mode' : 'dark_mode';
+    themeText.textContent = isDark ? 'Claro' : 'Oscuro';
+  }
+  updateThemeUI();
+  themeBtn.addEventListener('click', () => { document.documentElement.classList.toggle('dark'); updateThemeUI(); });
+
+  // ── Dashboard batch filter ──
+  function filterBatchTable(status, activeBtn) {
+    document.querySelectorAll('.batch-filter-btn').forEach(btn => {
+      btn.className = 'batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all';
+    });
+    activeBtn.className = 'batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm bg-primary text-on-primary font-medium transition-all shadow-sm';
+    document.querySelectorAll('#batch-list-container .batch-item').forEach(item => {
+      item.style.display = (status === 'todos' || item.getAttribute('data-status') === status) ? 'flex' : 'none';
+    });
+  }
+
+  // ── Inventory filter + search ──
+  (function() {
+    const pills = document.querySelectorAll('.inv-filter-pill');
+    const cards = document.querySelectorAll('.inventory-card');
+    const searchInput = document.getElementById('batch-search');
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pills.forEach(p => p.classList.remove('ring-2', 'ring-primary', 'scale-105'));
+        pill.classList.add('ring-2', 'ring-primary', 'scale-105');
+        const filterStatus = pill.getAttribute('data-status');
+        cards.forEach(card => {
+          card.classList.toggle('hidden', filterStatus !== 'all' && card.getAttribute('data-type') !== filterStatus);
+        });
+      });
+    });
+    if (searchInput) {
+      searchInput.addEventListener('input', e => {
+        const q = e.target.value.toLowerCase().trim();
+        cards.forEach(card => card.classList.toggle('hidden', !card.textContent.toLowerCase().includes(q)));
+      });
+    }
+  })();
+
+  // ── Modal: Agregar ──
+  function showAgregarModal() {
+    document.getElementById('modal-backdrop').style.display = 'block';
+    document.getElementById('modal-container').style.display = 'flex';
+  }
+  function closeAgregarModal() {
+    document.getElementById('modal-backdrop').style.display = 'none';
+    document.getElementById('modal-container').style.display = 'none';
+  }
+  document.getElementById('close-modal-btn').addEventListener('click', closeAgregarModal);
+  document.getElementById('cancel-btn').addEventListener('click', closeAgregarModal);
+  document.getElementById('modal-backdrop').addEventListener('click', closeAgregarModal);
+  document.getElementById('submit-product-btn').addEventListener('click', function() {
+    const btn = this;
+    btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>¡Guardado!</span>';
+    btn.classList.replace('bg-primary', 'bg-tertiary-container');
+    setTimeout(closeAgregarModal, 600);
+  });
+
+  // ── Modal: Editar ──
+  function showEditarModal() {
+    document.getElementById('modalBackdrop').style.display = 'block';
+    document.getElementById('modalDialog').style.display = 'flex';
+  }
+  function closeEditarModal() {
+    document.getElementById('modalBackdrop').style.display = 'none';
+    document.getElementById('modalDialog').style.display = 'none';
+  }
+  document.getElementById('closeModalBtn').addEventListener('click', closeEditarModal);
+  document.getElementById('cancelModalBtn').addEventListener('click', closeEditarModal);
+  document.getElementById('modalBackdrop').addEventListener('click', closeEditarModal);
+  document.getElementById('saveBatchBtn').addEventListener('click', function() {
+    const btn = this;
+    btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Guardando...</span>';
+    setTimeout(() => {
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>¡Actualizado!</span>';
+      btn.classList.replace('bg-primary', 'bg-tertiary-container');
+      btn.classList.replace('text-on-primary', 'text-on-tertiary-container');
+      setTimeout(closeEditarModal, 450);
+    }, 600);
+  });
+  document.getElementById('quarantineBtn').addEventListener('click', function() {
+    if (confirm('¿Desea enviar este lote LT-8942 a Cuarentena inmediata?')) {
+      this.innerHTML = '<span class="material-symbols-outlined text-[18px]">lock</span><span>En Cuarentena</span>';
+      setTimeout(closeEditarModal, 400);
+    }
+  });
+</script>
+</body>
+</html>
