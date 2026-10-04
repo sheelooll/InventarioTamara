@@ -134,6 +134,10 @@
 .page-section { display: none; }
 .page-section.active { display: flex; }
 input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
+.rep-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.rep-table th { background: rgb(var(--c-surface-container-highest)); color: rgb(var(--c-on-surface)); font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 2px solid rgb(var(--c-outline-variant)); white-space: nowrap; }
+.rep-table td { padding: 8px 10px; border-bottom: 1px solid rgb(var(--c-outline-variant)); color: rgb(var(--c-on-surface)); vertical-align: middle; }
+.rep-table tr:hover td { background: rgb(var(--c-surface-container-lowest) / 0.5); }
 </style>
 </head>
 <body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen">
@@ -516,11 +520,112 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
     </div>
   </div>
 </main>
-<main id="page-reportes" class="page-section flex-col items-center justify-center relative w-full px-margin pt-16 pb-safe bg-surface min-h-screen">
-  <div class="flex flex-col items-center gap-4 text-center py-20">
-    <div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-[32px] text-on-surface-variant">analytics</span></div>
-    <h2 class="font-headline-md text-headline-md text-on-surface">Reportes</h2>
-    <p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Reportes de vencimiento, rotación y trazabilidad FEFO. Próximamente disponible.</p>
+<main id="page-reportes" class="page-section flex-col relative w-full px-margin pt-16 pb-safe bg-surface">
+  <div class="flex flex-col w-full pb-10 space-y-4">
+    <!-- Header -->
+    <section class="flex items-center justify-between gap-3 pt-2">
+      <div class="flex flex-col">
+        <div class="flex items-center gap-2 text-primary"><span class="material-symbols-outlined text-[18px]">analytics</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary">Informes y Análisis</span></div>
+        <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Reportes</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant" id="rep-gen-date">—</p>
+      </div>
+    </section>
+    <!-- Tabs -->
+    <div class="flex p-1 rounded-xl bg-surface-container-highest gap-1">
+      <button class="reporte-tab flex-1 py-2 rounded-lg bg-cta text-on-primary font-label-md text-label-md transition-all" data-rep="inventario" type="button">Inventario</button>
+      <button class="reporte-tab flex-1 py-2 rounded-lg text-on-surface-variant font-label-md text-label-md transition-all" data-rep="vencimientos" type="button">Vencimientos</button>
+      <button class="reporte-tab flex-1 py-2 rounded-lg text-on-surface-variant font-label-md text-label-md transition-all" data-rep="movimientos-rep" type="button">Movimientos</button>
+    </div>
+
+    <!-- ══ INVENTARIO ══ -->
+    <div id="rep-inventario" class="flex flex-col gap-4">
+      <div class="bg-surface-container rounded-xl p-4 flex flex-col gap-3">
+        <div class="relative"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span><input id="rep-inv-search" type="text" placeholder="Buscar por nombre o lote…" class="w-full h-10 pl-10 pr-4 rounded-lg bg-surface-container-low text-on-surface font-body-md placeholder:text-outline focus:outline-none transition-colors"/></div>
+        <div class="flex gap-2 overflow-x-auto -mx-4 px-4 pb-1">
+          <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-cta text-on-primary" data-status="all" type="button">Todos</button>
+          <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container" data-status="vencido" type="button">Vencidos</button>
+          <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container" data-status="critico" type="button">Críticos</button>
+          <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container" data-status="por-vencer" type="button">Por vencer</button>
+          <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-tertiary-container text-on-tertiary-container" data-status="aceptable" type="button">Aceptable</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3" id="rep-inv-kpis"></div>
+      <div class="bg-surface-container rounded-xl p-4 flex flex-col gap-3" id="rep-inv-chart"></div>
+      <div class="bg-surface-container rounded-xl overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-surface-container-highest">
+          <span class="font-headline-sm text-headline-sm text-on-surface">Detalle de Lotes</span>
+          <span id="rep-inv-count" class="font-code-batch text-code-batch text-on-surface-variant">0 lotes</span>
+        </div>
+        <div class="overflow-x-auto" id="rep-inv-table"></div>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="exportarPDF('inventario')" class="flex-1 h-11 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-surface-container-high active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[18px] text-error-text">picture_as_pdf</span>Exportar PDF</button>
+        <button onclick="exportarCSV('inventario')" class="flex-1 h-11 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-surface-container-high active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[18px] text-tertiary">table_view</span>Exportar CSV</button>
+      </div>
+    </div>
+
+    <!-- ══ VENCIMIENTOS ══ -->
+    <div id="rep-vencimientos" class="flex flex-col gap-4" style="display:none">
+      <div class="bg-surface-container rounded-xl p-4 flex flex-col gap-3">
+        <p class="font-label-md text-label-md text-on-surface-variant">Rango de vencimiento</p>
+        <div class="flex gap-2 items-end">
+          <div class="flex flex-col gap-1 flex-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Desde</label><input id="rep-venc-from" type="date" class="h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-code-batch focus:outline-none transition-colors"/></div>
+          <div class="flex flex-col gap-1 flex-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Hasta</label><input id="rep-venc-to" type="date" class="h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-code-batch focus:outline-none transition-colors"/></div>
+          <button onclick="clearRepVencFiltros()" class="h-10 w-10 shrink-0 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high flex items-center justify-center transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">close</span></button>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button class="rep-venc-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-cta text-on-primary" data-status="all" type="button">Todos</button>
+          <button class="rep-venc-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container" data-status="vencido" type="button">Vencidos</button>
+          <button class="rep-venc-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container" data-status="critico" type="button">Críticos (&lt;30d)</button>
+          <button class="rep-venc-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container" data-status="por-vencer" type="button">Por vencer (&lt;90d)</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3" id="rep-venc-kpis"></div>
+      <div class="bg-surface-container rounded-xl p-4 flex flex-col gap-3" id="rep-venc-chart"></div>
+      <div class="bg-surface-container rounded-xl overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-surface-container-highest">
+          <span class="font-headline-sm text-headline-sm text-on-surface">Lotes por Vencer</span>
+          <span id="rep-venc-count" class="font-code-batch text-code-batch text-on-surface-variant">0 lotes</span>
+        </div>
+        <div class="overflow-x-auto" id="rep-venc-table"></div>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="exportarPDF('vencimientos')" class="flex-1 h-11 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-surface-container-high active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[18px] text-error-text">picture_as_pdf</span>Exportar PDF</button>
+        <button onclick="exportarCSV('vencimientos')" class="flex-1 h-11 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-surface-container-high active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[18px] text-tertiary">table_view</span>Exportar CSV</button>
+      </div>
+    </div>
+
+    <!-- ══ MOVIMIENTOS ══ -->
+    <div id="rep-movimientos-rep" class="flex flex-col gap-4" style="display:none">
+      <div class="bg-surface-container rounded-xl p-4 flex flex-col gap-3">
+        <p class="font-label-md text-label-md text-on-surface-variant">Período de análisis</p>
+        <div class="flex gap-2 items-end">
+          <div class="flex flex-col gap-1 flex-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Desde</label><input id="rep-mov-from" type="date" class="h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-code-batch focus:outline-none transition-colors"/></div>
+          <div class="flex flex-col gap-1 flex-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Hasta</label><input id="rep-mov-to" type="date" class="h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-code-batch focus:outline-none transition-colors"/></div>
+          <button onclick="clearRepMovFiltros()" class="h-10 w-10 shrink-0 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high flex items-center justify-center transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">close</span></button>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button class="rep-mov-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-cta text-on-primary" data-tipo="all" type="button">Todos</button>
+          <button class="rep-mov-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-tertiary-container text-on-tertiary-container" data-tipo="entrada" type="button">Entradas</button>
+          <button class="rep-mov-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container" data-tipo="salida" type="button">Salidas</button>
+          <button class="rep-mov-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container" data-tipo="ajuste" type="button">Ajustes</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-3" id="rep-mov-kpis"></div>
+      <div class="bg-surface-container rounded-xl p-4 flex flex-col gap-3" id="rep-mov-chart"></div>
+      <div class="bg-surface-container rounded-xl overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-surface-container-highest">
+          <span class="font-headline-sm text-headline-sm text-on-surface">Detalle de Movimientos</span>
+          <span id="rep-mov-count" class="font-code-batch text-code-batch text-on-surface-variant">0 registros</span>
+        </div>
+        <div class="overflow-x-auto" id="rep-mov-table"></div>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="exportarPDF('movimientos')" class="flex-1 h-11 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-surface-container-high active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[18px] text-error-text">picture_as_pdf</span>Exportar PDF</button>
+        <button onclick="exportarCSV('movimientos')" class="flex-1 h-11 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-surface-container-high active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[18px] text-tertiary">table_view</span>Exportar CSV</button>
+      </div>
+    </div>
+
   </div>
 </main>
 <main id="page-configuracion" class="page-section flex-col items-center justify-center relative w-full px-margin pt-16 pb-safe bg-surface min-h-screen">
@@ -1190,6 +1295,303 @@ function clearMovFilters() {
   renderMovimientos();
 }
 
+// ── Reportes ──
+let repInvStatusFilter = 'all';
+let repVencStatusFilter = 'all';
+let repMovTipoFilter = 'all';
+
+function today() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function todayDisplay() {
+  return new Date().toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+function navigateReporte(rep) {
+  ['inventario','vencimientos','movimientos-rep'].forEach(r => {
+    const el = document.getElementById('rep-' + r);
+    if (el) el.style.display = r === rep ? 'flex' : 'none';
+  });
+  document.querySelectorAll('.reporte-tab').forEach(btn => {
+    const active = btn.dataset.rep === rep;
+    btn.className = `reporte-tab flex-1 py-2 rounded-lg font-label-md text-label-md transition-all ${active ? 'bg-cta text-on-primary' : 'text-on-surface-variant hover:text-on-surface'}`;
+  });
+  const genEl = document.getElementById('rep-gen-date');
+  if (genEl) genEl.textContent = `Generado: ${todayDisplay()}`;
+  if (rep === 'inventario') renderRepInventario();
+  else if (rep === 'vencimientos') renderRepVencimientos();
+  else if (rep === 'movimientos-rep') renderRepMovimientos();
+}
+
+/* ── INVENTARIO ── */
+function getFilteredInventario() {
+  const search = (document.getElementById('rep-inv-search')?.value || '').toLowerCase().trim();
+  return allLotes.filter(l => {
+    const { estado } = getEstado(l.vencimiento.toDate());
+    const matchStatus = repInvStatusFilter === 'all' || estado === repInvStatusFilter;
+    const matchSearch = !search || l.nombre.toLowerCase().includes(search) || (l.lote||'').toLowerCase().includes(search);
+    return matchStatus && matchSearch;
+  });
+}
+
+function renderRepInventario() {
+  const data = getFilteredInventario();
+  const counts = { all: allLotes.length, vencido:0, critico:0, 'por-vencer':0, aceptable:0 };
+  allLotes.forEach(l => counts[getEstado(l.vencimiento.toDate()).estado]++);
+  const totalStock = data.reduce((s,l) => s + (Number(l.cantidad)||0), 0);
+  // KPIs
+  document.getElementById('rep-inv-kpis').innerHTML = `
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Lotes en reporte</span><span class="font-headline-sm text-headline-sm text-on-surface font-bold">${data.length}</span><span class="font-body-sm text-body-sm text-on-surface-variant">de ${allLotes.length} total</span></div>
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Stock total</span><span class="font-headline-sm text-headline-sm text-on-surface font-bold">${totalStock.toLocaleString('es-AR')}</span><span class="font-body-sm text-body-sm text-on-surface-variant">unidades</span></div>
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1 border-l-2 border-error"><span class="font-label-sm text-label-sm text-on-surface-variant">Alertas</span><span class="font-headline-sm text-headline-sm text-error-text font-bold">${counts.vencido + counts.critico}</span><span class="font-body-sm text-body-sm text-on-surface-variant">vencidos + críticos</span></div>
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1 border-l-2 border-tertiary"><span class="font-label-sm text-label-sm text-on-surface-variant">Aceptables</span><span class="font-headline-sm text-headline-sm text-on-tertiary-container font-bold">${counts.aceptable}</span><span class="font-body-sm text-body-sm text-on-surface-variant">lotes óptimos</span></div>`;
+  // Chart
+  const total = allLotes.length || 1;
+  const pOk = Math.round(counts.aceptable/total*100), pPv = Math.round(counts['por-vencer']/total*100);
+  const pCr = Math.round(counts.critico/total*100), pVe = Math.round(counts.vencido/total*100);
+  document.getElementById('rep-inv-chart').innerHTML = `
+    <div class="flex items-center justify-between"><h3 class="font-headline-sm text-headline-sm text-on-surface">Distribución por Estado</h3><span class="font-label-sm text-label-sm text-tertiary bg-tertiary-container/20 px-2 py-0.5 rounded">${pOk + pPv}% operativo</span></div>
+    <div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden flex gap-0.5 p-0.5">
+      <div class="h-full bg-tertiary rounded-l-full transition-all" style="width:${pOk}%"></div>
+      <div class="h-full bg-secondary transition-all" style="width:${pPv}%"></div>
+      <div class="h-full bg-error transition-all" style="width:${pCr}%"></div>
+      <div class="h-full bg-on-error-container transition-all rounded-r-full" style="width:${pVe}%"></div>
+    </div>
+    <div class="grid grid-cols-2 gap-2 font-label-sm text-label-sm">
+      <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-tertiary shrink-0"></span><span class="text-on-surface">${counts.aceptable} Aceptable (${pOk}%)</span></div>
+      <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-secondary shrink-0"></span><span class="text-on-surface">${counts['por-vencer']} Por vencer (${pPv}%)</span></div>
+      <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-error shrink-0"></span><span class="text-on-surface">${counts.critico} Crítico (${pCr}%)</span></div>
+      <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-on-error-container shrink-0"></span><span class="text-on-surface">${counts.vencido} Vencido (${pVe}%)</span></div>
+    </div>`;
+  // Table
+  document.getElementById('rep-inv-count').textContent = `${data.length} lotes`;
+  if (data.length === 0) {
+    document.getElementById('rep-inv-table').innerHTML = `<div class="py-8 text-center text-on-surface-variant font-body-md">Sin lotes para mostrar</div>`;
+    return;
+  }
+  const badgeColor = { vencido:'color:#B91C1C;background:#FECACA', critico:'color:#B91C1C;background:#FEE2E2', 'por-vencer':'color:#92600A;background:#FEF3C7', aceptable:'color:#065F46;background:#D1FAE5' };
+  const rows = data.map(l => {
+    const { estado, dias } = getEstado(l.vencimiento.toDate());
+    const diasTxt = dias < 0 ? `Vencido (${Math.abs(dias)}d)` : `${dias}d`;
+    return `<tr><td>${escHtml(l.nombre)}</td><td style="font-family:monospace">${escHtml(l.lote)}</td><td style="text-align:right">${l.cantidad}</td><td>${escHtml(l.unidad||'uds')}</td><td style="font-family:monospace">${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;${badgeColor[estado]}">${estado}</span></td></tr>`;
+  }).join('');
+  document.getElementById('rep-inv-table').innerHTML = `<table class="rep-table"><thead><tr><th>Producto</th><th>Lote</th><th>Cant.</th><th>Unid.</th><th>Vencimiento</th><th>Días</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+/* ── VENCIMIENTOS ── */
+function getFilteredVencimientos() {
+  const fromVal = document.getElementById('rep-venc-from')?.value;
+  const toVal = document.getElementById('rep-venc-to')?.value;
+  return allLotes.filter(l => {
+    const vd = l.vencimiento.toDate();
+    const { estado } = getEstado(vd);
+    const matchStatus = repVencStatusFilter === 'all' || estado === repVencStatusFilter;
+    let matchRange = true;
+    if (fromVal) matchRange = matchRange && vd >= new Date(fromVal + 'T00:00:00');
+    if (toVal) matchRange = matchRange && vd <= new Date(toVal + 'T23:59:59');
+    return matchStatus && matchRange;
+  }).sort((a,b) => a.vencimiento.seconds - b.vencimiento.seconds);
+}
+
+function renderRepVencimientos() {
+  const data = getFilteredVencimientos();
+  const counts = { vencido:0, critico:0, 'por-vencer':0, aceptable:0 };
+  data.forEach(l => counts[getEstado(l.vencimiento.toDate()).estado]++);
+  document.getElementById('rep-venc-kpis').innerHTML = `
+    <div class="bg-surface-container p-3 rounded-xl border-l-2 border-error flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Vencidos</span><span class="font-headline-sm text-headline-sm text-error-text font-bold">${counts.vencido}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Retirar urgente</span></div>
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Críticos &lt;30d</span><span class="font-headline-sm text-headline-sm text-error-text font-bold">${counts.critico}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Prioridad FEFO</span></div>
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Por vencer &lt;90d</span><span class="font-headline-sm text-headline-sm text-warn-text font-bold">${counts['por-vencer']}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Planificar salida</span></div>
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Aceptables</span><span class="font-headline-sm text-headline-sm text-on-tertiary-container font-bold">${counts.aceptable}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Stock seguro</span></div>`;
+  // Urgency chart
+  const total = data.length || 1;
+  const pV = Math.round(counts.vencido/total*100), pC = Math.round(counts.critico/total*100);
+  const pPV = Math.round(counts['por-vencer']/total*100), pA = Math.round(counts.aceptable/total*100);
+  document.getElementById('rep-venc-chart').innerHTML = `
+    <h3 class="font-headline-sm text-headline-sm text-on-surface">Distribución de Urgencia</h3>
+    <div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden flex gap-0.5 p-0.5">
+      <div class="h-full bg-on-error-container rounded-l-full" style="width:${pV}%"></div>
+      <div class="h-full bg-error" style="width:${pC}%"></div>
+      <div class="h-full bg-secondary" style="width:${pPV}%"></div>
+      <div class="h-full bg-tertiary rounded-r-full" style="width:${pA}%"></div>
+    </div>
+    <div class="flex flex-wrap gap-x-4 gap-y-1 font-label-sm text-label-sm">
+      <span class="flex gap-1 items-center"><span class="w-2 h-2 rounded-full bg-on-error-container"></span>Vencido: ${counts.vencido} (${pV}%)</span>
+      <span class="flex gap-1 items-center"><span class="w-2 h-2 rounded-full bg-error"></span>Crítico: ${counts.critico} (${pC}%)</span>
+      <span class="flex gap-1 items-center"><span class="w-2 h-2 rounded-full bg-secondary"></span>Por vencer: ${counts['por-vencer']} (${pPV}%)</span>
+      <span class="flex gap-1 items-center"><span class="w-2 h-2 rounded-full bg-tertiary"></span>Aceptable: ${counts.aceptable} (${pA}%)</span>
+    </div>`;
+  document.getElementById('rep-venc-count').textContent = `${data.length} lotes`;
+  if (data.length === 0) { document.getElementById('rep-venc-table').innerHTML = `<div class="py-8 text-center text-on-surface-variant font-body-md">Sin lotes para el filtro aplicado</div>`; return; }
+  const badgeColor = { vencido:'color:#B91C1C;background:#FECACA', critico:'color:#B91C1C;background:#FEE2E2', 'por-vencer':'color:#92600A;background:#FEF3C7', aceptable:'color:#065F46;background:#D1FAE5' };
+  const rows = data.map(l => {
+    const { estado, dias } = getEstado(l.vencimiento.toDate());
+    const diasTxt = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : `${dias}d restantes`;
+    return `<tr><td>${escHtml(l.nombre)}</td><td style="font-family:monospace">${escHtml(l.lote)}</td><td style="text-align:right">${l.cantidad} ${escHtml(l.unidad||'')}</td><td style="font-family:monospace">${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;${badgeColor[estado]}">${estado}</span></td></tr>`;
+  }).join('');
+  document.getElementById('rep-venc-table').innerHTML = `<table class="rep-table"><thead><tr><th>Producto</th><th>Lote</th><th>Stock</th><th>Vencimiento</th><th>Días</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+/* ── MOVIMIENTOS (reporte) ── */
+function getFilteredRepMov() {
+  const fromVal = document.getElementById('rep-mov-from')?.value;
+  const toVal = document.getElementById('rep-mov-to')?.value;
+  return allMovimientos.filter(m => {
+    const fd = m.fecha.toDate();
+    const matchTipo = repMovTipoFilter === 'all' || m.tipo === repMovTipoFilter;
+    let matchRange = true;
+    if (fromVal) matchRange = matchRange && fd >= new Date(fromVal + 'T00:00:00');
+    if (toVal) matchRange = matchRange && fd <= new Date(toVal + 'T23:59:59');
+    return matchTipo && matchRange;
+  });
+}
+
+function renderRepMovimientos() {
+  const data = getFilteredRepMov();
+  const ent = data.filter(m => m.tipo === 'entrada');
+  const sal = data.filter(m => m.tipo === 'salida');
+  const adj = data.filter(m => m.tipo === 'ajuste');
+  const sumEnt = ent.reduce((s,m) => s+(m.cantidadMovimiento||0), 0);
+  const sumSal = sal.reduce((s,m) => s+(m.cantidadMovimiento||0), 0);
+  const balance = sumEnt - sumSal;
+  document.getElementById('rep-mov-kpis').innerHTML = `
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Entradas</span><span class="font-headline-sm text-headline-sm text-on-tertiary-container font-bold">+${sumEnt}</span><span class="font-body-sm text-body-sm text-on-surface-variant">${ent.length} movimientos</span></div>
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Salidas</span><span class="font-headline-sm text-headline-sm text-error-text font-bold">−${sumSal}</span><span class="font-body-sm text-body-sm text-on-surface-variant">${sal.length} movimientos</span></div>
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1 ${balance >= 0 ? 'border-l-2 border-tertiary' : 'border-l-2 border-error'}"><span class="font-label-sm text-label-sm text-on-surface-variant">Balance neto</span><span class="font-headline-sm text-headline-sm ${balance >= 0 ? 'text-on-tertiary-container' : 'text-error-text'} font-bold">${balance >= 0 ? '+' : ''}${balance}</span><span class="font-body-sm text-body-sm text-on-surface-variant">${adj.length} ajustes</span></div>`;
+  // Chart entradas vs salidas
+  const maxVal = Math.max(sumEnt, sumSal, 1);
+  const wEnt = Math.round(sumEnt/maxVal*100), wSal = Math.round(sumSal/maxVal*100);
+  document.getElementById('rep-mov-chart').innerHTML = `
+    <h3 class="font-headline-sm text-headline-sm text-on-surface">Entradas vs Salidas</h3>
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center gap-3"><span class="font-label-sm text-label-sm text-on-surface-variant w-16 text-right shrink-0">Entradas</span><div class="flex-1 h-4 rounded-full bg-surface-container-highest overflow-hidden"><div class="h-full bg-tertiary rounded-full transition-all" style="width:${wEnt}%"></div></div><span class="font-code-batch text-code-batch text-on-tertiary-container w-10 text-right">+${sumEnt}</span></div>
+      <div class="flex items-center gap-3"><span class="font-label-sm text-label-sm text-on-surface-variant w-16 text-right shrink-0">Salidas</span><div class="flex-1 h-4 rounded-full bg-surface-container-highest overflow-hidden"><div class="h-full bg-error rounded-full transition-all" style="width:${wSal}%"></div></div><span class="font-code-batch text-code-batch text-error-text w-10 text-right">−${sumSal}</span></div>
+    </div>`;
+  document.getElementById('rep-mov-count').textContent = `${data.length} registros`;
+  if (data.length === 0) { document.getElementById('rep-mov-table').innerHTML = `<div class="py-8 text-center text-on-surface-variant font-body-md">Sin movimientos para el período seleccionado</div>`; return; }
+  const tipoBadge = { entrada:'color:#065F46;background:#D1FAE5', salida:'color:#B91C1C;background:#FECACA', ajuste:'color:#92600A;background:#FEF3C7' };
+  const tipoLabel = { entrada:'▲ Entrada', salida:'▼ Salida', ajuste:'⇄ Ajuste' };
+  const rows = data.map(m => {
+    const fd = m.fecha.toDate().toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const signo = m.tipo==='entrada' ? '+' : m.tipo==='salida' ? '−' : '=';
+    return `<tr><td>${fd}</td><td><span style="padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;${tipoBadge[m.tipo]}">${tipoLabel[m.tipo]}</span></td><td>${escHtml(m.productoNombre)}</td><td style="font-family:monospace">${escHtml(m.loteCode)}</td><td style="text-align:right;font-weight:600">${signo}${m.cantidadMovimiento}</td><td style="text-align:center">${m.cantidadAntes} → ${m.cantidadDespues}</td><td>${escHtml(m.nota||'—')}</td></tr>`;
+  }).join('');
+  document.getElementById('rep-mov-table').innerHTML = `<table class="rep-table"><thead><tr><th>Fecha</th><th>Tipo</th><th>Producto</th><th>Lote</th><th>Cant.</th><th>Stock Ant→Des</th><th>Nota</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+/* ── Filtros ── */
+function clearRepVencFiltros() {
+  document.getElementById('rep-venc-from').value = '';
+  document.getElementById('rep-venc-to').value = '';
+  repVencStatusFilter = 'all';
+  document.querySelectorAll('.rep-venc-pill').forEach(p => { p.classList.toggle('bg-cta', p.dataset.status==='all'); p.classList.toggle('text-on-primary', p.dataset.status==='all'); });
+  renderRepVencimientos();
+}
+function clearRepMovFiltros() {
+  document.getElementById('rep-mov-from').value = '';
+  document.getElementById('rep-mov-to').value = '';
+  repMovTipoFilter = 'all';
+  document.querySelectorAll('.rep-mov-pill').forEach(p => { p.classList.toggle('bg-cta', p.dataset.tipo==='all'); p.classList.toggle('text-on-primary', p.dataset.tipo==='all'); });
+  renderRepMovimientos();
+}
+
+/* ── CSV ── */
+function exportarCSV(tipo) {
+  let csv = '', filename = '';
+  if (tipo === 'inventario') {
+    csv = 'Nombre,Lote,Cantidad,Unidad,Fecha Vencimiento,Dias Restantes,Estado\n';
+    getFilteredInventario().forEach(l => {
+      const { estado, dias } = getEstado(l.vencimiento.toDate());
+      csv += `"${l.nombre}","${l.lote}",${l.cantidad},"${l.unidad||''}","${formatFecha(l.vencimiento.toDate())}",${dias},"${estado}"\n`;
+    });
+    filename = `TamaraInventory_Inventario_${today()}.csv`;
+  } else if (tipo === 'vencimientos') {
+    csv = 'Nombre,Lote,Cantidad,Unidad,Fecha Vencimiento,Dias Restantes,Estado\n';
+    getFilteredVencimientos().forEach(l => {
+      const { estado, dias } = getEstado(l.vencimiento.toDate());
+      csv += `"${l.nombre}","${l.lote}",${l.cantidad},"${l.unidad||''}","${formatFecha(l.vencimiento.toDate())}",${dias},"${estado}"\n`;
+    });
+    filename = `TamaraInventory_Vencimientos_${today()}.csv`;
+  } else {
+    csv = 'Fecha,Tipo,Producto,Lote,Cantidad,Stock Antes,Stock Despues,Nota\n';
+    getFilteredRepMov().forEach(m => {
+      const fd = m.fecha.toDate().toLocaleDateString('es-AR');
+      csv += `"${fd}","${m.tipo}","${m.productoNombre}","${m.loteCode}",${m.cantidadMovimiento},${m.cantidadAntes},${m.cantidadDespues},"${m.nota||''}"\n`;
+    });
+    filename = `TamaraInventory_Movimientos_${today()}.csv`;
+  }
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* ── PDF (ventana de impresión) ── */
+function exportarPDF(tipo) {
+  const fecha = todayDisplay();
+  let titulo = '', datos = [], cabeceras = [], filas = '';
+  const badgeStyle = { vencido:'background:#FECACA;color:#B91C1C', critico:'background:#FEE2E2;color:#B91C1C', 'por-vencer':'background:#FEF3C7;color:#92600A', aceptable:'background:#D1FAE5;color:#065F46' };
+  if (tipo === 'inventario') {
+    titulo = 'Reporte de Inventario Actual';
+    datos = getFilteredInventario();
+    filas = datos.map(l => {
+      const { estado, dias } = getEstado(l.vencimiento.toDate());
+      return `<tr><td>${escHtml(l.nombre)}</td><td>${escHtml(l.lote)}</td><td align="right">${l.cantidad}</td><td>${escHtml(l.unidad||'uds')}</td><td>${formatFecha(l.vencimiento.toDate())}</td><td align="right">${dias}</td><td><span style="padding:1px 7px;border-radius:999px;font-size:10px;font-weight:700;${badgeStyle[estado]}">${estado}</span></td></tr>`;
+    }).join('');
+    cabeceras = ['Producto','Lote','Cant.','Unid.','Vencimiento','Días','Estado'];
+  } else if (tipo === 'vencimientos') {
+    titulo = 'Reporte de Vencimientos';
+    datos = getFilteredVencimientos();
+    filas = datos.map(l => {
+      const { estado, dias } = getEstado(l.vencimiento.toDate());
+      const diasTxt = dias < 0 ? `Vencido ${Math.abs(dias)}d` : `${dias}d`;
+      return `<tr><td>${escHtml(l.nombre)}</td><td>${escHtml(l.lote)}</td><td align="right">${l.cantidad} ${escHtml(l.unidad||'')}</td><td>${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:1px 7px;border-radius:999px;font-size:10px;font-weight:700;${badgeStyle[estado]}">${estado}</span></td></tr>`;
+    }).join('');
+    cabeceras = ['Producto','Lote','Stock','Vencimiento','Días','Estado'];
+  } else {
+    titulo = 'Reporte de Movimientos';
+    datos = getFilteredRepMov();
+    const tipoBg = { entrada:'background:#D1FAE5;color:#065F46', salida:'background:#FECACA;color:#B91C1C', ajuste:'background:#FEF3C7;color:#92600A' };
+    const tipoL = { entrada:'▲ Entrada', salida:'▼ Salida', ajuste:'⇄ Ajuste' };
+    filas = datos.map(m => {
+      const fd = m.fecha.toDate().toLocaleDateString('es-AR');
+      return `<tr><td>${fd}</td><td><span style="padding:1px 7px;border-radius:999px;font-size:10px;font-weight:700;${tipoBg[m.tipo]}">${tipoL[m.tipo]}</span></td><td>${escHtml(m.productoNombre)}</td><td>${escHtml(m.loteCode)}</td><td align="right">${m.tipo==='salida'?'−':'+'}${m.cantidadMovimiento}</td><td align="center">${m.cantidadAntes}→${m.cantidadDespues}</td><td>${escHtml(m.nota||'—')}</td></tr>`;
+    }).join('');
+    cabeceras = ['Fecha','Tipo','Producto','Lote','Cant.','Stock','Nota'];
+  }
+  const thCells = cabeceras.map(h => `<th style="background:#F4A6C1;color:#4A1028;padding:6px 10px;text-align:left;font-size:11px;font-weight:700;white-space:nowrap">${h}</th>`).join('');
+  const userName = currentUser?.displayName || currentUser?.email || '';
+  const win = window.open('', '_blank', 'width=900,height=700');
+  win.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"/><title>${titulo} — TamaraInventory</title><style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Inter,Arial,sans-serif;font-size:12px;color:#1a1a1a;padding:32px;background:#fff}
+    .header{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #F4A6C1;padding-bottom:16px;margin-bottom:20px}
+    .brand{font-size:22px;font-weight:700;color:#B04070;letter-spacing:-0.5px}
+    .brand span{font-size:11px;font-weight:400;color:#8C7A82;display:block;margin-top:2px}
+    .title{font-size:16px;font-weight:700;margin-bottom:4px}
+    .meta{font-size:10px;color:#8C7A82}
+    .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px}
+    .kpi{border:1px solid #F8D7E3;border-radius:8px;padding:10px 12px}
+    .kpi-label{font-size:10px;color:#8C7A82;margin-bottom:4px}
+    .kpi-value{font-size:20px;font-weight:700;color:#B04070}
+    table{width:100%;border-collapse:collapse;margin-top:8px}
+    th{background:#F4A6C1;color:#4A1028;padding:6px 10px;text-align:left;font-size:11px;font-weight:700;white-space:nowrap}
+    td{padding:6px 10px;border-bottom:1px solid #F8D7E3;font-size:11px;vertical-align:middle}
+    tr:nth-child(even) td{background:#FFF7FA}
+    .footer{margin-top:24px;padding-top:12px;border-top:1px solid #F8D7E3;font-size:10px;color:#8C7A82;display:flex;justify-content:space-between}
+    @media print{body{padding:16px}button{display:none!important}}
+  </style></head><body>
+  <div class="header">
+    <div><div class="brand">TamaraInventory<span>inventario para mi hermanita</span></div></div>
+    <div style="text-align:right"><div class="title">${titulo}</div><div class="meta">Generado: ${fecha} · Usuario: ${escHtml(userName)}</div></div>
+  </div>
+  <table><thead><tr>${thCells}</tr></thead><tbody>${filas || '<tr><td colspan="99" style="text-align:center;padding:20px;color:#8C7A82">Sin datos</td></tr>'}</tbody></table>
+  <div class="footer"><span>TamaraInventory · ${fecha}</span><span>${datos.length} registros exportados</span></div>
+  <div style="margin-top:16px;text-align:center"><button onclick="window.print()" style="padding:8px 24px;background:#B04070;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">🖨 Imprimir / Guardar como PDF</button></div>
+  </body></html>`);
+  win.document.close();
+}
+
 // ── Navegación ──
 const pageSubtitles = { dashboard:'Dashboard', inventario:'Inventario de Lotes', movimientos:'Movimientos', reportes:'Reportes', configuracion:'Ajustes' };
 function navigateTo(path) {
@@ -1202,6 +1604,7 @@ function navigateTo(path) {
     btn.classList.toggle('text-on-surface-variant', !isActive);
   });
   document.getElementById('header-subtitle').textContent = pageSubtitles[path] || '';
+  if (path === 'reportes') navigateReporte('inventario');
 }
 
 // ── Modal Agregar ──
@@ -1481,6 +1884,41 @@ window.switchAuthTab = switchAuthTab;
 window.showMovimientoModal = showMovimientoModal;
 window.saveMovimiento = saveMovimiento;
 window.clearMovFilters = clearMovFilters;
+window.exportarPDF = exportarPDF;
+window.exportarCSV = exportarCSV;
+window.clearRepVencFiltros = clearRepVencFiltros;
+window.clearRepMovFiltros = clearRepMovFiltros;
+
+// ── Filtros de reportes ──
+document.querySelectorAll('.rep-inv-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    repInvStatusFilter = btn.dataset.status;
+    document.querySelectorAll('.rep-inv-pill').forEach(b => { b.classList.toggle('bg-cta',b.dataset.status===repInvStatusFilter); b.classList.toggle('text-on-primary',b.dataset.status===repInvStatusFilter); });
+    renderRepInventario();
+  });
+});
+document.getElementById('rep-inv-search').addEventListener('input', renderRepInventario);
+document.querySelectorAll('.rep-venc-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    repVencStatusFilter = btn.dataset.status;
+    document.querySelectorAll('.rep-venc-pill').forEach(b => { b.classList.toggle('bg-cta',b.dataset.status===repVencStatusFilter); b.classList.toggle('text-on-primary',b.dataset.status===repVencStatusFilter); });
+    renderRepVencimientos();
+  });
+});
+document.getElementById('rep-venc-from').addEventListener('change', renderRepVencimientos);
+document.getElementById('rep-venc-to').addEventListener('change', renderRepVencimientos);
+document.querySelectorAll('.rep-mov-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    repMovTipoFilter = btn.dataset.tipo;
+    document.querySelectorAll('.rep-mov-pill').forEach(b => { b.classList.toggle('bg-cta',b.dataset.tipo===repMovTipoFilter); b.classList.toggle('text-on-primary',b.dataset.tipo===repMovTipoFilter); });
+    renderRepMovimientos();
+  });
+});
+document.getElementById('rep-mov-from').addEventListener('change', renderRepMovimientos);
+document.getElementById('rep-mov-to').addEventListener('change', renderRepMovimientos);
+document.querySelectorAll('.reporte-tab').forEach(btn => {
+  btn.addEventListener('click', () => navigateReporte(btn.dataset.rep));
+});
 </script>
 </body>
 </html>
