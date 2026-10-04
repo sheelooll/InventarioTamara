@@ -131,6 +131,10 @@
   .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
 }
 ::-webkit-scrollbar { display: none; }
+.modal-scroll::-webkit-scrollbar { display: block; width: 5px; }
+.modal-scroll::-webkit-scrollbar-track { background: transparent; }
+.modal-scroll::-webkit-scrollbar-thumb { background: rgb(var(--c-primary) / 0.6); border-radius: 999px; }
+.modal-scroll::-webkit-scrollbar-thumb:hover { background: rgb(var(--c-cta)); }
 .page-section { display: none; }
 .page-section.active { display: flex; }
 input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
@@ -213,7 +217,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none" class="h-8 w-8 flex-shrink-0"><rect width="40" height="40" rx="10" fill="#F4A6C1"/><path d="M12 14L20 9L28 14L20 19L12 14Z" fill="#FFFFFF"/><path d="M12 17.5L20 22.5V31L12 26V17.5Z" fill="#FCE4EC"/><path d="M28 17.5L20 22.5V31L28 26V17.5Z" fill="#EC8FB0"/><circle cx="20" cy="19" r="2.5" fill="#C2577A"/></svg>
       <div class="flex flex-col truncate">
         <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-none truncate">TamaraInventory</span>
-        <span class="font-label-sm text-label-sm text-on-surface-variant truncate" id="header-subtitle">Dashboard</span>
+        <span class="font-label-sm text-label-sm text-on-surface-variant truncate" id="header-subtitle">inventario para mi hermanita</span>
       </div>
     </div>
     <div class="flex items-center gap-space-xs">
@@ -637,14 +641,14 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
 </main>
 
 <!-- ═══════════════ MODAL: REGISTRAR MOVIMIENTO ═══════════════ -->
-<div id="modal-movimiento-bd" class="fixed inset-0 z-40 bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
-<div id="modal-movimiento" class="fixed inset-x-0 bottom-0 z-50 flex flex-col max-h-[92dvh] bg-surface-container-low rounded-t-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.55)] overflow-hidden" style="display:none">
+<div id="modal-movimiento-bd" class="fixed inset-0 z-[55] bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
+<div id="modal-movimiento" class="fixed inset-x-0 bottom-0 z-[60] flex flex-col max-h-[90dvh] bg-surface-container-low rounded-t-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.55)] overflow-hidden" style="display:none">
   <div class="w-full flex justify-center pt-space-sm pb-1 flex-shrink-0 cursor-grab"><div class="w-10 h-1 rounded-full bg-outline-variant/60"></div></div>
   <div class="flex items-start justify-between px-space-lg pt-space-xs pb-space-md flex-shrink-0">
     <div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[20px]">swap_horiz</span><h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Registrar Movimiento</h2></div><p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Entrada, salida o ajuste de stock</p></div>
     <button id="close-mov-btn" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button>
   </div>
-  <form class="flex flex-col px-space-lg space-y-space-md overflow-y-auto overscroll-contain pb-space-xl" onsubmit="event.preventDefault()">
+  <form class="flex flex-col px-space-lg space-y-space-md overflow-y-auto overscroll-contain modal-scroll pb-space-xl" onsubmit="event.preventDefault()">
     <!-- Tipo -->
     <div class="flex p-1 rounded-xl bg-surface-container-highest gap-1">
       <button class="mov-tipo-btn flex-1 py-2 rounded-lg bg-tertiary text-on-tertiary font-label-md text-label-md transition-all" data-tipo="entrada" type="button">▲ Entrada</button>
@@ -656,7 +660,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
     <div class="flex flex-col gap-1.5">
       <label class="font-label-md text-label-md text-on-surface" for="mov-lote-select">Lote <span class="text-error">*</span></label>
       <div class="relative">
-        <select id="mov-lote-select" class="w-full h-11 px-space-md pr-8 rounded-lg bg-surface-container text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:bg-surface-container-high transition-colors cursor-pointer"><option value="">— Seleccionar lote —</option></select>
+        <select id="mov-lote-select" class="w-full h-11 px-space-md pr-8 rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md appearance-none focus:outline-none focus:border-[#D96A93] transition-colors cursor-pointer"><option value="">— Seleccionar lote —</option></select>
         <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
       </div>
     </div>
@@ -668,18 +672,18 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
     <!-- Cantidad -->
     <div class="flex flex-col gap-1.5">
       <label id="mov-qty-label" class="font-label-md text-label-md text-on-surface">Cantidad a ingresar <span class="text-error">*</span></label>
-      <input id="mov-qty" type="number" min="0" placeholder="0" class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-code-batch text-code-batch text-right focus:outline-none focus:bg-surface-container-high transition-colors"/>
+      <input id="mov-qty" type="number" min="0" placeholder="0" class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch text-right placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors"/>
       <p id="mov-qty-error" class="text-error-text font-body-sm text-body-sm min-h-[1rem]"></p>
     </div>
     <!-- Fecha -->
     <div class="flex flex-col gap-1.5">
       <label class="font-label-md text-label-md text-on-surface" for="mov-fecha">Fecha del movimiento <span class="text-error">*</span></label>
-      <input id="mov-fecha" type="date" class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-code-batch text-code-batch focus:outline-none focus:bg-surface-container-high transition-colors"/>
+      <input id="mov-fecha" type="date" class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors"/>
     </div>
     <!-- Nota -->
     <div class="flex flex-col gap-1.5">
       <label class="font-label-md text-label-md text-on-surface" for="mov-nota">Nota <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
-      <input id="mov-nota" type="text" placeholder="Ej. Recepción proveedor, consumo UCI, inventario físico..." class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-high transition-colors"/>
+      <input id="mov-nota" type="text" placeholder="Ej. Recepción proveedor, consumo UCI, inventario físico..." class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors"/>
     </div>
   </form>
   <div class="flex-shrink-0 px-space-lg py-space-md bg-surface-container-high/95 backdrop-blur-md flex items-center justify-end gap-space-sm shadow-[0_-4px_16px_rgba(0,0,0,0.3)]">
@@ -689,34 +693,34 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
 </div>
 
 <!-- ═══════════════ MODAL: AGREGAR PRODUCTO ═══════════════ -->
-<div id="modal-backdrop" class="fixed inset-0 z-40 bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
-<div id="modal-container" class="fixed inset-x-0 bottom-0 z-50 flex flex-col max-h-[92dvh] bg-surface-container-low rounded-t-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.55)] overflow-hidden" style="display:none">
+<div id="modal-backdrop" class="fixed inset-0 z-[55] bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
+<div id="modal-container" class="fixed inset-x-0 bottom-0 z-[60] flex flex-col max-h-[90dvh] bg-surface-container-low rounded-t-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.55)] overflow-hidden" style="display:none">
   <div class="w-full flex justify-center pt-space-sm pb-1 flex-shrink-0 cursor-grab"><div class="w-10 h-1 rounded-full bg-outline-variant/60"></div></div>
   <div class="flex items-start justify-between px-space-lg pt-space-xs pb-space-md flex-shrink-0 bg-surface-container-low">
     <div class="flex flex-col pr-space-md">
       <div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[20px]">add_box</span><h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Agregar Producto / Lote</h2></div>
-      <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Ingresá los datos para trazabilidad y cálculo FEFO</p>
+      <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Ingresa los datos para trazabilidad y cálculo FEFO</p>
     </div>
     <button aria-label="Cerrar modal" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high active:scale-95 transition-all" id="close-modal-btn" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button>
   </div>
-  <form class="flex flex-col px-space-lg space-y-space-md overflow-y-auto overscroll-contain pb-space-xl" id="product-form" onsubmit="event.preventDefault();">
+  <form class="flex flex-col px-space-lg space-y-space-md overflow-y-auto overscroll-contain modal-scroll pb-space-xl" id="product-form" onsubmit="event.preventDefault();">
     <div class="flex flex-col gap-1.5">
       <label class="font-label-md text-label-md text-on-surface" for="prod-name">Nombre del producto <span class="text-error">*</span></label>
-      <input class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-body-md text-body-md placeholder:text-outline-variant focus:outline-none focus:bg-surface-container-high transition-colors" id="prod-name" placeholder="Ej. Paracetamol 500mg Comprimidos" type="text"/>
+      <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors" id="prod-name" placeholder="Ej. Paracetamol 500mg Comprimidos" type="text"/>
     </div>
     <div class="flex flex-col gap-1.5">
       <label class="font-label-md text-label-md text-on-surface" for="prod-desc">Descripción / Presentación <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
-      <input class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-body-md text-body-md placeholder:text-outline-variant focus:outline-none focus:bg-surface-container-high transition-colors" id="prod-desc" placeholder="Ej. Comprimidos • Envase hospitalario x 100" type="text"/>
+      <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors" id="prod-desc" placeholder="Ej. Comprimidos • Envase hospitalario x 100" type="text"/>
     </div>
     <div class="grid grid-cols-2 gap-space-md">
       <div class="flex flex-col gap-1.5 min-w-0">
         <label class="font-label-md text-label-md text-on-surface truncate" for="prod-qty">Cantidad <span class="text-error">*</span></label>
-        <input class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-code-batch text-code-batch placeholder:text-outline-variant focus:outline-none focus:bg-surface-container-high transition-colors text-right pr-space-lg" id="prod-qty" min="1" placeholder="0" type="number"/>
+        <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors text-right pr-space-lg" id="prod-qty" min="1" placeholder="0" type="number"/>
       </div>
       <div class="flex flex-col gap-1.5 min-w-0">
         <label class="font-label-md text-label-md text-on-surface truncate" for="prod-unit">Unidad <span class="text-error">*</span></label>
         <div class="relative">
-          <select class="w-full h-11 pl-space-md pr-8 rounded-lg bg-surface-container text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-high transition-colors appearance-none cursor-pointer" id="prod-unit">
+          <select class="w-full h-11 pl-space-md pr-8 rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md focus:outline-none focus:border-[#D96A93] transition-colors appearance-none cursor-pointer" id="prod-unit">
             <option value="unidades">Unidades</option><option value="cajas">Cajas</option><option value="frascos">Frascos</option><option value="ampollas">Ampollas</option><option value="viales">Viales</option><option value="comprimidos">Comprimidos</option><option value="sobres">Sobres</option><option value="kg">kg</option><option value="litros">Litros</option>
           </select>
           <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
@@ -725,18 +729,18 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
     </div>
     <div class="flex flex-col gap-1.5">
       <label class="font-label-md text-label-md text-on-surface" for="batch-code">Código de Lote <span class="text-error">*</span></label>
-      <input class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-code-batch text-code-batch focus:outline-none focus:bg-surface-container-high transition-colors uppercase" id="batch-code" placeholder="Ej. L-2024-098" type="text"/>
+      <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors uppercase" id="batch-code" placeholder="Ej. L-2024-098" type="text"/>
     </div>
     <div class="flex flex-col gap-1.5">
       <div class="flex justify-between items-center">
         <label class="font-label-md text-label-md text-on-surface" for="exp-date">Fecha de vencimiento <span class="text-error">*</span></label>
-        <span class="font-label-sm text-label-sm text-secondary">Criterio FEFO activo</span>
+        <span class="font-label-sm text-label-sm text-[#B7791F] dark:text-[#F6C177]">Criterio FEFO activo</span>
       </div>
-      <input class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-code-batch text-code-batch focus:outline-none focus:bg-surface-container-high transition-colors" id="exp-date" type="date"/>
+      <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors" id="exp-date" type="date"/>
     </div>
     <div class="flex flex-col gap-1.5">
       <label class="font-label-md text-label-md text-on-surface" for="prod-location">Ubicación <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
-      <input class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-body-md text-body-md placeholder:text-outline-variant focus:outline-none focus:bg-surface-container-high transition-colors" id="prod-location" placeholder="Ej. Almacén Central • Pasillo B3" type="text"/>
+      <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors" id="prod-location" placeholder="Ej. Almacén Central • Pasillo B3" type="text"/>
     </div>
   </form>
   <div class="flex-shrink-0 px-space-lg py-space-md bg-surface-container-high/95 backdrop-blur-md flex items-center justify-end gap-space-sm shadow-[0_-4px_16px_rgba(0,0,0,0.3)]">
@@ -746,8 +750,8 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
 </div>
 
 <!-- ═══════════════ MODAL: EDITAR PRODUCTO ═══════════════ -->
-<div id="modalBackdrop" class="fixed inset-0 z-40 bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
-<div id="modalDialog" class="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] flex flex-col bg-surface-container-low rounded-t-[20px] shadow-[0_-8px_32px_rgba(0,0,0,0.6)] overflow-hidden" style="display:none">
+<div id="modalBackdrop" class="fixed inset-0 z-[55] bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
+<div id="modalDialog" class="fixed inset-x-0 bottom-0 z-[60] max-h-[90dvh] flex flex-col bg-surface-container-low rounded-t-[20px] shadow-[0_-8px_32px_rgba(0,0,0,0.6)] overflow-hidden" style="display:none">
   <div class="w-full flex items-center justify-center pt-3 pb-1 cursor-grab"><div class="w-10 h-1 bg-surface-container-highest rounded-full"></div></div>
   <div class="px-space-lg pt-space-xs pb-space-md flex items-start justify-between bg-surface-container-low">
     <div class="flex flex-col min-w-0 pr-2">
@@ -762,12 +766,12 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
     </div>
     <button aria-label="Cerrar modal" class="w-9 h-9 -mr-1 flex items-center justify-center rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface active:bg-surface-bright transition-colors flex-shrink-0" id="closeModalBtn" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button>
   </div>
-  <div class="overflow-y-auto px-space-lg pb-space-xl flex flex-col gap-space-lg">
+  <div class="overflow-y-auto modal-scroll px-space-lg pb-space-xl flex flex-col gap-space-lg">
     <form class="flex flex-col gap-space-md" id="editBatchForm" onsubmit="event.preventDefault();">
       <div class="flex flex-col gap-1.5">
         <label class="font-label-md text-label-md text-on-surface" for="prodName">Nombre del producto <span class="text-error">*</span></label>
         <div class="relative flex items-center">
-          <input class="w-full bg-surface-container text-on-surface font-body-md text-body-md rounded-lg px-space-md py-2.5 pr-9 focus:outline-none focus:bg-surface-bright transition-colors" id="prodName" type="text"/>
+          <input class="w-full bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md rounded-lg px-space-md py-2.5 pr-9 focus:outline-none focus:border-[#D96A93] transition-colors" id="prodName" type="text"/>
           <span class="absolute right-3 material-symbols-outlined text-secondary text-[18px]">verified</span>
         </div>
       </div>
@@ -775,14 +779,14 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
         <div class="flex flex-col gap-1.5">
           <label class="font-label-md text-label-md text-on-surface" for="prodQty">Cantidad <span class="text-error">*</span></label>
           <div class="relative flex items-center">
-            <input class="w-full bg-surface-container text-on-surface font-headline-sm text-headline-sm rounded-lg px-space-md py-2 focus:outline-none focus:bg-surface-bright text-right pr-9 transition-colors" id="prodQty" type="number"/>
+            <input class="w-full bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-headline-sm text-headline-sm rounded-lg px-space-md py-2 focus:outline-none focus:border-[#D96A93] text-right pr-9 transition-colors" id="prodQty" type="number"/>
             <span class="absolute right-2.5 font-label-sm text-label-sm text-on-surface-variant pointer-events-none">uds</span>
           </div>
         </div>
         <div class="flex flex-col gap-1.5">
           <label class="font-label-md text-label-md text-on-surface" for="prodUnit">Unidad <span class="text-error">*</span></label>
           <div class="relative flex items-center">
-            <select class="w-full bg-surface-container text-on-surface font-body-md text-body-md rounded-lg px-space-md py-2.5 pr-8 appearance-none focus:outline-none focus:bg-surface-bright transition-colors" id="prodUnit">
+            <select class="w-full bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md rounded-lg px-space-md py-2.5 pr-8 appearance-none focus:outline-none focus:border-[#D96A93] transition-colors" id="prodUnit">
               <option value="unidades">Unidades</option><option value="cajas">Cajas</option><option value="frascos">Frascos</option><option value="ampollas">Ampollas</option><option value="viales">Viales</option><option value="comprimidos">Comprimidos</option><option value="sobres">Sobres</option><option value="kg">kg</option><option value="litros">Litros</option>
             </select>
             <span class="absolute right-2.5 material-symbols-outlined text-on-surface-variant text-[20px] pointer-events-none">expand_more</span>
@@ -796,7 +800,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
         </div>
         <div class="relative flex items-center">
           <span class="absolute left-3 material-symbols-outlined text-on-surface-variant text-[18px]">barcode</span>
-          <input class="w-full bg-surface-container text-on-surface font-code-batch text-code-batch rounded-lg pl-10 pr-10 py-2.5 focus:outline-none focus:bg-surface-bright transition-colors uppercase tracking-wider" id="batchCode" type="text"/>
+          <input class="w-full bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch rounded-lg pl-10 pr-10 py-2.5 focus:outline-none focus:border-[#D96A93] transition-colors uppercase tracking-wider" id="batchCode" type="text"/>
         </div>
       </div>
       <div class="flex flex-col gap-1.5">
@@ -806,7 +810,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
         </div>
         <div class="relative flex items-center">
           <span class="absolute left-3 material-symbols-outlined text-on-surface-variant text-[18px]">calendar_clock</span>
-          <input class="w-full bg-surface-container text-on-surface font-body-md text-body-md rounded-lg pl-10 pr-9 py-2.5 focus:outline-none focus:bg-surface-bright transition-colors" id="expiryDate" type="date"/>
+          <input class="w-full bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md rounded-lg pl-10 pr-9 py-2.5 focus:outline-none focus:border-[#D96A93] transition-colors" id="expiryDate" type="date"/>
         </div>
       </div>
       <div id="edit-status-box" class="bg-error-container/40 p-space-md rounded-xl flex flex-col gap-space-sm">
@@ -821,7 +825,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
       </div>
       <div class="flex flex-col gap-1.5">
         <label class="font-label-md text-label-md text-on-surface" for="observations">Ubicación / Observaciones</label>
-        <textarea class="w-full bg-surface-container text-on-surface font-body-md text-body-md rounded-lg p-space-md focus:outline-none focus:bg-surface-bright transition-colors resize-none leading-relaxed" id="observations" rows="3"></textarea>
+        <textarea class="w-full bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md rounded-lg p-space-md focus:outline-none focus:border-[#D96A93] transition-colors resize-none leading-relaxed" id="observations" rows="3"></textarea>
       </div>
     </form>
   </div>
@@ -1191,6 +1195,7 @@ function renderMovimientos() {
 }
 
 function showMovimientoModal() {
+  document.body.style.overflow = 'hidden';
   movTipoSeleccionado = 'entrada';
   document.getElementById('mov-qty').value = '';
   document.getElementById('mov-nota').value = '';
@@ -1213,6 +1218,7 @@ function showMovimientoModal() {
 }
 
 function closeMovimientoModal() {
+  document.body.style.overflow = '';
   document.getElementById('modal-movimiento-bd').style.display = 'none';
   document.getElementById('modal-movimiento').style.display = 'none';
 }
@@ -1243,10 +1249,10 @@ async function saveMovimiento() {
   const nota = document.getElementById('mov-nota').value.trim();
   const errEl = document.getElementById('mov-qty-error');
   errEl.textContent = '';
-  if (!loteId) { errEl.textContent = 'Seleccioná un lote.'; return; }
-  if (!fechaStr) { errEl.textContent = 'Ingresá la fecha.'; return; }
+  if (!loteId) { errEl.textContent = 'Selecciona un lote.'; return; }
+  if (!fechaStr) { errEl.textContent = 'Ingresa la fecha.'; return; }
   const cant = parseInt(cantStr);
-  if (isNaN(cant) || cant < 0) { errEl.textContent = 'Ingresá una cantidad válida (número ≥ 0).'; return; }
+  if (isNaN(cant) || cant < 0) { errEl.textContent = 'Ingresa una cantidad válida (número ≥ 0).'; return; }
   if (movTipoSeleccionado !== 'ajuste' && cant === 0) { errEl.textContent = 'La cantidad debe ser mayor a 0.'; return; }
   const lote = allLotes.find(l => l.id === loteId);
   if (!lote) { errEl.textContent = 'Lote no encontrado.'; return; }
@@ -1603,17 +1609,19 @@ function navigateTo(path) {
     btn.classList.toggle('bg-surface-container/60', isActive);
     btn.classList.toggle('text-on-surface-variant', !isActive);
   });
-  document.getElementById('header-subtitle').textContent = pageSubtitles[path] || '';
+  // header subtitle is static
   if (path === 'reportes') navigateReporte('inventario');
 }
 
 // ── Modal Agregar ──
 function showAgregarModal() {
+  document.body.style.overflow = 'hidden';
   document.getElementById('product-form').reset();
   document.getElementById('modal-backdrop').style.display = 'block';
   document.getElementById('modal-container').style.display = 'flex';
 }
 function closeAgregarModal() {
+  document.body.style.overflow = '';
   document.getElementById('modal-backdrop').style.display = 'none';
   document.getElementById('modal-container').style.display = 'none';
 }
@@ -1626,7 +1634,7 @@ async function saveNuevoLote() {
   const expStr = document.getElementById('exp-date').value;
   const ubicacion = document.getElementById('prod-location').value.trim();
   if (!nombre || !lote || !expStr || isNaN(cantidad) || cantidad < 1) {
-    alert('Completá los campos obligatorios (*)');
+    alert('Completa los campos obligatorios (*)');
     return;
   }
   const vencimiento = Timestamp.fromDate(parseDateInput(expStr));
@@ -1674,10 +1682,12 @@ function showEditarModal(loteId) {
     : dias <= 30 ? `<strong>Vence en ${dias} días — ¡Urgente! Prioridad FEFO Máxima.</strong>`
     : dias <= 90 ? `<strong>Vence en ${dias} días. Planificar distribución.</strong>`
     : `<strong>Vence en ${dias} días. Estado óptimo.</strong>`;
+  document.body.style.overflow = 'hidden';
   document.getElementById('modalBackdrop').style.display = 'block';
   document.getElementById('modalDialog').style.display = 'flex';
 }
 function closeEditarModal() {
+  document.body.style.overflow = '';
   editingLoteId = null;
   document.getElementById('modalBackdrop').style.display = 'none';
   document.getElementById('modalDialog').style.display = 'none';
@@ -1690,7 +1700,7 @@ async function saveEditarLote() {
   const lote = document.getElementById('batchCode').value.trim().toUpperCase();
   const expStr = document.getElementById('expiryDate').value;
   const ubicacion = document.getElementById('observations').value.trim();
-  if (!nombre || !lote || !expStr || isNaN(cantidad)) { alert('Completá los campos obligatorios'); return; }
+  if (!nombre || !lote || !expStr || isNaN(cantidad)) { alert('Completa los campos obligatorios'); return; }
   const vencimiento = Timestamp.fromDate(parseDateInput(expStr));
   const btn = document.getElementById('saveBatchBtn');
   btn.disabled = true;
@@ -1720,7 +1730,7 @@ async function handleLogin() {
   const pass = document.getElementById('login-pass').value;
   const errEl = document.getElementById('login-error');
   errEl.textContent = '';
-  if (!email || !pass) { errEl.textContent = 'Completá email y contraseña.'; return; }
+  if (!email || !pass) { errEl.textContent = 'Completa el email y la contraseña.'; return; }
   const btn = document.getElementById('login-btn');
   btn.disabled = true; btn.textContent = 'Ingresando...';
   try {
@@ -1738,7 +1748,7 @@ async function handleRegister() {
   const pass2 = document.getElementById('reg-pass2').value;
   const errEl = document.getElementById('reg-error');
   errEl.textContent = '';
-  if (!name || !email || !pass) { errEl.textContent = 'Completá todos los campos.'; return; }
+  if (!name || !email || !pass) { errEl.textContent = 'Completa todos los campos.'; return; }
   if (pass !== pass2) { errEl.textContent = 'Las contraseñas no coinciden.'; return; }
   if (pass.length < 6) { errEl.textContent = 'La contraseña debe tener al menos 6 caracteres.'; return; }
   const btn = document.getElementById('reg-btn');
