@@ -229,10 +229,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
         <span class="material-symbols-outlined text-[18px]">dashboard</span><span>Panel</span>
       </button>
       <button onclick="navigateTo('inventario')" class="nav-btn h-10 px-3 rounded-lg flex items-center gap-1.5 font-label-md text-label-md transition-all text-on-surface-variant hover:bg-surface-container hover:text-on-surface" data-path="inventario" type="button">
-        <span class="material-symbols-outlined text-[18px]">inventory_2</span><span>Lotes</span>
-      </button>
-      <button onclick="navigateTo('movimientos')" class="nav-btn h-10 px-3 rounded-lg flex items-center gap-1.5 font-label-md text-label-md transition-all text-on-surface-variant hover:bg-surface-container hover:text-on-surface" data-path="movimientos" type="button">
-        <span class="material-symbols-outlined text-[18px]">swap_horiz</span><span>Movimientos</span>
+        <span class="material-symbols-outlined text-[18px]">inventory_2</span><span>Inventario</span>
       </button>
       <button onclick="navigateTo('reportes')" class="nav-btn h-10 px-3 rounded-lg flex items-center gap-1.5 font-label-md text-label-md transition-all text-on-surface-variant hover:bg-surface-container hover:text-on-surface" data-path="reportes" type="button">
         <span class="material-symbols-outlined text-[18px]">analytics</span><span>Reportes</span>
@@ -265,10 +262,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
         <span class="material-symbols-outlined text-[20px]">dashboard</span><span>Panel</span>
       </button>
       <button onclick="navigateTo('inventario')" class="nav-btn h-11 px-4 rounded-xl flex items-center gap-3 font-label-md text-label-md transition-all text-on-surface-variant hover:bg-surface-container hover:text-on-surface" data-path="inventario" type="button">
-        <span class="material-symbols-outlined text-[20px]">inventory_2</span><span>Lotes</span>
-      </button>
-      <button onclick="navigateTo('movimientos')" class="nav-btn h-11 px-4 rounded-xl flex items-center gap-3 font-label-md text-label-md transition-all text-on-surface-variant hover:bg-surface-container hover:text-on-surface" data-path="movimientos" type="button">
-        <span class="material-symbols-outlined text-[20px]">swap_horiz</span><span>Movimientos</span>
+        <span class="material-symbols-outlined text-[20px]">inventory_2</span><span>Inventario</span>
       </button>
       <button onclick="navigateTo('reportes')" class="nav-btn h-11 px-4 rounded-xl flex items-center gap-3 font-label-md text-label-md transition-all text-on-surface-variant hover:bg-surface-container hover:text-on-surface" data-path="reportes" type="button">
         <span class="material-symbols-outlined text-[20px]">analytics</span><span>Reportes</span>
@@ -340,27 +334,45 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
       </div>
       <div class="bg-surface-container p-3.5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
         <div class="flex items-center justify-between">
-          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Críticos (&lt;30d)</span>
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Crítico p/vencer</span>
           <span class="px-1.5 py-0.5 rounded-full text-label-sm font-label-sm bg-error-container/60 text-error-text flex items-center gap-1">Urgente</span>
         </div>
         <div class="mt-2.5">
           <div id="kpi-criticos" class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">0 <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">lotes</span></div>
           <div class="flex items-center gap-1.5 mt-1 font-label-sm text-label-sm text-on-surface-variant">
-            <span id="kpi-criticos-pct" class="text-error-text font-medium">0%</span><span>del stock general</span>
+            <span id="kpi-criticos-pct" class="text-error-text font-medium">0%</span><span id="kpi-criticos-lbl">≤10d</span>
           </div>
         </div>
       </div>
       <div class="bg-surface-container p-3.5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
         <div class="flex items-center justify-between">
-          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Por Vencer (&lt;90d)</span>
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Por Vencer</span>
           <span class="px-1.5 py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container/40 text-warn-text flex items-center gap-1">Planificar</span>
         </div>
         <div class="mt-2.5">
           <div id="kpi-pv-count" class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">0 <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">lotes</span></div>
           <div class="flex items-center gap-1.5 mt-1 font-label-sm text-label-sm text-on-surface-variant">
-            <span id="kpi-pv-pct" class="text-warn-text font-medium">0%</span><span>rotación recomendada</span>
+            <span id="kpi-pv-pct" class="text-warn-text font-medium">0%</span><span id="kpi-pv-lbl">≤30d</span>
           </div>
         </div>
+      </div>
+    </section>
+    <!-- KPI Stock crítico -->
+    <section class="grid grid-cols-1 gap-3">
+      <div class="bg-surface-container p-3.5 rounded-xl shadow-sm flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="p-2 rounded-lg bg-error-container/40 text-error flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[20px]">remove_shopping_cart</span></span>
+          <div class="flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Stock crítico</span>
+            <div class="flex items-center gap-2 mt-1">
+              <span id="kpi-stock-critico" class="font-headline-md text-headline-md text-on-surface font-semibold">0</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">lotes con stock bajo o agotado</span>
+            </div>
+          </div>
+        </div>
+        <button onclick="navigateTo('inventario')" class="flex-shrink-0 h-9 px-3 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors flex items-center gap-1.5" type="button">
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span><span class="hidden sm:inline">Ver inventario</span>
+        </button>
       </div>
     </section>
     <!-- Distribución de Lotes -->
@@ -381,15 +393,15 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
       <div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-1 font-label-sm text-label-sm">
         <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
           <span class="w-2.5 h-2.5 rounded-full bg-tertiary flex-shrink-0"></span>
-          <div class="flex flex-col min-w-0"><span id="legend-optimo" class="text-on-surface font-semibold truncate">— Lotes</span><span class="text-on-surface-variant text-[11px] truncate">Óptimo (&gt;90 días)</span></div>
+          <div class="flex flex-col min-w-0"><span id="legend-optimo" class="text-on-surface font-semibold truncate">— Lotes</span><span class="text-on-surface-variant text-[11px] truncate" id="legend-optimo-lbl">Vigente</span></div>
         </div>
         <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
           <span class="w-2.5 h-2.5 rounded-full bg-secondary flex-shrink-0"></span>
-          <div class="flex flex-col min-w-0"><span id="legend-pv" class="text-on-surface font-semibold truncate">— Lotes</span><span class="text-on-surface-variant text-[11px] truncate">Por vencer (30-90d)</span></div>
+          <div class="flex flex-col min-w-0"><span id="legend-pv" class="text-on-surface font-semibold truncate">— Lotes</span><span class="text-on-surface-variant text-[11px] truncate" id="legend-pv-lbl">Por vencer</span></div>
         </div>
         <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
           <span class="w-2.5 h-2.5 rounded-full bg-error flex-shrink-0"></span>
-          <div class="flex flex-col min-w-0"><span id="legend-critico" class="text-on-surface font-semibold truncate">— Lotes</span><span class="text-on-surface-variant text-[11px] truncate">Crítico (&lt;30 días)</span></div>
+          <div class="flex flex-col min-w-0"><span id="legend-critico" class="text-on-surface font-semibold truncate">— Lotes</span><span class="text-on-surface-variant text-[11px] truncate" id="legend-critico-lbl">Crítico por vencer</span></div>
         </div>
         <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
           <span class="w-2.5 h-2.5 rounded-full bg-on-error-container flex-shrink-0"></span>
@@ -406,8 +418,8 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
         </div>
         <div class="flex items-center gap-1.5 p-1 bg-surface-container-low rounded-lg self-start sm:self-auto overflow-x-auto max-w-full">
           <button id="batch-todos-btn" class="batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm bg-cta text-on-primary font-medium transition-all shadow-sm" onclick="filterBatchTable('todos', this)" type="button">Todos</button>
-          <button class="batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" onclick="filterBatchTable('critico', this)" type="button">Críticos (&lt;30d)</button>
-          <button class="batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" onclick="filterBatchTable('por-vencer', this)" type="button">Por vencer (&lt;90d)</button>
+          <button class="batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" onclick="filterBatchTable('critico-venc', this)" type="button">Crítico por vencer</button>
+          <button class="batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all" onclick="filterBatchTable('por-vencer', this)" type="button">Por vencer</button>
         </div>
       </div>
       <div class="flex flex-col divide-y divide-surface-container-high/60" id="batch-list-container">
@@ -424,14 +436,14 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
           <h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Actividad Reciente</h2>
           <p class="font-body-sm text-body-sm text-on-surface-variant">Últimos movimientos registrados</p>
         </div>
-        <a class="font-label-md text-label-md text-primary hover:underline flex items-center gap-1" href="#">
+        <button onclick="navigateTo('inventario'); switchInvTab('historial');" class="font-label-md text-label-md text-primary hover:underline flex items-center gap-1" type="button">
           <span>Ver todo</span><span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-        </a>
+        </button>
       </div>
-      <div id="activity-list" class="flex flex-col space-y-2 mt-1">
+      <div id="activity-list" class="flex flex-col divide-y divide-surface-container-high/60 mt-1">
         <div class="py-6 text-center text-on-surface-variant font-body-sm flex flex-col items-center gap-2">
           <span class="material-symbols-outlined text-[28px] text-on-surface-variant/40">history</span>
-          <span>El historial de movimientos estará disponible próximamente</span>
+          <span>Cargando actividad...</span>
         </div>
       </div>
     </section>
@@ -440,123 +452,85 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
 
 <!-- ═══════════════ PÁGINA: INVENTARIO ═══════════════ -->
 <main id="page-inventario" class="page-section flex-col relative w-full px-margin pt-16 pb-safe bg-surface">
-  <div class="flex flex-col w-full gap-space-lg">
-    <div class="flex flex-col gap-space-md">
-      <div class="flex flex-col gap-space-xs">
-        <div class="flex items-center gap-space-xs text-primary">
-          <span class="material-symbols-outlined text-[18px]">inventory_2</span>
-          <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary">Módulo de Caducidad</span>
-        </div>
-        <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Inventario de Lotes</h1>
-        <p class="font-body-md text-body-md text-on-surface-variant">Gestión de existencias, trazabilidad y control de caducidad (FEFO).</p>
-      </div>
-      <div class="flex items-center gap-space-sm w-full">
-        <button onclick="showAgregarModal()" class="flex-1 flex items-center justify-center gap-space-xs h-11 px-space-md rounded-lg bg-cta text-on-primary font-label-md text-label-md shadow-md active:scale-[0.98] transition-transform" type="button">
-          <span class="material-symbols-outlined text-[18px]">add_circle</span><span>+ Nuevo Lote</span>
-        </button>
-        <button class="flex items-center justify-center gap-space-xs h-11 px-space-md rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright active:scale-[0.98] transition-transform" type="button">
-          <span class="material-symbols-outlined text-[18px] text-secondary">file_download</span><span class="hidden sm:inline">Exportar</span><span class="sm:hidden text-label-sm">CSV</span>
-        </button>
-      </div>
-    </div>
-    <!-- Filter Pills -->
-    <div class="flex flex-col gap-space-xs">
-      <div class="flex items-center justify-between">
-        <span class="font-label-sm text-label-sm text-on-surface-variant">Filtrar por criticidad</span>
-        <span class="font-code-batch text-code-batch text-tertiary">FEFO Activo</span>
-      </div>
-      <div class="flex items-center gap-space-xs overflow-x-auto pb-space-xs -mx-margin px-margin">
-        <button class="inv-filter-pill flex items-center gap-1.5 px-space-md py-1.5 rounded-full bg-cta text-on-primary font-label-sm text-label-sm shrink-0 shadow-sm transition-all" data-status="all" type="button"><span>Todos</span><span id="pill-count-all" class="px-1.5 rounded-full bg-on-primary/20 text-on-primary text-[10px]">0</span></button>
-        <button class="inv-filter-pill flex items-center gap-1.5 px-space-md py-1.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="vencido" type="button"><span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span><span>Vencido</span><span id="pill-count-vencido" class="px-1.5 rounded-full bg-error/20 text-error text-[10px]">0</span></button>
-        <button class="inv-filter-pill flex items-center gap-1.5 px-space-md py-1.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="critico" type="button"><span class="w-1.5 h-1.5 rounded-full bg-error"></span><span>Crítico</span><span id="pill-count-critico" class="px-1.5 rounded-full bg-error/20 text-error text-[10px]">0</span></button>
-        <button class="inv-filter-pill flex items-center gap-1.5 px-space-md py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="por-vencer" type="button"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>Por vencer</span><span id="pill-count-pv" class="px-1.5 rounded-full bg-secondary/20 text-secondary text-[10px]">0</span></button>
-        <button class="inv-filter-pill flex items-center gap-1.5 px-space-md py-1.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="aceptable" type="button"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span><span>Aceptable</span><span id="pill-count-ok" class="px-1.5 rounded-full bg-tertiary/20 text-on-tertiary-container text-[10px]">0</span></button>
-      </div>
-    </div>
-    <!-- Search & Sort -->
-    <div class="flex flex-col gap-space-xs bg-surface-container p-space-md rounded-xl">
-      <div class="relative w-full">
+  <div class="flex flex-col w-full gap-4">
+    <!-- Toolbar -->
+    <div class="flex items-center gap-2 pt-2">
+      <div class="relative flex-1">
         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
-        <input class="w-full h-11 pl-10 pr-4 bg-surface-container-low rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" id="batch-search" placeholder="Buscar por producto o lote..." type="text"/>
+        <input class="w-full h-11 pl-10 pr-4 bg-surface-container rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none transition-colors" id="inv-search" placeholder="Buscar producto o lote..." type="text"/>
       </div>
-      <div class="relative">
-        <select class="w-full h-10 px-3 pr-8 bg-surface-container-low rounded-lg text-label-md font-label-md text-on-surface appearance-none focus:outline-none cursor-pointer" id="select-sort">
-          <option value="fefo">Vencimiento: Más próximo (FEFO)</option>
-          <option value="fefo-desc">Vencimiento: Más lejano</option>
-          <option value="name">Alfabético (A-Z)</option>
-        </select>
-        <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">sort</span>
-      </div>
+      <button onclick="showAgregarModal()" class="h-11 px-4 rounded-lg bg-cta text-on-primary font-label-md text-label-md flex items-center gap-1.5 shadow-md hover:brightness-110 active:scale-95 transition-all shrink-0" type="button">
+        <span class="material-symbols-outlined text-[18px]">add</span><span class="hidden sm:inline">Nuevo lote</span><span class="sm:hidden">+</span>
+      </button>
     </div>
-    <!-- Inventory Cards -->
-    <div class="flex flex-col gap-space-xs">
-      <div class="flex items-center justify-between px-space-xs text-on-surface-variant font-label-sm text-label-sm">
-        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary"></span><span>Prioridad FEFO Automatizada</span></div>
-        <span id="inv-visible-count" class="font-code-batch text-code-batch text-on-surface-variant">0 lotes</span>
+    <!-- Tabs -->
+    <div class="flex p-1 rounded-xl bg-surface-container-highest gap-1">
+      <button onclick="switchInvTab('lotes')" id="inv-tab-lotes" class="flex-1 py-2 rounded-lg bg-cta text-on-primary font-label-md text-label-md transition-all" type="button">Lotes</button>
+      <button onclick="switchInvTab('historial')" id="inv-tab-hist" class="flex-1 py-2 rounded-lg text-on-surface-variant font-label-md text-label-md transition-all hover:text-on-surface" type="button">Historial</button>
+    </div>
+
+    <!-- TAB: Lotes -->
+    <div id="inv-tab-lotes-panel" class="flex flex-col gap-4">
+      <!-- Vencimiento filter pills -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 -mx-margin px-margin">
+        <button class="inv-filter-pill flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cta text-on-primary font-label-sm text-label-sm shrink-0 shadow-sm transition-all" data-status="all" type="button">
+          <span>Todos</span><span id="pill-count-all" class="px-1.5 rounded-full bg-on-primary/20 text-[10px]">0</span>
+        </button>
+        <button class="inv-filter-pill flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="vencido" type="button">
+          <span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span><span>Vencido</span><span id="pill-count-vencido" class="px-1.5 rounded-full bg-error/20 text-error text-[10px]">0</span>
+        </button>
+        <button class="inv-filter-pill flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="critico-venc" type="button">
+          <span class="w-1.5 h-1.5 rounded-full bg-error"></span><span>Crítico</span><span id="pill-count-critico" class="px-1.5 rounded-full bg-error/20 text-error text-[10px]">0</span>
+        </button>
+        <button class="inv-filter-pill flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="por-vencer" type="button">
+          <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>Por vencer</span><span id="pill-count-pv" class="px-1.5 rounded-full bg-secondary/20 text-secondary text-[10px]">0</span>
+        </button>
+        <button class="inv-filter-pill flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-status="vigente" type="button">
+          <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span><span>Vigente</span><span id="pill-count-ok" class="px-1.5 rounded-full bg-tertiary/20 text-on-tertiary-container text-[10px]">0</span>
+        </button>
       </div>
-      <div class="flex flex-col gap-space-xs" id="inventory-list">
+      <!-- Sort + count -->
+      <div class="flex items-center gap-2">
+        <div class="relative flex-1">
+          <select class="w-full h-9 px-3 pr-8 bg-surface-container rounded-lg text-label-md font-label-md text-on-surface appearance-none focus:outline-none cursor-pointer" id="select-sort">
+            <option value="fefo">Vencimiento próximo (FEFO)</option>
+            <option value="fefo-desc">Vencimiento lejano</option>
+            <option value="name">Alfabético (A-Z)</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">sort</span>
+        </div>
+        <span id="inv-visible-count" class="font-label-sm text-label-sm text-on-surface-variant shrink-0">0 lotes</span>
+      </div>
+      <!-- Lote cards -->
+      <div class="flex flex-col gap-2 pb-4" id="inventory-list">
         <div class="py-12 text-center text-on-surface-variant flex flex-col items-center gap-3">
           <span class="material-symbols-outlined text-[40px] text-primary/40">inventory_2</span>
           <p class="font-body-md">Cargando inventario...</p>
         </div>
       </div>
     </div>
-  </div>
-</main>
 
-<!-- ═══════════════ PÁGINAS PLACEHOLDER ═══════════════ -->
-<main id="page-movimientos" class="page-section flex-col relative w-full px-margin pt-16 pb-safe bg-surface">
-  <div class="flex flex-col w-full pb-10 space-y-5">
-    <!-- Header -->
-    <section class="flex items-center justify-between gap-3 pt-2">
-      <div class="flex flex-col">
-        <div class="flex items-center gap-2 text-primary"><span class="material-symbols-outlined text-[18px]">swap_horiz</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-primary">Trazabilidad de Stock</span></div>
-        <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Movimientos</h1>
-        <p class="font-body-md text-body-md text-on-surface-variant">Entradas, salidas y ajustes de inventario</p>
+    <!-- TAB: Historial -->
+    <div id="inv-tab-hist-panel" class="flex-col gap-4" style="display:none">
+      <!-- Tipo filter pills -->
+      <div class="flex gap-2 overflow-x-auto pb-1 -mx-margin px-margin">
+        <button class="hist-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-cta text-on-primary transition-all shadow-sm" data-tipo="all" type="button">Todos</button>
+        <button class="hist-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-tertiary-container text-on-tertiary-container hover:brightness-95 transition-all" data-tipo="entrada" type="button">Entrada</button>
+        <button class="hist-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container hover:brightness-95 transition-all" data-tipo="salida" type="button">Salida</button>
+        <button class="hist-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container hover:brightness-95 transition-all" data-tipo="ajuste" type="button">Ajuste</button>
       </div>
-      <button onclick="showMovimientoModal()" class="h-10 px-4 rounded-lg bg-cta text-on-primary font-label-md text-label-md flex items-center gap-1.5 shadow-md hover:brightness-110 active:scale-95 transition-all shrink-0" type="button">
-        <span class="material-symbols-outlined text-[18px]">add</span><span>Registrar</span>
-      </button>
-    </section>
-    <!-- Stats -->
-    <section class="grid grid-cols-3 gap-3">
-      <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1.5">
-        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-tertiary"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Entradas</span></div>
-        <span id="mov-stat-entrada" class="font-headline-sm text-headline-sm text-on-tertiary-container font-bold">0</span>
-        <span id="mov-stat-entrada-uds" class="font-body-sm text-body-sm text-on-surface-variant">0 uds</span>
+      <!-- Date filters -->
+      <div class="flex gap-2 items-end bg-surface-container p-3 rounded-xl">
+        <div class="flex flex-col gap-1 flex-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Desde</label><input id="hist-date-from" type="date" class="h-9 px-3 rounded-lg bg-surface-container-low text-on-surface font-code-batch text-body-md focus:outline-none transition-colors"/></div>
+        <div class="flex flex-col gap-1 flex-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Hasta</label><input id="hist-date-to" type="date" class="h-9 px-3 rounded-lg bg-surface-container-low text-on-surface font-code-batch text-body-md focus:outline-none transition-colors"/></div>
+        <button onclick="clearHistFiltros()" class="h-9 w-9 shrink-0 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">close</span></button>
       </div>
-      <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1.5">
-        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-error"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Salidas</span></div>
-        <span id="mov-stat-salida" class="font-headline-sm text-headline-sm text-error-text font-bold">0</span>
-        <span id="mov-stat-salida-uds" class="font-body-sm text-body-sm text-on-surface-variant">0 uds</span>
-      </div>
-      <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1.5">
-        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Ajustes</span></div>
-        <span id="mov-stat-ajuste" class="font-headline-sm text-headline-sm text-warn-text font-bold">0</span>
-        <span id="mov-stat-ajuste-uds" class="font-body-sm text-body-sm text-on-surface-variant">0 ops</span>
-      </div>
-    </section>
-    <!-- Filtros -->
-    <section class="bg-surface-container rounded-xl p-4 flex flex-col gap-3">
-      <div class="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4">
-        <button class="mov-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-cta text-on-primary transition-all shadow-sm" data-tipo="all" type="button">Todos</button>
-        <button class="mov-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-tertiary-container text-on-tertiary-container hover:brightness-95 transition-all" data-tipo="entrada" type="button">Entrada</button>
-        <button class="mov-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container hover:brightness-95 transition-all" data-tipo="salida" type="button">Salida</button>
-        <button class="mov-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container hover:brightness-95 transition-all" data-tipo="ajuste" type="button">Ajuste</button>
-      </div>
-      <div class="flex gap-2 items-end">
-        <div class="flex flex-col gap-1 flex-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Desde</label><input id="mov-date-from" type="date" class="h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-code-batch text-body-md focus:outline-none focus:bg-surface-container-highest transition-colors"/></div>
-        <div class="flex flex-col gap-1 flex-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Hasta</label><input id="mov-date-to" type="date" class="h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-code-batch text-body-md focus:outline-none focus:bg-surface-container-highest transition-colors"/></div>
-        <button onclick="clearMovFilters()" class="h-10 w-10 shrink-0 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">close</span></button>
-      </div>
-    </section>
-    <!-- Historial -->
-    <div class="flex flex-col gap-2">
+      <!-- Movement list -->
       <div class="flex items-center justify-between px-1">
         <span class="font-label-sm text-label-sm text-on-surface-variant">Historial (más reciente primero)</span>
-        <span id="mov-count-label" class="font-code-batch text-code-batch text-on-surface-variant">0 registros</span>
+        <span id="hist-count-label" class="font-code-batch text-code-batch text-on-surface-variant">0 registros</span>
       </div>
-      <div id="mov-history" class="flex flex-col gap-2">
+      <div id="hist-list" class="flex flex-col gap-2 pb-4">
         <div class="py-12 text-center text-on-surface-variant flex flex-col items-center gap-3">
           <span class="material-symbols-outlined text-[40px] text-primary/40">swap_horiz</span>
           <p class="font-body-md">Cargando movimientos...</p>
@@ -565,6 +539,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
     </div>
   </div>
 </main>
+
 <main id="page-reportes" class="page-section flex-col relative w-full px-margin pt-16 pb-safe bg-surface">
   <div class="flex flex-col w-full pb-10 space-y-4">
     <!-- Header -->
@@ -589,9 +564,9 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
         <div class="flex gap-2 overflow-x-auto -mx-4 px-4 pb-1">
           <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-cta text-on-primary" data-status="all" type="button">Todos</button>
           <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container" data-status="vencido" type="button">Vencidos</button>
-          <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container" data-status="critico" type="button">Críticos</button>
+          <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container" data-status="critico-venc" type="button">Crítico p/vencer</button>
           <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container" data-status="por-vencer" type="button">Por vencer</button>
-          <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-tertiary-container text-on-tertiary-container" data-status="aceptable" type="button">Aceptable</button>
+          <button class="rep-inv-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-tertiary-container text-on-tertiary-container" data-status="vigente" type="button">Vigente</button>
         </div>
       </div>
       <div class="grid grid-cols-2 gap-3" id="rep-inv-kpis"></div>
@@ -621,8 +596,9 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
         <div class="flex gap-2 flex-wrap">
           <button class="rep-venc-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-cta text-on-primary" data-status="all" type="button">Todos</button>
           <button class="rep-venc-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container" data-status="vencido" type="button">Vencidos</button>
-          <button class="rep-venc-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container" data-status="critico" type="button">Críticos (&lt;30d)</button>
-          <button class="rep-venc-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container" data-status="por-vencer" type="button">Por vencer (&lt;90d)</button>
+          <button class="rep-venc-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container" data-status="critico-venc" type="button">Crítico p/vencer</button>
+          <button class="rep-venc-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container" data-status="por-vencer" type="button">Por vencer</button>
+          <button class="rep-venc-pill shrink-0 px-3 py-1 rounded-full text-label-sm font-label-sm bg-tertiary-container text-on-tertiary-container" data-status="vigente" type="button">Vigente</button>
         </div>
       </div>
       <div class="grid grid-cols-2 gap-3" id="rep-venc-kpis"></div>
@@ -735,35 +711,63 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
     <section class="bg-surface-container rounded-2xl overflow-hidden">
       <div class="px-4 py-3 border-b border-outline-variant/30">
         <div class="flex items-center gap-2">
-          <h2 class="font-headline-sm text-headline-sm text-on-surface">Parámetros FEFO</h2>
-          <span class="font-body-sm text-body-sm text-on-surface-variant">(First Expiry, First Out)</span>
+          <h2 class="font-headline-sm text-headline-sm text-on-surface">Parámetros de Alerta</h2>
         </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Umbrales para cálculo de estados FEFO y stock</p>
       </div>
       <div>
-        <div class="px-4 py-4 flex items-center justify-between gap-3">
+        <p class="px-4 pt-3 font-label-sm text-label-sm text-primary uppercase tracking-wider">Vencimiento</p>
+        <div class="px-4 py-3 flex items-center justify-between gap-3">
           <div class="flex flex-col gap-0.5">
             <div class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-error flex-shrink-0"></span>
-              <span class="font-label-md text-label-md text-on-surface">Umbral Crítico</span>
+              <span class="font-label-md text-label-md text-on-surface">Crítico por vencer</span>
             </div>
-            <span class="font-body-sm text-body-sm text-on-surface-variant">Lotes que vencen en ≤ N días</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Alerta máxima — vence en ≤ N días</span>
           </div>
           <div class="flex items-center gap-2">
             <input id="cfg-fefo-critico" type="number" min="1" max="365" class="w-16 h-9 text-center rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors"/>
             <span class="font-body-sm text-body-sm text-on-surface-variant">días</span>
           </div>
         </div>
-        <div class="border-t border-outline-variant/20 px-4 py-4 flex items-center justify-between gap-3">
+        <div class="border-t border-outline-variant/20 px-4 py-3 flex items-center justify-between gap-3">
           <div class="flex flex-col gap-0.5">
             <div class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full bg-secondary flex-shrink-0"></span>
-              <span class="font-label-md text-label-md text-on-surface">Umbral Por Vencer</span>
+              <span class="font-label-md text-label-md text-on-surface">Por vencer</span>
             </div>
-            <span class="font-body-sm text-body-sm text-on-surface-variant">Lotes que vencen en ≤ N días</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Alerta preventiva — vence en ≤ N días</span>
           </div>
           <div class="flex items-center gap-2">
             <input id="cfg-fefo-porvencer" type="number" min="1" max="730" class="w-16 h-9 text-center rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors"/>
             <span class="font-body-sm text-body-sm text-on-surface-variant">días</span>
+          </div>
+        </div>
+        <p class="px-4 pt-3 font-label-sm text-label-sm text-primary uppercase tracking-wider border-t border-outline-variant/20">Stock (globales)</p>
+        <div class="px-4 py-3 flex items-center justify-between gap-3">
+          <div class="flex flex-col gap-0.5">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-error flex-shrink-0"></span>
+              <span class="font-label-md text-label-md text-on-surface">Umbral crítico</span>
+            </div>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Stock ≤ N unidades → "Stock crítico"</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input id="cfg-stock-critico" type="number" min="0" max="9999" class="w-16 h-9 text-center rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors"/>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">uds</span>
+          </div>
+        </div>
+        <div class="border-t border-outline-variant/20 px-4 py-3 flex items-center justify-between gap-3">
+          <div class="flex flex-col gap-0.5">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-tertiary flex-shrink-0"></span>
+              <span class="font-label-md text-label-md text-on-surface">Umbral aceptable</span>
+            </div>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Stock ≥ N unidades → "Aceptable"</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input id="cfg-stock-aceptable" type="number" min="1" max="99999" class="w-16 h-9 text-center rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors"/>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">uds</span>
           </div>
         </div>
         <div class="border-t border-outline-variant/20 px-4 py-3 flex items-center justify-between gap-2">
@@ -848,6 +852,60 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
     <button id="cancel-mov-btn" class="h-11 px-space-lg rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-bright active:scale-95 transition-all" type="button">Cancelar</button>
     <button id="save-mov-btn" onclick="saveMovimiento()" class="h-11 px-space-xl rounded-lg bg-cta text-on-primary font-headline-sm text-headline-sm hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-space-xs shadow-md" type="button"><span class="material-symbols-outlined text-[18px]">check_circle</span><span>Guardar</span></button>
   </div>
+</div>
+
+<!-- ═══════════════ MODAL: QUICK STOCK ═══════════════ -->
+<div id="modal-qs-bd" class="fixed inset-0 z-[55] bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
+<div id="modal-qs" class="fixed inset-x-0 bottom-0 z-[60] flex flex-col max-h-[85dvh] bg-surface-container-low rounded-t-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.55)] overflow-hidden" style="display:none">
+  <div class="w-full flex justify-center pt-3 pb-1 flex-shrink-0"><div class="w-10 h-1 rounded-full bg-outline-variant/60"></div></div>
+  <div class="flex items-start justify-between px-5 pt-1 pb-4 flex-shrink-0">
+    <div>
+      <div class="flex items-center gap-2">
+        <span id="qs-tipo-icon" class="material-symbols-outlined text-primary text-[20px]">add_circle</span>
+        <h2 id="qs-title" class="font-headline-md text-headline-md text-on-surface tracking-tight">Registrar Entrada</h2>
+      </div>
+      <p id="qs-lote-name" class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">—</p>
+    </div>
+    <button onclick="closeQuickStock()" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button>
+  </div>
+  <div class="flex flex-col px-5 gap-4 overflow-y-auto overscroll-contain modal-scroll pb-6">
+    <div class="flex p-1 rounded-xl bg-surface-container-highest gap-1">
+      <button class="qs-tipo-btn flex-1 py-2 rounded-lg bg-tertiary text-on-tertiary font-label-md text-label-md transition-all" data-tipo="entrada" type="button">▲ Entrada</button>
+      <button class="qs-tipo-btn flex-1 py-2 rounded-lg text-on-surface-variant font-label-md text-label-md transition-all" data-tipo="salida" type="button">▼ Salida</button>
+      <button class="qs-tipo-btn flex-1 py-2 rounded-lg text-on-surface-variant font-label-md text-label-md transition-all" data-tipo="ajuste" type="button">⇄ Ajuste</button>
+    </div>
+    <div class="flex items-center justify-between px-3 py-2.5 rounded-lg bg-surface-container-high">
+      <span class="font-label-md text-label-md text-on-surface-variant">Stock actual:</span>
+      <span id="qs-stock-actual" class="font-headline-sm text-headline-sm text-on-surface font-bold">—</span>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <label id="qs-qty-label" class="font-label-md text-label-md text-on-surface">Cantidad a ingresar <span class="text-error">*</span></label>
+      <input id="qs-qty" type="number" min="0" placeholder="0" class="w-full h-11 px-4 rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch text-right placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors"/>
+      <p id="qs-qty-error" class="text-error-text font-body-sm text-body-sm min-h-[1rem]"></p>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface" for="qs-nota">Nota <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
+      <input id="qs-nota" type="text" placeholder="Ej. Recepción proveedor, consumo UCI..." class="w-full h-11 px-4 rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors"/>
+    </div>
+  </div>
+  <div class="flex-shrink-0 px-5 py-4 bg-surface-container-high/95 backdrop-blur-md flex items-center justify-end gap-3 shadow-[0_-4px_16px_rgba(0,0,0,0.3)]">
+    <button onclick="closeQuickStock()" class="h-11 px-5 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-bright active:scale-95 transition-all" type="button">Cancelar</button>
+    <button id="qs-save-btn" onclick="saveQuickStock()" class="h-11 px-6 rounded-lg bg-cta text-on-primary font-headline-sm text-headline-sm hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 shadow-md" type="button"><span class="material-symbols-outlined text-[18px]">check_circle</span><span>Guardar</span></button>
+  </div>
+</div>
+
+<!-- ═══════════════ PANEL: DETALLE LOTE ═══════════════ -->
+<div id="panel-lote-bd" class="fixed inset-0 z-[55] bg-surface-container-lowest/80 backdrop-blur-sm" style="display:none"></div>
+<div id="panel-lote" class="fixed inset-x-0 bottom-0 z-[60] flex flex-col max-h-[90dvh] bg-surface-container-low rounded-t-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.55)] overflow-hidden" style="display:none">
+  <div class="w-full flex justify-center pt-3 pb-1 flex-shrink-0"><div class="w-10 h-1 rounded-full bg-outline-variant/60"></div></div>
+  <div class="flex items-start justify-between px-5 pt-1 pb-3 flex-shrink-0">
+    <div>
+      <h2 id="det-nombre" class="font-headline-md text-headline-md text-on-surface tracking-tight">—</h2>
+      <p id="det-desc" class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">—</p>
+    </div>
+    <button onclick="closeLoteDetail()" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high active:scale-95 transition-all" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button>
+  </div>
+  <div class="flex flex-col px-5 gap-4 overflow-y-auto overscroll-contain modal-scroll pb-6" id="det-body"></div>
 </div>
 
 <!-- ═══════════════ MODAL: AGREGAR PRODUCTO ═══════════════ -->
@@ -1039,17 +1097,23 @@ function escHtml(str) {
 }
 
 // ── Configuración FEFO ──
-let fefoSettings = { critico: 30, porVencer: 90 };
+let fefoSettings = { venc_critico: 10, venc_porVencer: 30, stock_critico: 10, stock_aceptable: 50 };
 function loadSettings() {
   try {
     const s = JSON.parse(localStorage.getItem('tamara-settings') || '{}');
-    fefoSettings.critico = s.fefo_critico || 30;
-    fefoSettings.porVencer = s.fefo_porVencer || 90;
+    fefoSettings.venc_critico = s.fefo_critico ?? 10;
+    fefoSettings.venc_porVencer = s.fefo_porVencer ?? 30;
+    fefoSettings.stock_critico = s.stock_critico ?? 10;
+    fefoSettings.stock_aceptable = s.stock_aceptable ?? 50;
   } catch(e) {}
   const ci = document.getElementById('cfg-fefo-critico');
   const pv = document.getElementById('cfg-fefo-porvencer');
-  if (ci) ci.value = fefoSettings.critico;
-  if (pv) pv.value = fefoSettings.porVencer;
+  const sc = document.getElementById('cfg-stock-critico');
+  const sa = document.getElementById('cfg-stock-aceptable');
+  if (ci) ci.value = fefoSettings.venc_critico;
+  if (pv) pv.value = fefoSettings.venc_porVencer;
+  if (sc) sc.value = fefoSettings.stock_critico;
+  if (sa) sa.value = fefoSettings.stock_aceptable;
 }
 
 function getEstado(vencDate) {
@@ -1057,9 +1121,18 @@ function getEstado(vencDate) {
   const v = vencDate instanceof Date ? vencDate : vencDate.toDate();
   const dias = Math.ceil((v - hoy) / 86400000);
   if (dias < 0) return { estado: 'vencido', dias };
-  if (dias <= fefoSettings.critico) return { estado: 'critico', dias };
-  if (dias <= fefoSettings.porVencer) return { estado: 'por-vencer', dias };
-  return { estado: 'aceptable', dias };
+  if (dias <= fefoSettings.venc_critico) return { estado: 'critico-venc', dias };
+  if (dias <= fefoSettings.venc_porVencer) return { estado: 'por-vencer', dias };
+  return { estado: 'vigente', dias };
+}
+
+function getEstadoStock(cantidad, lote) {
+  const c = lote?.stockCritico != null ? lote.stockCritico : fefoSettings.stock_critico;
+  const a = lote?.stockAceptable != null ? lote.stockAceptable : fefoSettings.stock_aceptable;
+  if (cantidad === 0) return { estado: 'sin-stock', label: 'Sin stock' };
+  if (cantidad <= c) return { estado: 'critico-stock', label: 'Stock crítico' };
+  if (cantidad < a) return { estado: 'bajo', label: 'Stock bajo' };
+  return { estado: 'aceptable', label: 'Aceptable' };
 }
 
 function formatFecha(d) {
@@ -1117,54 +1190,65 @@ function subscribeToLotes() {
 function renderAll() {
   renderKPIs();
   renderBatchList();
-  renderInventoryCards(currentFilter, currentSearch);
+  renderLotesList(currentFilter, currentSearch);
   updatePillCounts();
+  if (currentInvTab === 'historial') renderHistorial();
 }
 
 function renderKPIs() {
   const total = allLotes.length;
   const totalUds = allLotes.reduce((s,l) => s + (Number(l.cantidad) || 0), 0);
   const vencidos = allLotes.filter(l => getEstado(l.vencimiento.toDate()).estado === 'vencido').length;
-  const criticos = allLotes.filter(l => getEstado(l.vencimiento.toDate()).estado === 'critico').length;
+  const criticosVenc = allLotes.filter(l => getEstado(l.vencimiento.toDate()).estado === 'critico-venc').length;
   const porVencer = allLotes.filter(l => getEstado(l.vencimiento.toDate()).estado === 'por-vencer').length;
-  const aceptables = allLotes.filter(l => getEstado(l.vencimiento.toDate()).estado === 'aceptable').length;
+  const vigentes = allLotes.filter(l => getEstado(l.vencimiento.toDate()).estado === 'vigente').length;
+  const stockCritico = allLotes.filter(l => {
+    const { estado } = getEstadoStock(Number(l.cantidad)||0, l);
+    return estado === 'sin-stock' || estado === 'critico-stock';
+  }).length;
 
   document.getElementById('kpi-total-uds').textContent = totalUds.toLocaleString('es-AR');
   document.getElementById('kpi-total-lotes').textContent = `${total} lotes activos`;
   document.getElementById('kpi-vencidos').innerHTML = `${vencidos} <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">lotes</span>`;
-  document.getElementById('kpi-criticos').innerHTML = `${criticos} <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">lotes</span>`;
+  document.getElementById('kpi-criticos').innerHTML = `${criticosVenc} <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">lotes</span>`;
   document.getElementById('kpi-pv-count').innerHTML = `${porVencer} <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">lotes</span>`;
-  document.getElementById('kpi-criticos-pct').textContent = total ? `${Math.round(criticos/total*100)}%` : '0%';
+  document.getElementById('kpi-criticos-pct').textContent = total ? `${Math.round(criticosVenc/total*100)}%` : '0%';
+  document.getElementById('kpi-criticos-lbl').textContent = `≤${fefoSettings.venc_critico}d`;
   document.getElementById('kpi-pv-pct').textContent = total ? `${Math.round(porVencer/total*100)}%` : '0%';
+  document.getElementById('kpi-pv-lbl').textContent = `≤${fefoSettings.venc_porVencer}d`;
+  document.getElementById('kpi-stock-critico').textContent = stockCritico;
 
   // Chart
   const pct = (n) => total ? Math.round(n/total*100) : 0;
-  const pOk = pct(aceptables), pPv = pct(porVencer), pCr = pct(criticos), pVe = pct(vencidos);
+  const pOk = pct(vigentes), pPv = pct(porVencer), pCr = pct(criticosVenc), pVe = pct(vencidos);
   document.getElementById('chart-optimo').style.width = pOk + '%';
   document.getElementById('chart-por-vencer').style.width = pPv + '%';
   document.getElementById('chart-critico').style.width = pCr + '%';
   document.getElementById('chart-vencido').style.width = pVe + '%';
   document.getElementById('chart-pct-badge').textContent = total ? `${pOk + pPv}% Operativo` : '—';
   document.getElementById('chart-subtitle').textContent = `Balance global de vigencia (${total} lotes totales)`;
-  document.getElementById('legend-optimo').textContent = `${aceptables} Lotes (${pOk}%)`;
+  document.getElementById('legend-optimo').textContent = `${vigentes} Lotes (${pOk}%)`;
+  document.getElementById('legend-optimo-lbl').textContent = `Vigente (>${fefoSettings.venc_porVencer}d)`;
   document.getElementById('legend-pv').textContent = `${porVencer} Lotes (${pPv}%)`;
-  document.getElementById('legend-critico').textContent = `${criticos} Lotes (${pCr}%)`;
+  document.getElementById('legend-pv-lbl').textContent = `Por vencer (${fefoSettings.venc_critico}–${fefoSettings.venc_porVencer}d)`;
+  document.getElementById('legend-critico').textContent = `${criticosVenc} Lotes (${pCr}%)`;
+  document.getElementById('legend-critico-lbl').textContent = `Crítico por vencer (≤${fefoSettings.venc_critico}d)`;
   document.getElementById('legend-vencido').textContent = `${vencidos} Lotes (${pVe}%)`;
 }
 
 function updatePillCounts() {
-  const counts = { all: allLotes.length, vencido: 0, critico: 0, 'por-vencer': 0, aceptable: 0 };
-  allLotes.forEach(l => { counts[getEstado(l.vencimiento.toDate()).estado]++; });
+  const counts = { all: allLotes.length, vencido: 0, 'critico-venc': 0, 'por-vencer': 0, vigente: 0 };
+  allLotes.forEach(l => { const e = getEstado(l.vencimiento.toDate()).estado; if (counts[e] !== undefined) counts[e]++; });
   document.getElementById('pill-count-all').textContent = counts.all;
   document.getElementById('pill-count-vencido').textContent = counts.vencido;
-  document.getElementById('pill-count-critico').textContent = counts.critico;
+  document.getElementById('pill-count-critico').textContent = counts['critico-venc'];
   document.getElementById('pill-count-pv').textContent = counts['por-vencer'];
-  document.getElementById('pill-count-ok').textContent = counts.aceptable;
+  document.getElementById('pill-count-ok').textContent = counts.vigente;
 }
 
 function renderBatchList() {
   const container = document.getElementById('batch-list-container');
-  const urgentes = allLotes.filter(l => ['critico','por-vencer','vencido'].includes(getEstado(l.vencimiento.toDate()).estado)).slice(0, 10);
+  const urgentes = allLotes.filter(l => ['critico-venc','por-vencer','vencido'].includes(getEstado(l.vencimiento.toDate()).estado)).slice(0, 10);
   document.getElementById('batch-todos-btn').textContent = `Todos (${urgentes.length})`;
 
   if (urgentes.length === 0) {
@@ -1174,15 +1258,15 @@ function renderBatchList() {
     return;
   }
 
-  const iconMap = { vencido:'block', critico:'emergency', 'por-vencer':'medication' };
+  const iconMap = { vencido:'block', 'critico-venc':'emergency', 'por-vencer':'medication' };
   container.innerHTML = urgentes.map(lote => {
     const { estado, dias } = getEstado(lote.vencimiento.toDate());
-    const isCr = estado === 'critico' || estado === 'vencido';
+    const isCr = estado === 'critico-venc' || estado === 'vencido';
     const bgIcon = isCr ? 'bg-error-container/60 text-error-text' : 'bg-secondary-container/40 text-warn-text';
     const badge = isCr ? 'bg-error-container text-on-error-container' : 'bg-secondary-container/40 text-warn-text';
     const txt = isCr ? 'text-error-text' : 'text-warn-text';
     const diasLabel = estado === 'vencido' ? `Venció hace ${Math.abs(dias)} días` : `Vence en ${dias} días`;
-    const label = { vencido:'Vencido', critico:'Crítico', 'por-vencer':'Por vencer' }[estado];
+    const label = { vencido:'Vencido', 'critico-venc':'Crítico', 'por-vencer':'Por vencer' }[estado];
     return `<div class="batch-item py-2.5 flex items-center justify-between gap-3 hover:bg-surface-container-high/40 px-2 rounded-lg transition-colors" data-status="${estado}">
       <div class="flex items-center gap-3 min-w-0">
         <div class="w-8 h-8 rounded-lg ${bgIcon} flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">${iconMap[estado]||'medication'}</span></div>
@@ -1199,11 +1283,10 @@ function renderBatchList() {
   }).join('');
 }
 
-function renderInventoryCards(filter = 'all', search = '') {
+function renderLotesList(filter = 'all', search = '') {
   const container = document.getElementById('inventory-list');
   let filtered = [...allLotes];
 
-  // Sort
   const sortVal = document.getElementById('select-sort')?.value || 'fefo';
   if (sortVal === 'fefo-desc') filtered.reverse();
   else if (sortVal === 'name') filtered.sort((a,b) => a.nombre.localeCompare(b.nombre));
@@ -1227,102 +1310,106 @@ function renderInventoryCards(filter = 'all', search = '') {
 }
 
 function renderLoteCard(lote) {
-  const { estado, dias } = getEstado(lote.vencimiento.toDate());
+  const { estado: estadoVenc, dias } = getEstado(lote.vencimiento.toDate());
+  const { estado: estadoStock, label: stockLabel } = getEstadoStock(Number(lote.cantidad)||0, lote);
   const fecha = formatFecha(lote.vencimiento.toDate());
-  const diasTxt = dias < 0 ? `Venció hace ${Math.abs(dias)} días` : `Vence en ${dias} días`;
-  const cardBg = estado === 'vencido' ? 'card-expired-bg' : estado === 'critico' ? 'card-critical-bg' : 'bg-surface-container-low';
-  const badgeMap = {
-    vencido: 'bg-error text-on-error font-bold',
-    critico: 'bg-error-container text-on-error-container',
-    'por-vencer': 'bg-secondary-container text-on-secondary-container',
-    aceptable: 'bg-tertiary-container text-on-tertiary-container'
-  };
-  const labelMap = { vencido:'Vencido', critico:'Crítico', 'por-vencer':'Por vencer', aceptable:'Aceptable' };
-  const dotMap = {
-    vencido: '<span class="material-symbols-outlined text-[13px]">block</span>',
-    critico: '<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>',
-    'por-vencer': '<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>',
-    aceptable: '<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>'
-  };
-  const fechaColor = (estado === 'vencido' || estado === 'critico') ? 'text-error-text' : estado === 'por-vencer' ? 'text-warn-text' : 'text-tertiary';
-  const diasColor = (estado === 'vencido' || estado === 'critico') ? 'text-error-text' : estado === 'por-vencer' ? 'text-warn-text' : 'text-on-tertiary-container';
+  const diasTxt = dias < 0 ? `Venció hace ${Math.abs(dias)}d` : `${dias}d`;
 
-  return `<div class="inventory-card group relative flex flex-col gap-space-sm p-space-md rounded-xl ${cardBg} transition-all" data-type="${estado}" data-id="${escHtml(lote.id)}">
-    <div class="flex items-start justify-between gap-space-xs">
-      <div class="flex flex-col min-w-0">
+  const cardBg = estadoVenc === 'vencido' ? 'card-expired-bg' : estadoVenc === 'critico-venc' ? 'card-critical-bg' : 'bg-surface-container-low';
+  const vencBadge = { vencido:'bg-error text-on-error', 'critico-venc':'bg-error-container text-on-error-container', 'por-vencer':'bg-secondary-container text-on-secondary-container', vigente:'bg-tertiary-container text-on-tertiary-container' };
+  const vencLabel = { vencido:'Vencido', 'critico-venc':'Crítico', 'por-vencer':'Por vencer', vigente:'Vigente' };
+  const stockBadge = { 'sin-stock':'bg-error-container text-error-text', 'critico-stock':'bg-error-container/60 text-error-text', bajo:'bg-secondary-container/60 text-warn-text', aceptable:'bg-tertiary-container/70 text-on-tertiary-container' };
+  const fechaColor = (estadoVenc === 'vencido' || estadoVenc === 'critico-venc') ? 'text-error-text' : estadoVenc === 'por-vencer' ? 'text-warn-text' : 'text-tertiary';
+
+  return `<div class="inventory-card flex flex-col gap-3 p-4 rounded-xl ${cardBg}" data-id="${escHtml(lote.id)}">
+    <div class="flex items-start justify-between gap-2">
+      <div class="flex flex-col min-w-0 flex-1 cursor-pointer" onclick="showLoteDetail('${escHtml(lote.id)}')">
         <span class="font-headline-sm text-headline-sm text-on-surface truncate">${escHtml(lote.nombre)}</span>
-        <span class="font-body-sm text-body-sm text-on-surface-variant truncate">${escHtml(lote.descripcion || '')}</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">${escHtml(lote.lote)}${lote.descripcion ? ' · ' + escHtml(lote.descripcion) : ''}</span>
       </div>
-      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full ${badgeMap[estado]} font-label-sm text-label-sm shrink-0">${dotMap[estado]}${labelMap[estado]}</span>
+      <div class="flex flex-col items-end gap-1 shrink-0">
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full ${vencBadge[estadoVenc]} font-label-sm text-label-sm">${vencLabel[estadoVenc]}</span>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full ${stockBadge[estadoStock]} font-label-sm text-label-sm">${stockLabel}</span>
+      </div>
     </div>
-    <div class="grid grid-cols-3 gap-space-xs bg-surface-container-lowest/60 p-space-sm rounded-lg items-center">
-      <div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant">Lote</span><span class="font-code-batch text-code-batch text-primary">${escHtml(lote.lote)}</span></div>
-      <div class="flex flex-col text-center"><span class="font-label-sm text-label-sm text-on-surface-variant">Stock</span><span class="font-headline-sm text-headline-sm text-on-surface font-semibold">${lote.cantidad} <span class="text-body-sm font-normal text-on-surface-variant">${escHtml(lote.unidad||'')}</span></span></div>
-      <div class="flex flex-col text-right"><span class="font-label-sm text-label-sm text-on-surface-variant">Vencimiento</span><span class="font-code-batch text-code-batch ${fechaColor} font-bold ${estado==='vencido'?'line-through':''}">${fecha}</span><span class="text-[11px] font-medium ${diasColor}">${diasTxt}</span></div>
-    </div>
-    <div class="flex items-center justify-between pt-space-xs">
-      <span class="font-label-sm text-label-sm text-on-surface-variant truncate">${escHtml(lote.ubicacion || '')}</span>
-      <div class="flex items-center gap-space-xs">
-        <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-primary transition-colors" onclick="showEditarModal('${escHtml(lote.id)}')" type="button"><span class="material-symbols-outlined text-[17px]">edit</span></button>
-        <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container-high text-error hover:bg-error-container transition-colors" onclick="confirmDeleteLote('${escHtml(lote.id)}','${escHtml(lote.nombre)}')" type="button"><span class="material-symbols-outlined text-[17px]">delete</span></button>
+    <div class="flex items-center justify-between">
+      <div class="flex flex-col">
+        <span class="font-headline-sm text-headline-sm text-on-surface font-bold">${lote.cantidad} <span class="font-body-sm text-on-surface-variant font-normal">${escHtml(lote.unidad||'uds')}</span></span>
+        <span class="font-label-sm text-label-sm ${fechaColor}">Vence ${diasTxt} · ${fecha}</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button onclick="showQuickStock('${escHtml(lote.id)}','entrada')" class="w-9 h-9 flex items-center justify-center rounded-lg bg-tertiary-container text-on-tertiary-container hover:brightness-110 active:scale-95 transition-all" type="button" title="Entrada"><span class="material-symbols-outlined text-[18px]">add</span></button>
+        <button onclick="showQuickStock('${escHtml(lote.id)}','salida')" class="w-9 h-9 flex items-center justify-center rounded-lg bg-error-container text-on-error-container hover:brightness-110 active:scale-95 transition-all" type="button" title="Salida"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+        <button onclick="showEditarModal('${escHtml(lote.id)}')" class="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface hover:text-primary transition-colors" type="button" title="Editar"><span class="material-symbols-outlined text-[17px]">edit</span></button>
+        <button onclick="confirmDeleteLote('${escHtml(lote.id)}','${escHtml(lote.nombre)}')" class="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-container-high text-error hover:bg-error-container transition-colors" type="button" title="Eliminar"><span class="material-symbols-outlined text-[17px]">delete</span></button>
       </div>
     </div>
   </div>`;
 }
 
 // ── Movimientos ──
+let histTipoFilter = 'all';
+
 function subscribeToMovimientos() {
   if (!currentUser) return;
   unsubscribeMovimientos = onSnapshot(collection(db, `users/${currentUser.uid}/movimientos`), snap => {
     allMovimientos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     allMovimientos.sort((a, b) => (b.creadoEn?.seconds || 0) - (a.creadoEn?.seconds || 0));
-    renderMovimientos();
+    renderRecentActivity();
+    if (currentInvTab === 'historial') renderHistorial();
   }, err => console.error('Movimientos error:', err));
 }
 
-function renderMovimientos() {
-  const dateFromVal = document.getElementById('mov-date-from')?.value;
-  const dateToVal = document.getElementById('mov-date-to')?.value;
+function renderRecentActivity() {
+  const container = document.getElementById('activity-list');
+  if (!container) return;
+  const recent = allMovimientos.slice(0, 5);
+  if (recent.length === 0) {
+    container.innerHTML = `<div class="py-6 text-center text-on-surface-variant font-body-md">Sin actividad reciente</div>`;
+    return;
+  }
+  container.innerHTML = recent.map(mov => {
+    const fechaStr = mov.fecha.toDate().toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit' });
+    const tipoBadge = { entrada:'bg-tertiary-container text-on-tertiary-container', salida:'bg-error-container text-on-error-container', ajuste:'bg-secondary-container text-on-secondary-container' }[mov.tipo];
+    const signo = mov.tipo === 'entrada' ? '+' : mov.tipo === 'salida' ? '−' : '=';
+    const cantColor = { entrada:'text-on-tertiary-container', salida:'text-error-text', ajuste:'text-warn-text' }[mov.tipo];
+    return `<div class="flex items-center justify-between py-2.5 gap-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${tipoBadge}">${mov.tipo}</span>
+        <div class="flex flex-col min-w-0">
+          <span class="font-label-md text-label-md text-on-surface truncate">${escHtml(mov.productoNombre)}</span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant">${escHtml(mov.loteCode)} · ${fechaStr}</span>
+        </div>
+      </div>
+      <span class="font-headline-sm text-headline-sm ${cantColor} font-bold shrink-0">${signo}${mov.cantidadMovimiento}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderHistorial() {
+  const dateFromVal = document.getElementById('hist-date-from')?.value;
+  const dateToVal = document.getElementById('hist-date-to')?.value;
   let filtered = [...allMovimientos];
-  if (movTipoFilter !== 'all') filtered = filtered.filter(m => m.tipo === movTipoFilter);
-  if (dateFromVal) {
-    const from = new Date(dateFromVal + 'T00:00:00');
-    filtered = filtered.filter(m => m.fecha.toDate() >= from);
-  }
-  if (dateToVal) {
-    const to = new Date(dateToVal + 'T23:59:59');
-    filtered = filtered.filter(m => m.fecha.toDate() <= to);
-  }
-  const countEl = document.getElementById('mov-count-label');
+  if (histTipoFilter !== 'all') filtered = filtered.filter(m => m.tipo === histTipoFilter);
+  if (dateFromVal) filtered = filtered.filter(m => m.fecha.toDate() >= new Date(dateFromVal + 'T00:00:00'));
+  if (dateToVal) filtered = filtered.filter(m => m.fecha.toDate() <= new Date(dateToVal + 'T23:59:59'));
+  const countEl = document.getElementById('hist-count-label');
   if (countEl) countEl.textContent = `${filtered.length} registro${filtered.length !== 1 ? 's' : ''}`;
-  // Stats
-  const ent = allMovimientos.filter(m => m.tipo === 'entrada');
-  const sal = allMovimientos.filter(m => m.tipo === 'salida');
-  const adj = allMovimientos.filter(m => m.tipo === 'ajuste');
-  const setEl = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-  setEl('mov-stat-entrada', ent.length);
-  setEl('mov-stat-salida', sal.length);
-  setEl('mov-stat-ajuste', adj.length);
-  setEl('mov-stat-entrada-uds', ent.reduce((s, m) => s + (m.cantidadMovimiento || 0), 0) + ' uds');
-  setEl('mov-stat-salida-uds', sal.reduce((s, m) => s + (m.cantidadMovimiento || 0), 0) + ' uds');
-  setEl('mov-stat-ajuste-uds', adj.length + ' ops');
-  const container = document.getElementById('mov-history');
+  const container = document.getElementById('hist-list');
   if (!container) return;
   if (filtered.length === 0) {
     container.innerHTML = `<div class="py-12 text-center text-on-surface-variant flex flex-col items-center gap-3">
       <span class="material-symbols-outlined text-[40px] text-primary/40">swap_horiz</span>
       <p class="font-body-md">${allMovimientos.length === 0 ? 'No hay movimientos registrados' : 'Sin resultados para los filtros aplicados'}</p>
-      ${allMovimientos.length === 0 ? `<button onclick="showMovimientoModal()" class="h-9 px-4 rounded-lg bg-cta text-on-primary font-label-md text-label-md">+ Registrar primero</button>` : ''}
     </div>`;
     return;
   }
   container.innerHTML = filtered.map(mov => {
-    const fecha = mov.fecha.toDate();
-    const fechaStr = fecha.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    const tipoBadge = { entrada: 'bg-tertiary-container text-on-tertiary-container', salida: 'bg-error-container text-on-error-container', ajuste: 'bg-secondary-container text-on-secondary-container' }[mov.tipo];
-    const tipoLabel = { entrada: '▲ Entrada', salida: '▼ Salida', ajuste: '⇄ Ajuste' }[mov.tipo];
+    const fechaStr = mov.fecha.toDate().toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const tipoBadge = { entrada:'bg-tertiary-container text-on-tertiary-container', salida:'bg-error-container text-on-error-container', ajuste:'bg-secondary-container text-on-secondary-container' }[mov.tipo];
+    const tipoLabel = { entrada:'▲ Entrada', salida:'▼ Salida', ajuste:'⇄ Ajuste' }[mov.tipo];
     const signo = mov.tipo === 'entrada' ? '+' : mov.tipo === 'salida' ? '−' : '=';
-    const cantColor = { entrada: 'text-on-tertiary-container', salida: 'text-error-text', ajuste: 'text-warn-text' }[mov.tipo];
+    const cantColor = { entrada:'text-on-tertiary-container', salida:'text-error-text', ajuste:'text-warn-text' }[mov.tipo];
     return `<div class="bg-surface-container-low rounded-xl p-3 flex flex-col gap-2">
       <div class="flex items-start justify-between gap-3">
         <div class="flex flex-col min-w-0">
@@ -1344,6 +1431,22 @@ function renderMovimientos() {
       </div>
     </div>`;
   }).join('');
+}
+
+function clearHistFiltros() {
+  const df = document.getElementById('hist-date-from');
+  const dt = document.getElementById('hist-date-to');
+  if (df) df.value = '';
+  if (dt) dt.value = '';
+  histTipoFilter = 'all';
+  document.querySelectorAll('.hist-tipo-filter').forEach(b => {
+    const active = b.dataset.tipo === 'all';
+    b.className = `hist-tipo-filter shrink-0 px-3 py-1.5 rounded-full text-label-sm font-label-sm transition-all ${active ? 'bg-cta text-on-primary shadow-sm' : b.className.replace(/bg-cta\s*text-on-primary\s*shadow-sm/,'').trim()}`;
+    b.classList.toggle('bg-cta', active);
+    b.classList.toggle('text-on-primary', active);
+    b.classList.toggle('shadow-sm', active);
+  });
+  renderHistorial();
 }
 
 function showMovimientoModal() {
@@ -1440,17 +1543,165 @@ async function saveMovimiento() {
   }
 }
 
-function clearMovFilters() {
-  document.getElementById('mov-date-from').value = '';
-  document.getElementById('mov-date-to').value = '';
-  movTipoFilter = 'all';
-  document.querySelectorAll('.mov-tipo-filter').forEach(b => {
-    const isAll = b.dataset.tipo === 'all';
-    b.classList.toggle('bg-cta', isAll);
-    b.classList.toggle('text-on-primary', isAll);
-    b.classList.toggle('shadow-sm', isAll);
+function clearMovFilters() { clearHistFiltros(); }
+
+// ── Inventario tabs ──
+let currentInvTab = 'lotes';
+function switchInvTab(tab) {
+  currentInvTab = tab;
+  const lotesPanel = document.getElementById('inv-tab-lotes-panel');
+  const histPanel = document.getElementById('inv-tab-hist-panel');
+  if (lotesPanel) lotesPanel.style.display = tab === 'lotes' ? 'flex' : 'none';
+  if (histPanel) histPanel.style.display = tab === 'historial' ? 'flex' : 'none';
+  const lotesBtn = document.getElementById('inv-tab-lotes');
+  const histBtn = document.getElementById('inv-tab-hist');
+  if (lotesBtn) lotesBtn.className = `flex-1 py-2 rounded-lg font-label-md text-label-md transition-all ${tab === 'lotes' ? 'bg-cta text-on-primary' : 'text-on-surface-variant hover:text-on-surface'}`;
+  if (histBtn) histBtn.className = `flex-1 py-2 rounded-lg font-label-md text-label-md transition-all ${tab === 'historial' ? 'bg-cta text-on-primary' : 'text-on-surface-variant hover:text-on-surface'}`;
+  if (tab === 'historial') renderHistorial();
+}
+
+// ── Quick Stock ──
+let quickStockLoteId = null;
+let quickStockTipo = 'entrada';
+
+function showQuickStock(loteId, tipo = 'entrada') {
+  const lote = allLotes.find(l => l.id === loteId);
+  if (!lote) return;
+  quickStockLoteId = loteId;
+  document.body.style.overflow = 'hidden';
+  document.getElementById('qs-qty').value = '';
+  document.getElementById('qs-nota').value = '';
+  document.getElementById('qs-qty-error').textContent = '';
+  document.getElementById('qs-lote-name').textContent = `${lote.nombre} · ${lote.lote}`;
+  document.getElementById('qs-stock-actual').textContent = `${lote.cantidad} ${lote.unidad || 'uds'}`;
+  updateQSTipoUI(tipo);
+  document.getElementById('modal-qs-bd').style.display = 'block';
+  document.getElementById('modal-qs').style.display = 'flex';
+}
+
+function closeQuickStock() {
+  document.body.style.overflow = '';
+  document.getElementById('modal-qs-bd').style.display = 'none';
+  document.getElementById('modal-qs').style.display = 'none';
+}
+
+function updateQSTipoUI(tipo) {
+  quickStockTipo = tipo;
+  const cfg = {
+    entrada: { icon: 'add_circle', title: 'Registrar Entrada', lbl: 'Cantidad a ingresar *' },
+    salida:  { icon: 'remove_circle', title: 'Registrar Salida', lbl: 'Cantidad a retirar *' },
+    ajuste:  { icon: 'tune', title: 'Ajuste de Stock', lbl: 'Nueva cantidad exacta *' }
+  };
+  const c = cfg[tipo];
+  document.getElementById('qs-tipo-icon').textContent = c.icon;
+  document.getElementById('qs-title').textContent = c.title;
+  document.getElementById('qs-qty-label').textContent = c.lbl;
+  const btnColors = { entrada:'bg-tertiary text-on-tertiary', salida:'bg-error text-on-error', ajuste:'bg-secondary text-on-secondary' };
+  document.querySelectorAll('.qs-tipo-btn').forEach(btn => {
+    const t = btn.dataset.tipo;
+    btn.className = `qs-tipo-btn flex-1 py-2 rounded-lg font-label-md text-label-md transition-all ${t === tipo ? btnColors[t] : 'text-on-surface-variant hover:text-on-surface'}`;
   });
-  renderMovimientos();
+}
+
+async function saveQuickStock() {
+  const lote = allLotes.find(l => l.id === quickStockLoteId);
+  const cant = parseInt(document.getElementById('qs-qty').value);
+  const nota = document.getElementById('qs-nota').value.trim();
+  const errEl = document.getElementById('qs-qty-error');
+  errEl.textContent = '';
+  if (!lote) { errEl.textContent = 'Lote no encontrado.'; return; }
+  if (isNaN(cant) || cant < 0) { errEl.textContent = 'Ingresa una cantidad válida (≥ 0).'; return; }
+  if (quickStockTipo !== 'ajuste' && cant === 0) { errEl.textContent = 'La cantidad debe ser mayor a 0.'; return; }
+  const cantidadAntes = Number(lote.cantidad) || 0;
+  let cantidadDespues;
+  if (quickStockTipo === 'entrada') {
+    cantidadDespues = cantidadAntes + cant;
+  } else if (quickStockTipo === 'salida') {
+    if (cant > cantidadAntes) { errEl.textContent = `Stock insuficiente: solo hay ${cantidadAntes} ${lote.unidad || 'unidades'}.`; return; }
+    cantidadDespues = cantidadAntes - cant;
+  } else {
+    cantidadDespues = cant;
+  }
+  const btn = document.getElementById('qs-save-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Guardando...</span>';
+  try {
+    const now = Timestamp.now();
+    await addDoc(collection(db, `users/${currentUser.uid}/movimientos`), {
+      tipo: quickStockTipo, loteId: lote.id, loteCode: lote.lote, productoNombre: lote.nombre,
+      cantidadMovimiento: cant, cantidadAntes, cantidadDespues, fecha: now, nota, creadoEn: now
+    });
+    await updateDoc(doc(db, `users/${currentUser.uid}/lotes`, lote.id), { cantidad: cantidadDespues });
+    btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>¡Listo!</span>';
+    setTimeout(closeQuickStock, 600);
+  } catch(e) {
+    errEl.textContent = 'Error: ' + e.message;
+  } finally {
+    setTimeout(() => { btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span><span>Guardar</span>'; }, 1500);
+  }
+}
+
+// ── Detalle Lote ──
+function showLoteDetail(loteId) {
+  const lote = allLotes.find(l => l.id === loteId);
+  if (!lote) return;
+  document.body.style.overflow = 'hidden';
+  const { estado: estadoVenc, dias } = getEstado(lote.vencimiento.toDate());
+  const { estado: estadoStock, label: stockLabel } = getEstadoStock(Number(lote.cantidad)||0, lote);
+  document.getElementById('det-nombre').textContent = lote.nombre;
+  document.getElementById('det-desc').textContent = lote.descripcion ? `${lote.lote} · ${lote.descripcion}` : lote.lote;
+  const vencLabel = { vencido:'Vencido', 'critico-venc':'Crítico por vencer', 'por-vencer':'Por vencer', vigente:'Vigente' };
+  const vencBadge = { vencido:'bg-error text-on-error', 'critico-venc':'bg-error-container text-on-error-container', 'por-vencer':'bg-secondary-container text-on-secondary-container', vigente:'bg-tertiary-container text-on-tertiary-container' };
+  const stockBadge = { 'sin-stock':'bg-error-container text-error-text', 'critico-stock':'bg-error-container/60 text-error-text', bajo:'bg-secondary-container/60 text-warn-text', aceptable:'bg-tertiary-container text-on-tertiary-container' };
+  const diasTxt = dias < 0 ? `Venció hace ${Math.abs(dias)} días` : `Vence en ${dias} días`;
+  const movs = allMovimientos.filter(m => m.loteId === loteId).slice(0, 20);
+  const movRows = movs.length === 0
+    ? `<p class="text-on-surface-variant font-body-sm py-4 text-center">Sin movimientos registrados</p>`
+    : movs.map(m => {
+        const tipoBadge = { entrada:'bg-tertiary-container text-on-tertiary-container', salida:'bg-error-container text-on-error-container', ajuste:'bg-secondary-container text-on-secondary-container' }[m.tipo];
+        const signo = m.tipo === 'entrada' ? '+' : m.tipo === 'salida' ? '−' : '=';
+        const color = { entrada:'text-on-tertiary-container', salida:'text-error-text', ajuste:'text-warn-text' }[m.tipo];
+        const fecha = m.fecha.toDate().toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric' });
+        return `<div class="flex items-center justify-between py-2 border-b border-surface-container-highest/50 last:border-b-0">
+          <div class="flex flex-col min-w-0 flex-1">
+            <div class="flex items-center gap-2"><span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold ${tipoBadge}">${m.tipo}</span><span class="font-body-sm text-on-surface-variant">${fecha}</span></div>
+            ${m.nota ? `<span class="font-body-sm text-body-sm text-on-surface-variant truncate">${escHtml(m.nota)}</span>` : ''}
+          </div>
+          <div class="flex flex-col items-end shrink-0"><span class="font-headline-sm font-bold ${color}">${signo}${m.cantidadMovimiento}</span><span class="font-label-sm text-on-surface-variant">${m.cantidadAntes}→${m.cantidadDespues}</span></div>
+        </div>`;
+      }).join('');
+  document.getElementById('det-body').innerHTML = `
+    <div class="grid grid-cols-2 gap-3">
+      <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1">
+        <span class="font-label-sm text-on-surface-variant">Stock actual</span>
+        <span class="font-headline-sm text-on-surface font-bold">${lote.cantidad} <span class="font-body-sm text-on-surface-variant font-normal">${escHtml(lote.unidad||'uds')}</span></span>
+        <span class="inline-flex w-fit px-2 py-0.5 rounded-full text-[11px] font-bold ${stockBadge[estadoStock]}">${stockLabel}</span>
+      </div>
+      <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1">
+        <span class="font-label-sm text-on-surface-variant">Vencimiento</span>
+        <span class="font-code-batch text-code-batch text-on-surface">${formatFecha(lote.vencimiento.toDate())}</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">${diasTxt}</span>
+        <span class="inline-flex w-fit px-2 py-0.5 rounded-full text-[11px] font-bold ${vencBadge[estadoVenc]}">${vencLabel[estadoVenc]}</span>
+      </div>
+    </div>
+    ${lote.ubicacion ? `<div class="bg-surface-container p-3 rounded-xl font-body-sm text-body-sm"><span class="text-on-surface-variant">Ubicación: </span><span class="text-on-surface">${escHtml(lote.ubicacion)}</span></div>` : ''}
+    <div class="flex gap-2">
+      <button onclick="showQuickStock('${escHtml(loteId)}','entrada');closeLoteDetail();" class="flex-1 h-10 rounded-lg bg-tertiary-container text-on-tertiary-container font-label-md text-label-md flex items-center justify-center gap-1.5 hover:brightness-110 transition-all" type="button"><span class="material-symbols-outlined text-[18px]">add</span>Entrada</button>
+      <button onclick="showQuickStock('${escHtml(loteId)}','salida');closeLoteDetail();" class="flex-1 h-10 rounded-lg bg-error-container text-on-error-container font-label-md text-label-md flex items-center justify-center gap-1.5 hover:brightness-110 transition-all" type="button"><span class="material-symbols-outlined text-[18px]">remove</span>Salida</button>
+      <button onclick="showEditarModal('${escHtml(loteId)}');closeLoteDetail();" class="flex-1 h-10 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center justify-center gap-1.5 hover:bg-surface-bright transition-all" type="button"><span class="material-symbols-outlined text-[18px]">edit</span>Editar</button>
+    </div>
+    <div class="flex flex-col gap-2">
+      <h3 class="font-headline-sm text-headline-sm text-on-surface">Historial de movimientos</h3>
+      <div class="bg-surface-container rounded-xl px-3 flex flex-col">${movRows}</div>
+    </div>`;
+  document.getElementById('panel-lote-bd').style.display = 'block';
+  document.getElementById('panel-lote').style.display = 'flex';
+}
+
+function closeLoteDetail() {
+  document.body.style.overflow = '';
+  document.getElementById('panel-lote-bd').style.display = 'none';
+  document.getElementById('panel-lote').style.display = 'none';
 }
 
 // ── Reportes ──
@@ -1495,19 +1746,17 @@ function getFilteredInventario() {
 
 function renderRepInventario() {
   const data = getFilteredInventario();
-  const counts = { all: allLotes.length, vencido:0, critico:0, 'por-vencer':0, aceptable:0 };
-  allLotes.forEach(l => counts[getEstado(l.vencimiento.toDate()).estado]++);
+  const counts = { all: allLotes.length, vencido:0, 'critico-venc':0, 'por-vencer':0, vigente:0 };
+  allLotes.forEach(l => { const e = getEstado(l.vencimiento.toDate()).estado; if (counts[e] !== undefined) counts[e]++; });
   const totalStock = data.reduce((s,l) => s + (Number(l.cantidad)||0), 0);
-  // KPIs
   document.getElementById('rep-inv-kpis').innerHTML = `
     <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Lotes en reporte</span><span class="font-headline-sm text-headline-sm text-on-surface font-bold">${data.length}</span><span class="font-body-sm text-body-sm text-on-surface-variant">de ${allLotes.length} total</span></div>
     <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Stock total</span><span class="font-headline-sm text-headline-sm text-on-surface font-bold">${totalStock.toLocaleString('es-AR')}</span><span class="font-body-sm text-body-sm text-on-surface-variant">unidades</span></div>
-    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1 border-l-2 border-error"><span class="font-label-sm text-label-sm text-on-surface-variant">Alertas</span><span class="font-headline-sm text-headline-sm text-error-text font-bold">${counts.vencido + counts.critico}</span><span class="font-body-sm text-body-sm text-on-surface-variant">vencidos + críticos</span></div>
-    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1 border-l-2 border-tertiary"><span class="font-label-sm text-label-sm text-on-surface-variant">Aceptables</span><span class="font-headline-sm text-headline-sm text-on-tertiary-container font-bold">${counts.aceptable}</span><span class="font-body-sm text-body-sm text-on-surface-variant">lotes óptimos</span></div>`;
-  // Chart
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1 border-l-2 border-error"><span class="font-label-sm text-label-sm text-on-surface-variant">Alertas</span><span class="font-headline-sm text-headline-sm text-error-text font-bold">${counts.vencido + counts['critico-venc']}</span><span class="font-body-sm text-body-sm text-on-surface-variant">vencidos + críticos</span></div>
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1 border-l-2 border-tertiary"><span class="font-label-sm text-label-sm text-on-surface-variant">Vigentes</span><span class="font-headline-sm text-headline-sm text-on-tertiary-container font-bold">${counts.vigente}</span><span class="font-body-sm text-body-sm text-on-surface-variant">lotes óptimos</span></div>`;
   const total = allLotes.length || 1;
-  const pOk = Math.round(counts.aceptable/total*100), pPv = Math.round(counts['por-vencer']/total*100);
-  const pCr = Math.round(counts.critico/total*100), pVe = Math.round(counts.vencido/total*100);
+  const pOk = Math.round(counts.vigente/total*100), pPv = Math.round(counts['por-vencer']/total*100);
+  const pCr = Math.round(counts['critico-venc']/total*100), pVe = Math.round(counts.vencido/total*100);
   document.getElementById('rep-inv-chart').innerHTML = `
     <div class="flex items-center justify-between"><h3 class="font-headline-sm text-headline-sm text-on-surface">Distribución por Estado</h3><span class="font-label-sm text-label-sm text-tertiary bg-tertiary-container/20 px-2 py-0.5 rounded">${pOk + pPv}% operativo</span></div>
     <div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden flex gap-0.5 p-0.5">
@@ -1517,22 +1766,22 @@ function renderRepInventario() {
       <div class="h-full bg-on-error-container transition-all rounded-r-full" style="width:${pVe}%"></div>
     </div>
     <div class="grid grid-cols-2 gap-2 font-label-sm text-label-sm">
-      <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-tertiary shrink-0"></span><span class="text-on-surface">${counts.aceptable} Aceptable (${pOk}%)</span></div>
+      <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-tertiary shrink-0"></span><span class="text-on-surface">${counts.vigente} Vigente (${pOk}%)</span></div>
       <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-secondary shrink-0"></span><span class="text-on-surface">${counts['por-vencer']} Por vencer (${pPv}%)</span></div>
-      <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-error shrink-0"></span><span class="text-on-surface">${counts.critico} Crítico (${pCr}%)</span></div>
+      <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-error shrink-0"></span><span class="text-on-surface">${counts['critico-venc']} Crítico (${pCr}%)</span></div>
       <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-on-error-container shrink-0"></span><span class="text-on-surface">${counts.vencido} Vencido (${pVe}%)</span></div>
     </div>`;
-  // Table
   document.getElementById('rep-inv-count').textContent = `${data.length} lotes`;
   if (data.length === 0) {
     document.getElementById('rep-inv-table').innerHTML = `<div class="py-8 text-center text-on-surface-variant font-body-md">Sin lotes para mostrar</div>`;
     return;
   }
-  const badgeColor = { vencido:'color:#B91C1C;background:#FECACA', critico:'color:#B91C1C;background:#FEE2E2', 'por-vencer':'color:#92600A;background:#FEF3C7', aceptable:'color:#065F46;background:#D1FAE5' };
+  const badgeColor = { vencido:'color:#B91C1C;background:#FECACA', 'critico-venc':'color:#B91C1C;background:#FEE2E2', 'por-vencer':'color:#92600A;background:#FEF3C7', vigente:'color:#065F46;background:#D1FAE5' };
+  const badgeLabel = { vencido:'Vencido', 'critico-venc':'Crítico', 'por-vencer':'Por vencer', vigente:'Vigente' };
   const rows = data.map(l => {
     const { estado, dias } = getEstado(l.vencimiento.toDate());
     const diasTxt = dias < 0 ? `Vencido (${Math.abs(dias)}d)` : `${dias}d`;
-    return `<tr><td>${escHtml(l.nombre)}</td><td style="font-family:monospace">${escHtml(l.lote)}</td><td style="text-align:right">${l.cantidad}</td><td>${escHtml(l.unidad||'uds')}</td><td style="font-family:monospace">${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;${badgeColor[estado]}">${estado}</span></td></tr>`;
+    return `<tr><td>${escHtml(l.nombre)}</td><td style="font-family:monospace">${escHtml(l.lote)}</td><td style="text-align:right">${l.cantidad}</td><td>${escHtml(l.unidad||'uds')}</td><td style="font-family:monospace">${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;${badgeColor[estado]}">${badgeLabel[estado]||estado}</span></td></tr>`;
   }).join('');
   document.getElementById('rep-inv-table').innerHTML = `<table class="rep-table"><thead><tr><th>Producto</th><th>Lote</th><th>Cant.</th><th>Unid.</th><th>Vencimiento</th><th>Días</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
@@ -1554,17 +1803,16 @@ function getFilteredVencimientos() {
 
 function renderRepVencimientos() {
   const data = getFilteredVencimientos();
-  const counts = { vencido:0, critico:0, 'por-vencer':0, aceptable:0 };
-  data.forEach(l => counts[getEstado(l.vencimiento.toDate()).estado]++);
+  const counts = { vencido:0, 'critico-venc':0, 'por-vencer':0, vigente:0 };
+  data.forEach(l => { const e = getEstado(l.vencimiento.toDate()).estado; if (counts[e] !== undefined) counts[e]++; });
   document.getElementById('rep-venc-kpis').innerHTML = `
     <div class="bg-surface-container p-3 rounded-xl border-l-2 border-error flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Vencidos</span><span class="font-headline-sm text-headline-sm text-error-text font-bold">${counts.vencido}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Retirar urgente</span></div>
-    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Críticos &lt;30d</span><span class="font-headline-sm text-headline-sm text-error-text font-bold">${counts.critico}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Prioridad FEFO</span></div>
-    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Por vencer &lt;90d</span><span class="font-headline-sm text-headline-sm text-warn-text font-bold">${counts['por-vencer']}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Planificar salida</span></div>
-    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Aceptables</span><span class="font-headline-sm text-headline-sm text-on-tertiary-container font-bold">${counts.aceptable}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Stock seguro</span></div>`;
-  // Urgency chart
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Crítico ≤${fefoSettings.venc_critico}d</span><span class="font-headline-sm text-headline-sm text-error-text font-bold">${counts['critico-venc']}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Prioridad FEFO</span></div>
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Por vencer ≤${fefoSettings.venc_porVencer}d</span><span class="font-headline-sm text-headline-sm text-warn-text font-bold">${counts['por-vencer']}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Planificar salida</span></div>
+    <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Vigentes</span><span class="font-headline-sm text-headline-sm text-on-tertiary-container font-bold">${counts.vigente}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Stock seguro</span></div>`;
   const total = data.length || 1;
-  const pV = Math.round(counts.vencido/total*100), pC = Math.round(counts.critico/total*100);
-  const pPV = Math.round(counts['por-vencer']/total*100), pA = Math.round(counts.aceptable/total*100);
+  const pV = Math.round(counts.vencido/total*100), pC = Math.round(counts['critico-venc']/total*100);
+  const pPV = Math.round(counts['por-vencer']/total*100), pA = Math.round(counts.vigente/total*100);
   document.getElementById('rep-venc-chart').innerHTML = `
     <h3 class="font-headline-sm text-headline-sm text-on-surface">Distribución de Urgencia</h3>
     <div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden flex gap-0.5 p-0.5">
@@ -1575,17 +1823,18 @@ function renderRepVencimientos() {
     </div>
     <div class="flex flex-wrap gap-x-4 gap-y-1 font-label-sm text-label-sm">
       <span class="flex gap-1 items-center"><span class="w-2 h-2 rounded-full bg-on-error-container"></span>Vencido: ${counts.vencido} (${pV}%)</span>
-      <span class="flex gap-1 items-center"><span class="w-2 h-2 rounded-full bg-error"></span>Crítico: ${counts.critico} (${pC}%)</span>
+      <span class="flex gap-1 items-center"><span class="w-2 h-2 rounded-full bg-error"></span>Crítico: ${counts['critico-venc']} (${pC}%)</span>
       <span class="flex gap-1 items-center"><span class="w-2 h-2 rounded-full bg-secondary"></span>Por vencer: ${counts['por-vencer']} (${pPV}%)</span>
-      <span class="flex gap-1 items-center"><span class="w-2 h-2 rounded-full bg-tertiary"></span>Aceptable: ${counts.aceptable} (${pA}%)</span>
+      <span class="flex gap-1 items-center"><span class="w-2 h-2 rounded-full bg-tertiary"></span>Vigente: ${counts.vigente} (${pA}%)</span>
     </div>`;
   document.getElementById('rep-venc-count').textContent = `${data.length} lotes`;
   if (data.length === 0) { document.getElementById('rep-venc-table').innerHTML = `<div class="py-8 text-center text-on-surface-variant font-body-md">Sin lotes para el filtro aplicado</div>`; return; }
-  const badgeColor = { vencido:'color:#B91C1C;background:#FECACA', critico:'color:#B91C1C;background:#FEE2E2', 'por-vencer':'color:#92600A;background:#FEF3C7', aceptable:'color:#065F46;background:#D1FAE5' };
+  const badgeColor = { vencido:'color:#B91C1C;background:#FECACA', 'critico-venc':'color:#B91C1C;background:#FEE2E2', 'por-vencer':'color:#92600A;background:#FEF3C7', vigente:'color:#065F46;background:#D1FAE5' };
+  const badgeLabel = { vencido:'Vencido', 'critico-venc':'Crítico', 'por-vencer':'Por vencer', vigente:'Vigente' };
   const rows = data.map(l => {
     const { estado, dias } = getEstado(l.vencimiento.toDate());
     const diasTxt = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : `${dias}d restantes`;
-    return `<tr><td>${escHtml(l.nombre)}</td><td style="font-family:monospace">${escHtml(l.lote)}</td><td style="text-align:right">${l.cantidad} ${escHtml(l.unidad||'')}</td><td style="font-family:monospace">${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;${badgeColor[estado]}">${estado}</span></td></tr>`;
+    return `<tr><td>${escHtml(l.nombre)}</td><td style="font-family:monospace">${escHtml(l.lote)}</td><td style="text-align:right">${l.cantidad} ${escHtml(l.unidad||'')}</td><td style="font-family:monospace">${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;${badgeColor[estado]}">${badgeLabel[estado]||estado}</span></td></tr>`;
   }).join('');
   document.getElementById('rep-venc-table').innerHTML = `<table class="rep-table"><thead><tr><th>Producto</th><th>Lote</th><th>Stock</th><th>Vencimiento</th><th>Días</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
@@ -1688,13 +1937,14 @@ function exportarCSV(tipo) {
 function exportarPDF(tipo) {
   const fecha = todayDisplay();
   let titulo = '', datos = [], cabeceras = [], filas = '';
-  const badgeStyle = { vencido:'background:#FECACA;color:#B91C1C', critico:'background:#FEE2E2;color:#B91C1C', 'por-vencer':'background:#FEF3C7;color:#92600A', aceptable:'background:#D1FAE5;color:#065F46' };
+  const badgeStyle = { vencido:'background:#FECACA;color:#B91C1C', 'critico-venc':'background:#FEE2E2;color:#B91C1C', 'por-vencer':'background:#FEF3C7;color:#92600A', vigente:'background:#D1FAE5;color:#065F46' };
+  const badgeLbl = { vencido:'Vencido', 'critico-venc':'Crítico', 'por-vencer':'Por vencer', vigente:'Vigente' };
   if (tipo === 'inventario') {
     titulo = 'Reporte de Inventario Actual';
     datos = getFilteredInventario();
     filas = datos.map(l => {
       const { estado, dias } = getEstado(l.vencimiento.toDate());
-      return `<tr><td>${escHtml(l.nombre)}</td><td>${escHtml(l.lote)}</td><td align="right">${l.cantidad}</td><td>${escHtml(l.unidad||'uds')}</td><td>${formatFecha(l.vencimiento.toDate())}</td><td align="right">${dias}</td><td><span style="padding:1px 7px;border-radius:999px;font-size:10px;font-weight:700;${badgeStyle[estado]}">${estado}</span></td></tr>`;
+      return `<tr><td>${escHtml(l.nombre)}</td><td>${escHtml(l.lote)}</td><td align="right">${l.cantidad}</td><td>${escHtml(l.unidad||'uds')}</td><td>${formatFecha(l.vencimiento.toDate())}</td><td align="right">${dias}</td><td><span style="padding:1px 7px;border-radius:999px;font-size:10px;font-weight:700;${badgeStyle[estado]}">${badgeLbl[estado]||estado}</span></td></tr>`;
     }).join('');
     cabeceras = ['Producto','Lote','Cant.','Unid.','Vencimiento','Días','Estado'];
   } else if (tipo === 'vencimientos') {
@@ -1703,7 +1953,7 @@ function exportarPDF(tipo) {
     filas = datos.map(l => {
       const { estado, dias } = getEstado(l.vencimiento.toDate());
       const diasTxt = dias < 0 ? `Vencido ${Math.abs(dias)}d` : `${dias}d`;
-      return `<tr><td>${escHtml(l.nombre)}</td><td>${escHtml(l.lote)}</td><td align="right">${l.cantidad} ${escHtml(l.unidad||'')}</td><td>${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:1px 7px;border-radius:999px;font-size:10px;font-weight:700;${badgeStyle[estado]}">${estado}</span></td></tr>`;
+      return `<tr><td>${escHtml(l.nombre)}</td><td>${escHtml(l.lote)}</td><td align="right">${l.cantidad} ${escHtml(l.unidad||'')}</td><td>${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:1px 7px;border-radius:999px;font-size:10px;font-weight:700;${badgeStyle[estado]}">${badgeLbl[estado]||estado}</span></td></tr>`;
     }).join('');
     cabeceras = ['Producto','Lote','Stock','Vencimiento','Días','Estado'];
   } else {
@@ -1857,17 +2107,26 @@ function updateCfgThemeUI() {
 }
 
 function saveFEFOParams() {
-  const critico = parseInt(document.getElementById('cfg-fefo-critico').value) || 30;
-  const porVencer = parseInt(document.getElementById('cfg-fefo-porvencer').value) || 90;
+  const critico = parseInt(document.getElementById('cfg-fefo-critico').value) || 10;
+  const porVencer = parseInt(document.getElementById('cfg-fefo-porvencer').value) || 30;
+  const stockCritico = parseInt(document.getElementById('cfg-stock-critico').value) ?? 10;
+  const stockAceptable = parseInt(document.getElementById('cfg-stock-aceptable').value) || 50;
   const msg = document.getElementById('cfg-fefo-msg');
   if (critico >= porVencer) {
     msg.textContent = 'El umbral crítico debe ser menor que "por vencer".';
     msg.style.color = 'rgb(var(--c-error))';
     return;
   }
-  fefoSettings.critico = critico;
-  fefoSettings.porVencer = porVencer;
-  localStorage.setItem('tamara-settings', JSON.stringify({ fefo_critico: critico, fefo_porVencer: porVencer }));
+  if (stockCritico >= stockAceptable) {
+    msg.textContent = 'El umbral crítico de stock debe ser menor que el aceptable.';
+    msg.style.color = 'rgb(var(--c-error))';
+    return;
+  }
+  fefoSettings.venc_critico = critico;
+  fefoSettings.venc_porVencer = porVencer;
+  fefoSettings.stock_critico = stockCritico;
+  fefoSettings.stock_aceptable = stockAceptable;
+  localStorage.setItem('tamara-settings', JSON.stringify({ fefo_critico: critico, fefo_porVencer: porVencer, stock_critico: stockCritico, stock_aceptable: stockAceptable }));
   renderAll();
   msg.textContent = '¡Parámetros aplicados!';
   msg.style.color = 'rgb(var(--c-tertiary))';
@@ -1926,10 +2185,10 @@ function showEditarModal(loteId) {
   document.getElementById('observations').value = lote.ubicacion || lote.descripcion || '';
   document.getElementById('edit-lote-badge').textContent = lote.lote || '—';
   const { estado, dias } = getEstado(lote.vencimiento.toDate());
-  const labels = { vencido:'Vencido', critico:'Crítico', 'por-vencer':'Por vencer', aceptable:'Aceptable' };
+  const labels = { vencido:'Vencido', 'critico-venc':'Crítico por vencer', 'por-vencer':'Por vencer', vigente:'Vigente' };
   const badgeClasses = {
-    vencido: 'bg-error text-on-error', critico: 'bg-error-container text-on-error-container',
-    'por-vencer': 'bg-secondary-container text-on-secondary-container', aceptable: 'bg-tertiary-container text-on-tertiary-container'
+    vencido: 'bg-error text-on-error', 'critico-venc': 'bg-error-container text-on-error-container',
+    'por-vencer': 'bg-secondary-container text-on-secondary-container', vigente: 'bg-tertiary-container text-on-tertiary-container'
   };
   const badgeEl = document.getElementById('edit-status-badge');
   badgeEl.className = `inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-label-sm text-label-sm ${badgeClasses[estado]}`;
@@ -1940,8 +2199,8 @@ function showEditarModal(loteId) {
   document.getElementById('edit-dias-text').textContent = diasTxt;
   document.getElementById('edit-status-text').innerHTML = dias < 0
     ? '<strong>Vencido — Requiere baja inmediata.</strong>'
-    : dias <= 30 ? `<strong>Vence en ${dias} días — ¡Urgente! Prioridad FEFO Máxima.</strong>`
-    : dias <= 90 ? `<strong>Vence en ${dias} días. Planificar distribución.</strong>`
+    : dias <= fefoSettings.venc_critico ? `<strong>Vence en ${dias} días — ¡Urgente! Prioridad FEFO Máxima.</strong>`
+    : dias <= fefoSettings.venc_porVencer ? `<strong>Vence en ${dias} días. Planificar distribución.</strong>`
     : `<strong>Vence en ${dias} días. Estado óptimo.</strong>`;
   document.body.style.overflow = 'hidden';
   document.getElementById('modalBackdrop').style.display = 'block';
@@ -2049,8 +2308,10 @@ function filterBatchTable(status, activeBtn) {
     btn.className = 'batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-all';
   });
   activeBtn.className = 'batch-filter-btn px-2.5 py-1 rounded text-label-sm font-label-sm bg-cta text-on-primary font-medium transition-all shadow-sm';
+  const map = { 'critico': 'critico-venc' };
+  const mapped = map[status] || status;
   document.querySelectorAll('#batch-list-container .batch-item').forEach(item => {
-    item.style.display = (status === 'todos' || item.dataset.status === status) ? 'flex' : 'none';
+    item.style.display = (status === 'todos' || item.dataset.status === mapped) ? 'flex' : 'none';
   });
 }
 
@@ -2060,16 +2321,37 @@ document.querySelectorAll('.inv-filter-pill').forEach(pill => {
     document.querySelectorAll('.inv-filter-pill').forEach(p => p.classList.remove('ring-2','ring-primary','scale-105'));
     pill.classList.add('ring-2','ring-primary','scale-105');
     currentFilter = pill.dataset.status;
-    renderInventoryCards(currentFilter, currentSearch);
+    renderLotesList(currentFilter, currentSearch);
   });
 });
-document.getElementById('batch-search').addEventListener('input', e => {
+document.getElementById('inv-search').addEventListener('input', e => {
   currentSearch = e.target.value.toLowerCase().trim();
-  renderInventoryCards(currentFilter, currentSearch);
+  renderLotesList(currentFilter, currentSearch);
 });
 document.getElementById('select-sort').addEventListener('change', () => {
-  renderInventoryCards(currentFilter, currentSearch);
+  renderLotesList(currentFilter, currentSearch);
 });
+// ── UI: filtros historial ──
+document.querySelectorAll('.hist-tipo-filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    histTipoFilter = btn.dataset.tipo;
+    document.querySelectorAll('.hist-tipo-filter').forEach(b => {
+      const active = b.dataset.tipo === histTipoFilter;
+      b.classList.toggle('bg-cta', active);
+      b.classList.toggle('text-on-primary', active);
+      b.classList.toggle('shadow-sm', active);
+    });
+    renderHistorial();
+  });
+});
+document.getElementById('hist-date-from').addEventListener('change', renderHistorial);
+document.getElementById('hist-date-to').addEventListener('change', renderHistorial);
+// ── UI: quick stock tipo ──
+document.querySelectorAll('.qs-tipo-btn').forEach(btn => {
+  btn.addEventListener('click', () => updateQSTipoUI(btn.dataset.tipo));
+});
+document.getElementById('modal-qs-bd').addEventListener('click', closeQuickStock);
+document.getElementById('panel-lote-bd').addEventListener('click', closeLoteDetail);
 
 // ── UI: theme ──
 function updateThemeUI() {
@@ -2131,22 +2413,6 @@ document.getElementById('mov-lote-select').addEventListener('change', function()
   }
 });
 
-// ── Filtros movimientos ──
-document.querySelectorAll('.mov-tipo-filter').forEach(btn => {
-  btn.addEventListener('click', () => {
-    movTipoFilter = btn.dataset.tipo;
-    document.querySelectorAll('.mov-tipo-filter').forEach(b => {
-      const active = b.dataset.tipo === movTipoFilter;
-      b.classList.toggle('bg-cta', active);
-      b.classList.toggle('text-on-primary', active);
-      b.classList.toggle('shadow-sm', active);
-      if (!active) { b.classList.remove('bg-cta', 'text-on-primary', 'shadow-sm'); }
-    });
-    renderMovimientos();
-  });
-});
-document.getElementById('mov-date-from').addEventListener('change', renderMovimientos);
-document.getElementById('mov-date-to').addEventListener('change', renderMovimientos);
 
 // Exponer globales para onclick en HTML
 window.navigateTo = navigateTo;
@@ -2172,6 +2438,13 @@ window.saveDisplayName = saveDisplayName;
 window.sendPasswordReset = sendPasswordReset;
 window.setTheme = setTheme;
 window.saveFEFOParams = saveFEFOParams;
+window.switchInvTab = switchInvTab;
+window.showQuickStock = showQuickStock;
+window.closeQuickStock = closeQuickStock;
+window.saveQuickStock = saveQuickStock;
+window.showLoteDetail = showLoteDetail;
+window.closeLoteDetail = closeLoteDetail;
+window.clearHistFiltros = clearHistFiltros;
 
 // ── Filtros de reportes ──
 document.querySelectorAll('.rep-inv-pill').forEach(btn => {
