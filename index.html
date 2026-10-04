@@ -673,11 +673,128 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
 
   </div>
 </main>
-<main id="page-configuracion" class="page-section flex-col items-center justify-center relative w-full px-margin pt-16 pb-safe bg-surface min-h-screen">
-  <div class="flex flex-col items-center gap-4 text-center py-20">
-    <div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center"><span class="material-symbols-outlined text-[32px] text-on-surface-variant">tune</span></div>
-    <h2 class="font-headline-md text-headline-md text-on-surface">Ajustes</h2>
-    <p class="font-body-md text-body-md text-on-surface-variant max-w-xs">Configuración de almacén, usuarios y parámetros FEFO. Próximamente disponible.</p>
+<main id="page-configuracion" class="page-section flex-col relative w-full px-margin pt-16 pb-safe bg-surface">
+  <div class="flex flex-col w-full max-w-lg mx-auto pb-10 space-y-5 pt-5">
+    <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Ajustes</h1>
+
+    <!-- Mi cuenta -->
+    <section class="bg-surface-container rounded-2xl overflow-hidden">
+      <div class="px-4 py-3 border-b border-outline-variant/30">
+        <h2 class="font-headline-sm text-headline-sm text-on-surface">Mi cuenta</h2>
+      </div>
+      <div>
+        <div class="px-4 py-4 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-11 h-11 rounded-full bg-primary-container flex items-center justify-center flex-shrink-0 ring-2 ring-primary/30">
+              <span id="cfg-initials" class="font-headline-sm text-headline-sm text-on-primary-container font-bold">--</span>
+            </div>
+            <div class="flex flex-col min-w-0">
+              <span id="cfg-name-display" class="font-label-md text-label-md text-on-surface truncate">—</span>
+              <span id="cfg-email-display" class="font-body-sm text-body-sm text-on-surface-variant truncate">—</span>
+            </div>
+          </div>
+          <button onclick="toggleEditName()" class="flex-shrink-0 h-9 px-3 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors" type="button">Editar</button>
+        </div>
+        <div id="cfg-edit-name-row" class="px-4 pb-4 flex flex-col gap-2" style="display:none">
+          <div class="flex gap-2">
+            <input id="cfg-name-input" type="text" placeholder="Tu nombre" class="flex-1 h-10 px-3 rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors"/>
+            <button onclick="saveDisplayName()" class="h-10 px-4 rounded-lg bg-cta text-on-primary font-label-md text-label-md hover:brightness-110 active:scale-95 transition-all" type="button">Guardar</button>
+            <button onclick="toggleEditName()" class="h-10 px-3 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors" type="button">✕</button>
+          </div>
+          <p id="cfg-name-msg" class="font-body-sm text-body-sm text-error min-h-[1rem]"></p>
+        </div>
+        <div class="border-t border-outline-variant/20 px-4 py-4 flex items-center justify-between gap-3">
+          <div class="flex flex-col">
+            <span class="font-label-md text-label-md text-on-surface">Contraseña</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Se envía un enlace de restablecimiento al email</span>
+          </div>
+          <button onclick="sendPasswordReset()" class="flex-shrink-0 h-9 px-3 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors" type="button">Restablecer</button>
+        </div>
+        <div id="cfg-pass-msg" class="px-4 pb-3 font-body-sm text-body-sm text-tertiary" style="display:none"></div>
+      </div>
+    </section>
+
+    <!-- Apariencia -->
+    <section class="bg-surface-container rounded-2xl overflow-hidden">
+      <div class="px-4 py-3 border-b border-outline-variant/30">
+        <h2 class="font-headline-sm text-headline-sm text-on-surface">Apariencia</h2>
+      </div>
+      <div class="px-4 py-4 flex items-center justify-between gap-3">
+        <div class="flex flex-col">
+          <span class="font-label-md text-label-md text-on-surface">Tema</span>
+          <span id="cfg-theme-desc" class="font-body-sm text-body-sm text-on-surface-variant">Claro</span>
+        </div>
+        <div class="flex rounded-xl bg-surface-container-highest p-0.5 gap-0.5">
+          <button onclick="setTheme('light')" id="cfg-theme-light" class="h-8 px-3 rounded-lg font-label-md text-label-md transition-all bg-surface text-on-surface shadow-sm" type="button">Claro</button>
+          <button onclick="setTheme('dark')" id="cfg-theme-dark" class="h-8 px-3 rounded-lg font-label-md text-label-md transition-all text-on-surface-variant" type="button">Oscuro</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Parámetros FEFO -->
+    <section class="bg-surface-container rounded-2xl overflow-hidden">
+      <div class="px-4 py-3 border-b border-outline-variant/30">
+        <div class="flex items-center gap-2">
+          <h2 class="font-headline-sm text-headline-sm text-on-surface">Parámetros FEFO</h2>
+          <span class="font-body-sm text-body-sm text-on-surface-variant">(First Expiry, First Out)</span>
+        </div>
+      </div>
+      <div>
+        <div class="px-4 py-4 flex items-center justify-between gap-3">
+          <div class="flex flex-col gap-0.5">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-error flex-shrink-0"></span>
+              <span class="font-label-md text-label-md text-on-surface">Umbral Crítico</span>
+            </div>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Lotes que vencen en ≤ N días</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input id="cfg-fefo-critico" type="number" min="1" max="365" class="w-16 h-9 text-center rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors"/>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">días</span>
+          </div>
+        </div>
+        <div class="border-t border-outline-variant/20 px-4 py-4 flex items-center justify-between gap-3">
+          <div class="flex flex-col gap-0.5">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-secondary flex-shrink-0"></span>
+              <span class="font-label-md text-label-md text-on-surface">Umbral Por Vencer</span>
+            </div>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Lotes que vencen en ≤ N días</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input id="cfg-fefo-porvencer" type="number" min="1" max="730" class="w-16 h-9 text-center rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors"/>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">días</span>
+          </div>
+        </div>
+        <div class="border-t border-outline-variant/20 px-4 py-3 flex items-center justify-between gap-2">
+          <p id="cfg-fefo-msg" class="font-body-sm text-body-sm text-tertiary min-h-[1rem]"></p>
+          <button onclick="saveFEFOParams()" class="flex-shrink-0 h-9 px-4 rounded-lg bg-cta text-on-primary font-label-md text-label-md hover:brightness-110 active:scale-95 transition-all" type="button">Aplicar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Datos -->
+    <section class="bg-surface-container rounded-2xl overflow-hidden">
+      <div class="px-4 py-3 border-b border-outline-variant/30">
+        <h2 class="font-headline-sm text-headline-sm text-on-surface">Datos</h2>
+      </div>
+      <div class="px-4 py-4 flex items-center justify-between gap-3">
+        <div class="flex flex-col">
+          <span class="font-label-md text-label-md text-on-surface">Exportar inventario completo</span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant">Todos los lotes en formato CSV</span>
+        </div>
+        <button onclick="exportarCSV('inventario')" class="flex-shrink-0 h-9 px-3 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright flex items-center gap-1.5 transition-colors" type="button">
+          <span class="material-symbols-outlined text-[16px] text-tertiary">table_view</span>CSV
+        </button>
+      </div>
+    </section>
+
+    <!-- Cerrar sesión -->
+    <button onclick="handleLogout()" class="w-full h-12 rounded-2xl border border-error/40 text-error font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-error-container/20 active:scale-[0.98] transition-all" type="button">
+      <span class="material-symbols-outlined text-[20px]">logout</span>Cerrar sesión
+    </button>
+
+    <p class="text-center font-body-sm text-body-sm text-on-surface-variant pb-2">TamaraInventory · v1.0</p>
   </div>
 </main>
 
@@ -888,7 +1005,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
 <!-- ═══════════════ FIREBASE + LÓGICA ═══════════════ -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, Timestamp, setDoc } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -921,13 +1038,27 @@ function escHtml(str) {
   return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
+// ── Configuración FEFO ──
+let fefoSettings = { critico: 30, porVencer: 90 };
+function loadSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem('tamara-settings') || '{}');
+    fefoSettings.critico = s.fefo_critico || 30;
+    fefoSettings.porVencer = s.fefo_porVencer || 90;
+  } catch(e) {}
+  const ci = document.getElementById('cfg-fefo-critico');
+  const pv = document.getElementById('cfg-fefo-porvencer');
+  if (ci) ci.value = fefoSettings.critico;
+  if (pv) pv.value = fefoSettings.porVencer;
+}
+
 function getEstado(vencDate) {
   const hoy = new Date(); hoy.setHours(0,0,0,0);
   const v = vencDate instanceof Date ? vencDate : vencDate.toDate();
   const dias = Math.ceil((v - hoy) / 86400000);
   if (dias < 0) return { estado: 'vencido', dias };
-  if (dias <= 30) return { estado: 'critico', dias };
-  if (dias <= 90) return { estado: 'por-vencer', dias };
+  if (dias <= fefoSettings.critico) return { estado: 'critico', dias };
+  if (dias <= fefoSettings.porVencer) return { estado: 'por-vencer', dias };
   return { estado: 'aceptable', dias };
 }
 
@@ -957,6 +1088,7 @@ function showApp(user) {
   document.getElementById('user-greeting').textContent = `Hola, ${name.split(' ')[0]} 👋`;
   const now = new Date();
   document.getElementById('dash-date').textContent = now.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  loadSettings();
   subscribeToLotes();
   subscribeToMovimientos();
   navigateTo('dashboard');
@@ -1644,6 +1776,102 @@ function navigateTo(path) {
   });
   closeMobileMenu();
   if (path === 'reportes') navigateReporte('inventario');
+  if (path === 'configuracion') updateConfigPage();
+}
+
+// ── Ajustes ──
+function updateConfigPage() {
+  if (!currentUser) return;
+  const name = currentUser.displayName || currentUser.email.split('@')[0];
+  const initials = name.trim().split(/\s+/).map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  document.getElementById('cfg-initials').textContent = initials;
+  document.getElementById('cfg-name-display').textContent = name;
+  document.getElementById('cfg-email-display').textContent = currentUser.email;
+  loadSettings();
+  updateCfgThemeUI();
+}
+
+function toggleEditName() {
+  const row = document.getElementById('cfg-edit-name-row');
+  const visible = row.style.display !== 'none';
+  row.style.display = visible ? 'none' : 'flex';
+  if (!visible) {
+    document.getElementById('cfg-name-input').value = currentUser.displayName || currentUser.email.split('@')[0];
+    document.getElementById('cfg-name-msg').textContent = '';
+    document.getElementById('cfg-name-input').focus();
+  }
+}
+
+async function saveDisplayName() {
+  const newName = document.getElementById('cfg-name-input').value.trim();
+  const msg = document.getElementById('cfg-name-msg');
+  if (!newName) { msg.textContent = 'Escribe un nombre.'; return; }
+  try {
+    await updateProfile(currentUser, { displayName: newName });
+    const initials = newName.trim().split(/\s+/).map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    document.getElementById('user-initials').textContent = initials;
+    document.getElementById('user-greeting').textContent = `Hola, ${newName.split(' ')[0]} 👋`;
+    document.getElementById('cfg-edit-name-row').style.display = 'none';
+    updateConfigPage();
+  } catch(e) {
+    msg.textContent = 'Error: ' + e.message;
+  }
+}
+
+async function sendPasswordReset() {
+  const msgEl = document.getElementById('cfg-pass-msg');
+  try {
+    await sendPasswordResetEmail(auth, currentUser.email);
+    msgEl.textContent = `Enlace enviado a ${currentUser.email}`;
+    msgEl.style.color = 'rgb(var(--c-tertiary))';
+  } catch(e) {
+    msgEl.textContent = 'Error: ' + e.message;
+    msgEl.style.color = 'rgb(var(--c-error))';
+  }
+  msgEl.style.display = 'block';
+  setTimeout(() => { msgEl.style.display = 'none'; }, 5000);
+}
+
+function setTheme(mode) {
+  if (mode === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+  localStorage.setItem('tamara-theme', mode);
+  updateThemeUI();
+  updateCfgThemeUI();
+}
+
+function updateCfgThemeUI() {
+  const isDark = document.documentElement.classList.contains('dark');
+  const lightBtn = document.getElementById('cfg-theme-light');
+  const darkBtn = document.getElementById('cfg-theme-dark');
+  const desc = document.getElementById('cfg-theme-desc');
+  if (!lightBtn) return;
+  const active = 'h-8 px-3 rounded-lg font-label-md text-label-md transition-all bg-surface text-on-surface shadow-sm';
+  const inactive = 'h-8 px-3 rounded-lg font-label-md text-label-md transition-all text-on-surface-variant';
+  lightBtn.className = isDark ? inactive : active;
+  darkBtn.className = isDark ? active : inactive;
+  if (desc) desc.textContent = isDark ? 'Oscuro' : 'Claro';
+}
+
+function saveFEFOParams() {
+  const critico = parseInt(document.getElementById('cfg-fefo-critico').value) || 30;
+  const porVencer = parseInt(document.getElementById('cfg-fefo-porvencer').value) || 90;
+  const msg = document.getElementById('cfg-fefo-msg');
+  if (critico >= porVencer) {
+    msg.textContent = 'El umbral crítico debe ser menor que "por vencer".';
+    msg.style.color = 'rgb(var(--c-error))';
+    return;
+  }
+  fefoSettings.critico = critico;
+  fefoSettings.porVencer = porVencer;
+  localStorage.setItem('tamara-settings', JSON.stringify({ fefo_critico: critico, fefo_porVencer: porVencer }));
+  renderAll();
+  msg.textContent = '¡Parámetros aplicados!';
+  msg.style.color = 'rgb(var(--c-tertiary))';
+  setTimeout(() => { msg.textContent = ''; }, 2500);
 }
 
 // ── Modal Agregar ──
@@ -1848,7 +2076,14 @@ function updateThemeUI() {
   const isDark = document.documentElement.classList.contains('dark');
   document.getElementById('theme-btn-icon').textContent = isDark ? 'light_mode' : 'dark_mode';
   document.getElementById('theme-btn-text').textContent = isDark ? 'Claro' : 'Oscuro';
+  updateCfgThemeUI();
 }
+// Cargar tema guardado
+(function() {
+  const saved = localStorage.getItem('tamara-theme');
+  if (saved === 'dark') document.documentElement.classList.add('dark');
+  else document.documentElement.classList.remove('dark');
+})();
 updateThemeUI();
 document.getElementById('theme-switcher-btn').addEventListener('click', () => { document.documentElement.classList.toggle('dark'); updateThemeUI(); });
 document.getElementById('header-theme-btn').addEventListener('click', () => { document.documentElement.classList.toggle('dark'); updateThemeUI(); });
@@ -1932,6 +2167,11 @@ window.exportarPDF = exportarPDF;
 window.exportarCSV = exportarCSV;
 window.clearRepVencFiltros = clearRepVencFiltros;
 window.clearRepMovFiltros = clearRepMovFiltros;
+window.toggleEditName = toggleEditName;
+window.saveDisplayName = saveDisplayName;
+window.sendPasswordReset = sendPasswordReset;
+window.setTheme = setTheme;
+window.saveFEFOParams = saveFEFOParams;
 
 // ── Filtros de reportes ──
 document.querySelectorAll('.rep-inv-pill').forEach(btn => {
