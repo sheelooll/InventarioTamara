@@ -489,6 +489,12 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
           <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span><span>Vigente</span><span id="pill-count-ok" class="px-1.5 rounded-full bg-tertiary/20 text-on-tertiary-container text-[10px]">0</span>
         </button>
       </div>
+      <!-- Tipo filter pills -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 -mx-margin px-margin">
+        <button class="inv-tipo-pill px-3 py-1.5 rounded-full bg-cta text-on-primary font-label-sm text-label-sm shrink-0 shadow-sm transition-all" data-tipo="all" type="button">Todos los tipos</button>
+        <button class="inv-tipo-pill px-3 py-1.5 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-tipo="Control" type="button">Control</button>
+        <button class="inv-tipo-pill px-3 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm shrink-0 hover:brightness-110 transition-all" data-tipo="Calibrador" type="button">Calibrador</button>
+      </div>
       <!-- Sort + count -->
       <div class="flex items-center gap-2">
         <div class="relative flex-1">
@@ -887,6 +893,18 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
       <label class="font-label-md text-label-md text-on-surface" for="qs-nota">Nota <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
       <input id="qs-nota" type="text" placeholder="Ej. Recepción proveedor, consumo UCI..." class="w-full h-11 px-4 rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors"/>
     </div>
+    <!-- Campos opcionales: lote y fecha (solo cuando el producto no los tiene) -->
+    <div id="qs-extra-fields" class="flex-col gap-3 p-3 rounded-xl bg-surface-container border border-outline-variant/50" style="display:none">
+      <p class="font-label-sm text-label-sm text-on-surface-variant">Este producto aún no tiene lote ni fecha. Podés ingresarlos ahora:</p>
+      <div id="qs-lote-row" class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-on-surface" for="qs-lote-code">Código de lote <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
+        <input id="qs-lote-code" type="text" placeholder="Ej. L-2024-001" class="w-full h-11 px-4 rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch uppercase placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors"/>
+      </div>
+      <div id="qs-fecha-row" class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-on-surface" for="qs-exp-date">Fecha de vencimiento <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
+        <input id="qs-exp-date" type="date" class="w-full h-11 px-4 rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors"/>
+      </div>
+    </div>
   </div>
   <div class="flex-shrink-0 px-5 py-4 bg-surface-container-high/95 backdrop-blur-md flex items-center justify-end gap-3 shadow-[0_-4px_16px_rgba(0,0,0,0.3)]">
     <button onclick="closeQuickStock()" class="h-11 px-5 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-bright active:scale-95 transition-all" type="button">Cancelar</button>
@@ -922,7 +940,18 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
   <form class="flex flex-col px-space-lg space-y-space-md overflow-y-auto overscroll-contain modal-scroll pb-space-xl" id="product-form" onsubmit="event.preventDefault();">
     <div class="flex flex-col gap-1.5">
       <label class="font-label-md text-label-md text-on-surface" for="prod-name">Nombre del producto <span class="text-error">*</span></label>
-      <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors" id="prod-name" placeholder="Ej. Paracetamol 500mg Comprimidos" type="text"/>
+      <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors" id="prod-name" placeholder="Ej. Control I bioquímica" type="text"/>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface" for="prod-tipo">Tipo <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
+      <div class="relative">
+        <select class="w-full h-11 pl-space-md pr-8 rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md focus:outline-none focus:border-[#D96A93] transition-colors appearance-none cursor-pointer" id="prod-tipo">
+          <option value="">— Sin tipo —</option>
+          <option value="Control">Control</option>
+          <option value="Calibrador">Calibrador</option>
+        </select>
+        <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+      </div>
     </div>
     <div class="flex flex-col gap-1.5">
       <label class="font-label-md text-label-md text-on-surface" for="prod-desc">Descripción / Presentación <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
@@ -931,7 +960,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
     <div class="grid grid-cols-2 gap-space-md">
       <div class="flex flex-col gap-1.5 min-w-0">
         <label class="font-label-md text-label-md text-on-surface truncate" for="prod-qty">Cantidad <span class="text-error">*</span></label>
-        <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors text-right pr-space-lg" id="prod-qty" min="1" placeholder="0" type="number"/>
+        <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch placeholder:text-[#9A8A91] focus:outline-none focus:border-[#D96A93] transition-colors text-right pr-space-lg" id="prod-qty" min="0" placeholder="0" type="number"/>
       </div>
       <div class="flex flex-col gap-1.5 min-w-0">
         <label class="font-label-md text-label-md text-on-surface truncate" for="prod-unit">Unidad <span class="text-error">*</span></label>
@@ -944,15 +973,25 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
       </div>
     </div>
     <div class="flex flex-col gap-1.5">
-      <label class="font-label-md text-label-md text-on-surface" for="batch-code">Código de Lote <span class="text-error">*</span></label>
+      <label class="font-label-md text-label-md text-on-surface" for="batch-code">Código de Lote <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
       <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors uppercase" id="batch-code" placeholder="Ej. L-2024-098" type="text"/>
     </div>
     <div class="flex flex-col gap-1.5">
-      <div class="flex justify-between items-center">
-        <label class="font-label-md text-label-md text-on-surface" for="exp-date">Fecha de vencimiento <span class="text-error">*</span></label>
-        <span class="font-label-sm text-label-sm text-[#B7791F] dark:text-[#F6C177]">Criterio FEFO activo</span>
-      </div>
+      <label class="font-label-md text-label-md text-on-surface" for="exp-date">Fecha de vencimiento <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
       <input class="w-full h-11 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch focus:outline-none focus:border-[#D96A93] transition-colors" id="exp-date" type="date"/>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface">Umbrales de stock <span class="font-body-sm text-on-surface-variant font-normal">(auto-propuesto según tipo)</span></label>
+      <div class="grid grid-cols-2 gap-space-md">
+        <div class="flex flex-col gap-1">
+          <label class="font-label-sm text-label-sm text-on-surface-variant" for="prod-stock-critico">Crítico si ≤</label>
+          <input class="w-full h-10 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch text-right focus:outline-none focus:border-[#D96A93] transition-colors" id="prod-stock-critico" type="number" min="0" placeholder="—"/>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class="font-label-sm text-label-sm text-on-surface-variant" for="prod-stock-aceptable">Aceptable desde</label>
+          <input class="w-full h-10 px-space-md rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-code-batch text-code-batch text-right focus:outline-none focus:border-[#D96A93] transition-colors" id="prod-stock-aceptable" type="number" min="1" placeholder="—"/>
+        </div>
+      </div>
     </div>
     <div class="flex flex-col gap-1.5">
       <label class="font-label-md text-label-md text-on-surface" for="prod-location">Ubicación <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
@@ -991,6 +1030,17 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
           <span class="absolute right-3 material-symbols-outlined text-secondary text-[18px]">verified</span>
         </div>
       </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-on-surface" for="edit-prod-tipo">Tipo</label>
+        <div class="relative">
+          <select class="w-full h-11 pl-space-md pr-8 rounded-lg bg-white dark:bg-surface-container border border-[#E8B4C8] dark:border-outline-variant text-on-surface font-body-md text-body-md focus:outline-none focus:border-[#D96A93] transition-colors appearance-none cursor-pointer" id="edit-prod-tipo">
+            <option value="">— Sin tipo —</option>
+            <option value="Control">Control</option>
+            <option value="Calibrador">Calibrador</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+        </div>
+      </div>
       <div class="grid grid-cols-2 gap-space-sm">
         <div class="flex flex-col gap-1.5">
           <label class="font-label-md text-label-md text-on-surface" for="prodQty">Cantidad <span class="text-error">*</span></label>
@@ -1011,7 +1061,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
       </div>
       <div class="flex flex-col gap-1.5">
         <div class="flex items-center justify-between">
-          <label class="font-label-md text-label-md text-on-surface" for="batchCode">Código de Lote <span class="text-error">*</span></label>
+          <label class="font-label-md text-label-md text-on-surface" for="batchCode">Código de Lote <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
           <span class="font-label-sm text-label-sm text-tertiary flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check_circle</span>Validado</span>
         </div>
         <div class="relative flex items-center">
@@ -1021,7 +1071,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
       </div>
       <div class="flex flex-col gap-1.5">
         <div class="flex items-center justify-between">
-          <label class="font-label-md text-label-md text-on-surface" for="expiryDate">Fecha de vencimiento <span class="text-error">*</span></label>
+          <label class="font-label-md text-label-md text-on-surface" for="expiryDate">Fecha de vencimiento <span class="font-body-sm text-on-surface-variant font-normal">(opcional)</span></label>
           <span id="edit-dias-text" class="font-label-sm text-label-sm text-error">—</span>
         </div>
         <div class="relative flex items-center">
@@ -1064,7 +1114,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: po
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
-import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, Timestamp, setDoc } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, Timestamp, setDoc } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBYU6WIGtfkVAKyOyReANjfHjAZfev4YrE",
@@ -1090,6 +1140,7 @@ let unsubscribeMovimientos = null;
 let allMovimientos = [];
 let movTipoFilter = 'all';
 let movTipoSeleccionado = 'entrada';
+let currentTipoFilter = 'all';
 
 // ── Helpers ──
 function escHtml(str) {
@@ -1117,6 +1168,7 @@ function loadSettings() {
 }
 
 function getEstado(vencDate) {
+  if (!vencDate) return { estado: 'sin-fecha', dias: null };
   const hoy = new Date(); hoy.setHours(0,0,0,0);
   const v = vencDate instanceof Date ? vencDate : vencDate.toDate();
   const dias = Math.ceil((v - hoy) / 86400000);
@@ -1150,6 +1202,38 @@ function parseDateInput(str) {
   return new Date(y, m-1, d);
 }
 
+// ── Datos iniciales ──
+async function seedInitialData() {
+  if (!currentUser) return;
+  const SEED = [
+    { nombre: 'Control I bioquímica',      tipo: 'Control',     stockCritico: 6, stockAceptable: 7 },
+    { nombre: 'Control II bioquímica',     tipo: 'Control',     stockCritico: 6, stockAceptable: 7 },
+    { nombre: 'Control I orina',           tipo: 'Control',     stockCritico: 6, stockAceptable: 7 },
+    { nombre: 'Control II orina',          tipo: 'Control',     stockCritico: 6, stockAceptable: 7 },
+    { nombre: 'Control fructosamina',      tipo: 'Control',     stockCritico: 6, stockAceptable: 7 },
+    { nombre: 'Control hematología',       tipo: 'Control',     stockCritico: 6, stockAceptable: 7 },
+    { nombre: 'Calibrador Bioquímica',     tipo: 'Calibrador',  stockCritico: 3, stockAceptable: 4 },
+    { nombre: 'Calibrador Orina',          tipo: 'Calibrador',  stockCritico: 3, stockAceptable: 4 },
+    { nombre: 'Calibrador MAU',            tipo: 'Calibrador',  stockCritico: 3, stockAceptable: 4 },
+    { nombre: 'Calibrador Fructosamina',   tipo: 'Calibrador',  stockCritico: 3, stockAceptable: 4 },
+    { nombre: 'Calibrador Ácidos Biliares',tipo: 'Calibrador',  stockCritico: 3, stockAceptable: 4 },
+  ];
+  try {
+    const snap = await getDocs(collection(db, `users/${currentUser.uid}/lotes`));
+    const existingNames = new Set(snap.docs.map(d => d.data().nombre));
+    for (const p of SEED) {
+      if (!existingNames.has(p.nombre)) {
+        await addDoc(collection(db, `users/${currentUser.uid}/lotes`), {
+          nombre: p.nombre, tipo: p.tipo, descripcion: '', cantidad: 0, unidad: 'unidades',
+          lote: '', vencimiento: null, ubicacion: '',
+          stockCritico: p.stockCritico, stockAceptable: p.stockAceptable,
+          creadoEn: Timestamp.now()
+        });
+      }
+    }
+  } catch(e) { console.error('Seed error:', e); }
+}
+
 // ── Auth UI ──
 function showApp(user) {
   currentUser = user;
@@ -1164,6 +1248,7 @@ function showApp(user) {
   loadSettings();
   subscribeToLotes();
   subscribeToMovimientos();
+  seedInitialData();
   navigateTo('dashboard');
 }
 
@@ -1179,7 +1264,7 @@ function showLogin() {
 // ── Firestore listener ──
 function subscribeToLotes() {
   if (!currentUser) return;
-  const q = query(collection(db, `users/${currentUser.uid}/lotes`), orderBy('vencimiento', 'asc'));
+  const q = query(collection(db, `users/${currentUser.uid}/lotes`), orderBy('nombre', 'asc'));
   unsubscribeLotes = onSnapshot(q, snap => {
     allLotes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderAll();
@@ -1198,10 +1283,10 @@ function renderAll() {
 function renderKPIs() {
   const total = allLotes.length;
   const totalUds = allLotes.reduce((s,l) => s + (Number(l.cantidad) || 0), 0);
-  const vencidos = allLotes.filter(l => getEstado(l.vencimiento.toDate()).estado === 'vencido').length;
-  const criticosVenc = allLotes.filter(l => getEstado(l.vencimiento.toDate()).estado === 'critico-venc').length;
-  const porVencer = allLotes.filter(l => getEstado(l.vencimiento.toDate()).estado === 'por-vencer').length;
-  const vigentes = allLotes.filter(l => getEstado(l.vencimiento.toDate()).estado === 'vigente').length;
+  const vencidos = allLotes.filter(l => getEstado(l.vencimiento).estado === 'vencido').length;
+  const criticosVenc = allLotes.filter(l => getEstado(l.vencimiento).estado === 'critico-venc').length;
+  const porVencer = allLotes.filter(l => getEstado(l.vencimiento).estado === 'por-vencer').length;
+  const vigentes = allLotes.filter(l => getEstado(l.vencimiento).estado === 'vigente').length;
   const stockCritico = allLotes.filter(l => {
     const { estado } = getEstadoStock(Number(l.cantidad)||0, l);
     return estado === 'sin-stock' || estado === 'critico-stock';
@@ -1238,7 +1323,7 @@ function renderKPIs() {
 
 function updatePillCounts() {
   const counts = { all: allLotes.length, vencido: 0, 'critico-venc': 0, 'por-vencer': 0, vigente: 0 };
-  allLotes.forEach(l => { const e = getEstado(l.vencimiento.toDate()).estado; if (counts[e] !== undefined) counts[e]++; });
+  allLotes.forEach(l => { const e = getEstado(l.vencimiento).estado; if (counts[e] !== undefined) counts[e]++; });
   document.getElementById('pill-count-all').textContent = counts.all;
   document.getElementById('pill-count-vencido').textContent = counts.vencido;
   document.getElementById('pill-count-critico').textContent = counts['critico-venc'];
@@ -1248,7 +1333,7 @@ function updatePillCounts() {
 
 function renderBatchList() {
   const container = document.getElementById('batch-list-container');
-  const urgentes = allLotes.filter(l => ['critico-venc','por-vencer','vencido'].includes(getEstado(l.vencimiento.toDate()).estado)).slice(0, 10);
+  const urgentes = allLotes.filter(l => ['critico-venc','por-vencer','vencido'].includes(getEstado(l.vencimiento).estado)).slice(0, 10);
   document.getElementById('batch-todos-btn').textContent = `Todos (${urgentes.length})`;
 
   if (urgentes.length === 0) {
@@ -1260,7 +1345,7 @@ function renderBatchList() {
 
   const iconMap = { vencido:'block', 'critico-venc':'emergency', 'por-vencer':'medication' };
   container.innerHTML = urgentes.map(lote => {
-    const { estado, dias } = getEstado(lote.vencimiento.toDate());
+    const { estado, dias } = getEstado(lote.vencimiento);
     const isCr = estado === 'critico-venc' || estado === 'vencido';
     const bgIcon = isCr ? 'bg-error-container/60 text-error-text' : 'bg-secondary-container/40 text-warn-text';
     const badge = isCr ? 'bg-error-container text-on-error-container' : 'bg-secondary-container/40 text-warn-text';
@@ -1271,8 +1356,8 @@ function renderBatchList() {
       <div class="flex items-center gap-3 min-w-0">
         <div class="w-8 h-8 rounded-lg ${bgIcon} flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-[18px]">${iconMap[estado]||'medication'}</span></div>
         <div class="flex flex-col min-w-0">
-          <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">${escHtml(lote.nombre)}</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">${escHtml(lote.lote)}</span></div>
-          <span class="font-body-sm text-body-sm ${txt} font-medium truncate">${diasLabel} — ${formatFecha(lote.vencimiento.toDate())}</span>
+          <div class="flex items-center gap-2"><span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">${escHtml(lote.nombre)}</span><span class="font-code-batch text-code-batch text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">${escHtml(lote.lote||'—')}</span></div>
+          <span class="font-body-sm text-body-sm ${txt} font-medium truncate">${diasLabel} — ${lote.vencimiento ? formatFecha(lote.vencimiento.toDate()) : '—'}</span>
         </div>
       </div>
       <div class="flex items-center gap-3 flex-shrink-0">
@@ -1288,10 +1373,26 @@ function renderLotesList(filter = 'all', search = '') {
   let filtered = [...allLotes];
 
   const sortVal = document.getElementById('select-sort')?.value || 'fefo';
-  if (sortVal === 'fefo-desc') filtered.reverse();
-  else if (sortVal === 'name') filtered.sort((a,b) => a.nombre.localeCompare(b.nombre));
+  if (sortVal === 'name') {
+    filtered.sort((a,b) => a.nombre.localeCompare(b.nombre));
+  } else if (sortVal === 'fefo') {
+    filtered.sort((a,b) => {
+      if (!a.vencimiento && !b.vencimiento) return 0;
+      if (!a.vencimiento) return 1;
+      if (!b.vencimiento) return -1;
+      return a.vencimiento.seconds - b.vencimiento.seconds;
+    });
+  } else if (sortVal === 'fefo-desc') {
+    filtered.sort((a,b) => {
+      if (!a.vencimiento && !b.vencimiento) return 0;
+      if (!a.vencimiento) return 1;
+      if (!b.vencimiento) return -1;
+      return b.vencimiento.seconds - a.vencimiento.seconds;
+    });
+  }
 
-  if (filter !== 'all') filtered = filtered.filter(l => getEstado(l.vencimiento.toDate()).estado === filter);
+  if (filter !== 'all') filtered = filtered.filter(l => getEstado(l.vencimiento).estado === filter);
+  if (currentTipoFilter !== 'all') filtered = filtered.filter(l => l.tipo === currentTipoFilter);
   if (search) filtered = filtered.filter(l =>
     (l.nombre||'').toLowerCase().includes(search) || (l.lote||'').toLowerCase().includes(search)
   );
@@ -1310,32 +1411,39 @@ function renderLotesList(filter = 'all', search = '') {
 }
 
 function renderLoteCard(lote) {
-  const { estado: estadoVenc, dias } = getEstado(lote.vencimiento.toDate());
+  const { estado: estadoVenc, dias } = getEstado(lote.vencimiento);
   const { estado: estadoStock, label: stockLabel } = getEstadoStock(Number(lote.cantidad)||0, lote);
-  const fecha = formatFecha(lote.vencimiento.toDate());
-  const diasTxt = dias < 0 ? `Venció hace ${Math.abs(dias)}d` : `${dias}d`;
+  const hasFecha = !!lote.vencimiento;
+  const fecha = hasFecha ? formatFecha(lote.vencimiento.toDate()) : '—';
+  const diasTxt = !hasFecha ? '' : dias < 0 ? `Venció hace ${Math.abs(dias)}d` : `${dias}d`;
+  const loteDisplay = lote.lote || '—';
 
   const cardBg = estadoVenc === 'vencido' ? 'card-expired-bg' : estadoVenc === 'critico-venc' ? 'card-critical-bg' : 'bg-surface-container-low';
-  const vencBadge = { vencido:'bg-error text-on-error', 'critico-venc':'bg-error-container text-on-error-container', 'por-vencer':'bg-secondary-container text-on-secondary-container', vigente:'bg-tertiary-container text-on-tertiary-container' };
-  const vencLabel = { vencido:'Vencido', 'critico-venc':'Crítico', 'por-vencer':'Por vencer', vigente:'Vigente' };
+  const vencBadge = { vencido:'bg-error text-on-error', 'critico-venc':'bg-error-container text-on-error-container', 'por-vencer':'bg-secondary-container text-on-secondary-container', vigente:'bg-tertiary-container text-on-tertiary-container', 'sin-fecha':'bg-surface-container-highest text-on-surface-variant' };
+  const vencLabel = { vencido:'Vencido', 'critico-venc':'Crítico', 'por-vencer':'Por vencer', vigente:'Vigente', 'sin-fecha':'Sin fecha' };
   const stockBadge = { 'sin-stock':'bg-error-container text-error-text', 'critico-stock':'bg-error-container/60 text-error-text', bajo:'bg-secondary-container/60 text-warn-text', aceptable:'bg-tertiary-container/70 text-on-tertiary-container' };
-  const fechaColor = (estadoVenc === 'vencido' || estadoVenc === 'critico-venc') ? 'text-error-text' : estadoVenc === 'por-vencer' ? 'text-warn-text' : 'text-tertiary';
+  const fechaColor = (estadoVenc === 'vencido' || estadoVenc === 'critico-venc') ? 'text-error-text' : estadoVenc === 'por-vencer' ? 'text-warn-text' : 'text-on-surface-variant';
+  const tipoBadge = lote.tipo === 'Control' ? 'bg-primary-container text-on-primary-container' : lote.tipo === 'Calibrador' ? 'bg-secondary-container text-on-secondary-container' : '';
+  const fechaLine = hasFecha ? `Vence ${diasTxt} · ${fecha}` : 'Sin fecha de vencimiento';
 
   return `<div class="inventory-card flex flex-col gap-3 p-4 rounded-xl ${cardBg}" data-id="${escHtml(lote.id)}">
     <div class="flex items-start justify-between gap-2">
       <div class="flex flex-col min-w-0 flex-1 cursor-pointer" onclick="showLoteDetail('${escHtml(lote.id)}')">
-        <span class="font-headline-sm text-headline-sm text-on-surface truncate">${escHtml(lote.nombre)}</span>
-        <span class="font-body-sm text-body-sm text-on-surface-variant">${escHtml(lote.lote)}${lote.descripcion ? ' · ' + escHtml(lote.descripcion) : ''}</span>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="font-headline-sm text-headline-sm text-on-surface truncate">${escHtml(lote.nombre)}</span>
+          ${lote.tipo ? `<span class="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold ${tipoBadge}">${escHtml(lote.tipo)}</span>` : ''}
+        </div>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">${loteDisplay}${lote.descripcion ? ' · ' + escHtml(lote.descripcion) : ''}</span>
       </div>
       <div class="flex flex-col items-end gap-1 shrink-0">
-        <span class="inline-flex items-center px-2 py-0.5 rounded-full ${vencBadge[estadoVenc]} font-label-sm text-label-sm">${vencLabel[estadoVenc]}</span>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full ${vencBadge[estadoVenc]||vencBadge['sin-fecha']} font-label-sm text-label-sm">${vencLabel[estadoVenc]||estadoVenc}</span>
         <span class="inline-flex items-center px-2 py-0.5 rounded-full ${stockBadge[estadoStock]} font-label-sm text-label-sm">${stockLabel}</span>
       </div>
     </div>
     <div class="flex items-center justify-between">
       <div class="flex flex-col">
         <span class="font-headline-sm text-headline-sm text-on-surface font-bold">${lote.cantidad} <span class="font-body-sm text-on-surface-variant font-normal">${escHtml(lote.unidad||'uds')}</span></span>
-        <span class="font-label-sm text-label-sm ${fechaColor}">Vence ${diasTxt} · ${fecha}</span>
+        <span class="font-label-sm text-label-sm ${fechaColor}">${fechaLine}</span>
       </div>
       <div class="flex items-center gap-1.5">
         <button onclick="showQuickStock('${escHtml(lote.id)}','entrada')" class="w-9 h-9 flex items-center justify-center rounded-lg bg-tertiary-container text-on-tertiary-container hover:brightness-110 active:scale-95 transition-all" type="button" title="Entrada"><span class="material-symbols-outlined text-[18px]">add</span></button>
@@ -1378,7 +1486,7 @@ function renderRecentActivity() {
         <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${tipoBadge}">${mov.tipo}</span>
         <div class="flex flex-col min-w-0">
           <span class="font-label-md text-label-md text-on-surface truncate">${escHtml(mov.productoNombre)}</span>
-          <span class="font-body-sm text-body-sm text-on-surface-variant">${escHtml(mov.loteCode)} · ${fechaStr}</span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant">${escHtml(mov.loteCode||'—')} · ${fechaStr}</span>
         </div>
       </div>
       <span class="font-headline-sm text-headline-sm ${cantColor} font-bold shrink-0">${signo}${mov.cantidadMovimiento}</span>
@@ -1415,7 +1523,7 @@ function renderHistorial() {
         <div class="flex flex-col min-w-0">
           <span class="font-headline-sm text-headline-sm text-on-surface truncate">${escHtml(mov.productoNombre)}</span>
           <div class="flex items-center gap-2 mt-0.5 flex-wrap">
-            <span class="font-code-batch text-code-batch text-primary">${escHtml(mov.loteCode)}</span>
+            <span class="font-code-batch text-code-batch text-primary">${escHtml(mov.loteCode||'—')}</span>
             <span class="text-on-surface-variant font-body-sm">•</span>
             <span class="font-body-sm text-body-sm text-on-surface-variant">${fechaStr}</span>
           </div>
@@ -1461,10 +1569,10 @@ function showMovimientoModal() {
   const sel = document.getElementById('mov-lote-select');
   sel.innerHTML = '<option value="">— Seleccionar lote —</option>';
   allLotes.forEach(l => {
-    const { estado } = getEstado(l.vencimiento.toDate());
+    const { estado } = getEstado(l.vencimiento);
     const opt = document.createElement('option');
     opt.value = l.id;
-    opt.textContent = `${l.nombre} · ${l.lote} (${l.cantidad} ${l.unidad || 'uds'})`;
+    opt.textContent = `${l.nombre} · ${l.lote||'—'} (${l.cantidad} ${l.unidad || 'uds'})`;
     sel.appendChild(opt);
   });
   updateMovTipoUI('entrada');
@@ -1572,8 +1680,23 @@ function showQuickStock(loteId, tipo = 'entrada') {
   document.getElementById('qs-qty').value = '';
   document.getElementById('qs-nota').value = '';
   document.getElementById('qs-qty-error').textContent = '';
-  document.getElementById('qs-lote-name').textContent = `${lote.nombre} · ${lote.lote}`;
+  document.getElementById('qs-lote-name').textContent = lote.nombre + (lote.lote ? ` · ${lote.lote}` : '');
   document.getElementById('qs-stock-actual').textContent = `${lote.cantidad} ${lote.unidad || 'uds'}`;
+  // Show optional lote/fecha fields if product is missing them
+  const qsExtra = document.getElementById('qs-extra-fields');
+  const needsLote = !lote.lote;
+  const needsFecha = !lote.vencimiento;
+  if (qsExtra) {
+    qsExtra.style.display = (needsLote || needsFecha) ? 'flex' : 'none';
+    const loteCodeEl = document.getElementById('qs-lote-code');
+    const expDateEl = document.getElementById('qs-exp-date');
+    const loteRow = document.getElementById('qs-lote-row');
+    const fechaRow = document.getElementById('qs-fecha-row');
+    if (loteRow) loteRow.style.display = needsLote ? 'flex' : 'none';
+    if (fechaRow) fechaRow.style.display = needsFecha ? 'flex' : 'none';
+    if (loteCodeEl) loteCodeEl.value = '';
+    if (expDateEl) expDateEl.value = '';
+  }
   updateQSTipoUI(tipo);
   document.getElementById('modal-qs-bd').style.display = 'block';
   document.getElementById('modal-qs').style.display = 'flex';
@@ -1627,11 +1750,17 @@ async function saveQuickStock() {
   btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Guardando...</span>';
   try {
     const now = Timestamp.now();
+    const newLoteCode = document.getElementById('qs-lote-code')?.value?.trim().toUpperCase() || '';
+    const newExpDateStr = document.getElementById('qs-exp-date')?.value || '';
+    const effectiveLote = lote.lote || newLoteCode;
     await addDoc(collection(db, `users/${currentUser.uid}/movimientos`), {
-      tipo: quickStockTipo, loteId: lote.id, loteCode: lote.lote, productoNombre: lote.nombre,
+      tipo: quickStockTipo, loteId: lote.id, loteCode: effectiveLote, productoNombre: lote.nombre,
       cantidadMovimiento: cant, cantidadAntes, cantidadDespues, fecha: now, nota, creadoEn: now
     });
-    await updateDoc(doc(db, `users/${currentUser.uid}/lotes`, lote.id), { cantidad: cantidadDespues });
+    const updateData = { cantidad: cantidadDespues };
+    if (newLoteCode && !lote.lote) updateData.lote = newLoteCode;
+    if (newExpDateStr && !lote.vencimiento) updateData.vencimiento = Timestamp.fromDate(parseDateInput(newExpDateStr));
+    await updateDoc(doc(db, `users/${currentUser.uid}/lotes`, lote.id), updateData);
     btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>¡Listo!</span>';
     setTimeout(closeQuickStock, 600);
   } catch(e) {
@@ -1646,14 +1775,16 @@ function showLoteDetail(loteId) {
   const lote = allLotes.find(l => l.id === loteId);
   if (!lote) return;
   document.body.style.overflow = 'hidden';
-  const { estado: estadoVenc, dias } = getEstado(lote.vencimiento.toDate());
+  const { estado: estadoVenc, dias } = getEstado(lote.vencimiento);
   const { estado: estadoStock, label: stockLabel } = getEstadoStock(Number(lote.cantidad)||0, lote);
+  const hasFecha = !!lote.vencimiento;
+  const loteDisplay = lote.lote || '—';
   document.getElementById('det-nombre').textContent = lote.nombre;
-  document.getElementById('det-desc').textContent = lote.descripcion ? `${lote.lote} · ${lote.descripcion}` : lote.lote;
-  const vencLabel = { vencido:'Vencido', 'critico-venc':'Crítico por vencer', 'por-vencer':'Por vencer', vigente:'Vigente' };
-  const vencBadge = { vencido:'bg-error text-on-error', 'critico-venc':'bg-error-container text-on-error-container', 'por-vencer':'bg-secondary-container text-on-secondary-container', vigente:'bg-tertiary-container text-on-tertiary-container' };
+  document.getElementById('det-desc').textContent = lote.descripcion ? `${loteDisplay} · ${lote.descripcion}` : loteDisplay;
+  const vencLabel = { vencido:'Vencido', 'critico-venc':'Crítico por vencer', 'por-vencer':'Por vencer', vigente:'Vigente', 'sin-fecha':'Sin fecha' };
+  const vencBadge = { vencido:'bg-error text-on-error', 'critico-venc':'bg-error-container text-on-error-container', 'por-vencer':'bg-secondary-container text-on-secondary-container', vigente:'bg-tertiary-container text-on-tertiary-container', 'sin-fecha':'bg-surface-container-highest text-on-surface-variant' };
   const stockBadge = { 'sin-stock':'bg-error-container text-error-text', 'critico-stock':'bg-error-container/60 text-error-text', bajo:'bg-secondary-container/60 text-warn-text', aceptable:'bg-tertiary-container text-on-tertiary-container' };
-  const diasTxt = dias < 0 ? `Venció hace ${Math.abs(dias)} días` : `Vence en ${dias} días`;
+  const diasTxt = !hasFecha ? 'Sin fecha de vencimiento' : dias < 0 ? `Venció hace ${Math.abs(dias)} días` : `Vence en ${dias} días`;
   const movs = allMovimientos.filter(m => m.loteId === loteId).slice(0, 20);
   const movRows = movs.length === 0
     ? `<p class="text-on-surface-variant font-body-sm py-4 text-center">Sin movimientos registrados</p>`
@@ -1679,9 +1810,9 @@ function showLoteDetail(loteId) {
       </div>
       <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1">
         <span class="font-label-sm text-on-surface-variant">Vencimiento</span>
-        <span class="font-code-batch text-code-batch text-on-surface">${formatFecha(lote.vencimiento.toDate())}</span>
+        <span class="font-code-batch text-code-batch text-on-surface">${hasFecha ? formatFecha(lote.vencimiento.toDate()) : '—'}</span>
         <span class="font-body-sm text-body-sm text-on-surface-variant">${diasTxt}</span>
-        <span class="inline-flex w-fit px-2 py-0.5 rounded-full text-[11px] font-bold ${vencBadge[estadoVenc]}">${vencLabel[estadoVenc]}</span>
+        <span class="inline-flex w-fit px-2 py-0.5 rounded-full text-[11px] font-bold ${vencBadge[estadoVenc]||vencBadge['sin-fecha']}">${vencLabel[estadoVenc]||estadoVenc}</span>
       </div>
     </div>
     ${lote.ubicacion ? `<div class="bg-surface-container p-3 rounded-xl font-body-sm text-body-sm"><span class="text-on-surface-variant">Ubicación: </span><span class="text-on-surface">${escHtml(lote.ubicacion)}</span></div>` : ''}
@@ -1737,7 +1868,7 @@ function navigateReporte(rep) {
 function getFilteredInventario() {
   const search = (document.getElementById('rep-inv-search')?.value || '').toLowerCase().trim();
   return allLotes.filter(l => {
-    const { estado } = getEstado(l.vencimiento.toDate());
+    const { estado } = getEstado(l.vencimiento);
     const matchStatus = repInvStatusFilter === 'all' || estado === repInvStatusFilter;
     const matchSearch = !search || l.nombre.toLowerCase().includes(search) || (l.lote||'').toLowerCase().includes(search);
     return matchStatus && matchSearch;
@@ -1747,7 +1878,7 @@ function getFilteredInventario() {
 function renderRepInventario() {
   const data = getFilteredInventario();
   const counts = { all: allLotes.length, vencido:0, 'critico-venc':0, 'por-vencer':0, vigente:0 };
-  allLotes.forEach(l => { const e = getEstado(l.vencimiento.toDate()).estado; if (counts[e] !== undefined) counts[e]++; });
+  allLotes.forEach(l => { const e = getEstado(l.vencimiento).estado; if (counts[e] !== undefined) counts[e]++; });
   const totalStock = data.reduce((s,l) => s + (Number(l.cantidad)||0), 0);
   document.getElementById('rep-inv-kpis').innerHTML = `
     <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Lotes en reporte</span><span class="font-headline-sm text-headline-sm text-on-surface font-bold">${data.length}</span><span class="font-body-sm text-body-sm text-on-surface-variant">de ${allLotes.length} total</span></div>
@@ -1779,11 +1910,11 @@ function renderRepInventario() {
   const badgeColor = { vencido:'color:#B91C1C;background:#FECACA', 'critico-venc':'color:#B91C1C;background:#FEE2E2', 'por-vencer':'color:#92600A;background:#FEF3C7', vigente:'color:#065F46;background:#D1FAE5' };
   const badgeLabel = { vencido:'Vencido', 'critico-venc':'Crítico', 'por-vencer':'Por vencer', vigente:'Vigente' };
   const rows = data.map(l => {
-    const { estado, dias } = getEstado(l.vencimiento.toDate());
-    const diasTxt = dias < 0 ? `Vencido (${Math.abs(dias)}d)` : `${dias}d`;
-    return `<tr><td>${escHtml(l.nombre)}</td><td style="font-family:monospace">${escHtml(l.lote)}</td><td style="text-align:right">${l.cantidad}</td><td>${escHtml(l.unidad||'uds')}</td><td style="font-family:monospace">${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;${badgeColor[estado]}">${badgeLabel[estado]||estado}</span></td></tr>`;
+    const { estado, dias } = getEstado(l.vencimiento);
+    const diasTxt = !l.vencimiento ? '—' : dias < 0 ? `Vencido (${Math.abs(dias)}d)` : `${dias}d`;
+    return `<tr><td>${escHtml(l.nombre)}</td><td style="font-family:monospace">${escHtml(l.tipo||'—')}</td><td style="font-family:monospace">${escHtml(l.lote||'—')}</td><td style="text-align:right">${l.cantidad}</td><td>${escHtml(l.unidad||'uds')}</td><td style="font-family:monospace">${l.vencimiento ? formatFecha(l.vencimiento.toDate()) : '—'}</td><td>${diasTxt}</td><td><span style="padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;${badgeColor[estado]||''}">${badgeLabel[estado]||estado}</span></td></tr>`;
   }).join('');
-  document.getElementById('rep-inv-table').innerHTML = `<table class="rep-table"><thead><tr><th>Producto</th><th>Lote</th><th>Cant.</th><th>Unid.</th><th>Vencimiento</th><th>Días</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table>`;
+  document.getElementById('rep-inv-table').innerHTML = `<table class="rep-table"><thead><tr><th>Producto</th><th>Tipo</th><th>Lote</th><th>Cant.</th><th>Unid.</th><th>Vencimiento</th><th>Días</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 /* ── VENCIMIENTOS ── */
@@ -1791,8 +1922,9 @@ function getFilteredVencimientos() {
   const fromVal = document.getElementById('rep-venc-from')?.value;
   const toVal = document.getElementById('rep-venc-to')?.value;
   return allLotes.filter(l => {
+    if (!l.vencimiento) return false;
     const vd = l.vencimiento.toDate();
-    const { estado } = getEstado(vd);
+    const { estado } = getEstado(l.vencimiento);
     const matchStatus = repVencStatusFilter === 'all' || estado === repVencStatusFilter;
     let matchRange = true;
     if (fromVal) matchRange = matchRange && vd >= new Date(fromVal + 'T00:00:00');
@@ -1804,7 +1936,7 @@ function getFilteredVencimientos() {
 function renderRepVencimientos() {
   const data = getFilteredVencimientos();
   const counts = { vencido:0, 'critico-venc':0, 'por-vencer':0, vigente:0 };
-  data.forEach(l => { const e = getEstado(l.vencimiento.toDate()).estado; if (counts[e] !== undefined) counts[e]++; });
+  data.forEach(l => { const e = getEstado(l.vencimiento).estado; if (counts[e] !== undefined) counts[e]++; });
   document.getElementById('rep-venc-kpis').innerHTML = `
     <div class="bg-surface-container p-3 rounded-xl border-l-2 border-error flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Vencidos</span><span class="font-headline-sm text-headline-sm text-error-text font-bold">${counts.vencido}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Retirar urgente</span></div>
     <div class="bg-surface-container p-3 rounded-xl flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">Crítico ≤${fefoSettings.venc_critico}d</span><span class="font-headline-sm text-headline-sm text-error-text font-bold">${counts['critico-venc']}</span><span class="font-body-sm text-body-sm text-on-surface-variant">Prioridad FEFO</span></div>
@@ -1832,7 +1964,7 @@ function renderRepVencimientos() {
   const badgeColor = { vencido:'color:#B91C1C;background:#FECACA', 'critico-venc':'color:#B91C1C;background:#FEE2E2', 'por-vencer':'color:#92600A;background:#FEF3C7', vigente:'color:#065F46;background:#D1FAE5' };
   const badgeLabel = { vencido:'Vencido', 'critico-venc':'Crítico', 'por-vencer':'Por vencer', vigente:'Vigente' };
   const rows = data.map(l => {
-    const { estado, dias } = getEstado(l.vencimiento.toDate());
+    const { estado, dias } = getEstado(l.vencimiento);
     const diasTxt = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : `${dias}d restantes`;
     return `<tr><td>${escHtml(l.nombre)}</td><td style="font-family:monospace">${escHtml(l.lote)}</td><td style="text-align:right">${l.cantidad} ${escHtml(l.unidad||'')}</td><td style="font-family:monospace">${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;${badgeColor[estado]}">${badgeLabel[estado]||estado}</span></td></tr>`;
   }).join('');
@@ -1906,17 +2038,17 @@ function clearRepMovFiltros() {
 function exportarCSV(tipo) {
   let csv = '', filename = '';
   if (tipo === 'inventario') {
-    csv = 'Nombre,Lote,Cantidad,Unidad,Fecha Vencimiento,Dias Restantes,Estado\n';
+    csv = 'Nombre,Tipo,Lote,Cantidad,Unidad,Fecha Vencimiento,Dias Restantes,Estado\n';
     getFilteredInventario().forEach(l => {
-      const { estado, dias } = getEstado(l.vencimiento.toDate());
-      csv += `"${l.nombre}","${l.lote}",${l.cantidad},"${l.unidad||''}","${formatFecha(l.vencimiento.toDate())}",${dias},"${estado}"\n`;
+      const { estado, dias } = getEstado(l.vencimiento);
+      csv += `"${l.nombre}","${l.tipo||''}","${l.lote||''}",${l.cantidad},"${l.unidad||''}","${l.vencimiento ? formatFecha(l.vencimiento.toDate()) : ''}",${dias??''},"${estado}"\n`;
     });
     filename = `TamaraInventory_Inventario_${today()}.csv`;
   } else if (tipo === 'vencimientos') {
-    csv = 'Nombre,Lote,Cantidad,Unidad,Fecha Vencimiento,Dias Restantes,Estado\n';
+    csv = 'Nombre,Tipo,Lote,Cantidad,Unidad,Fecha Vencimiento,Dias Restantes,Estado\n';
     getFilteredVencimientos().forEach(l => {
-      const { estado, dias } = getEstado(l.vencimiento.toDate());
-      csv += `"${l.nombre}","${l.lote}",${l.cantidad},"${l.unidad||''}","${formatFecha(l.vencimiento.toDate())}",${dias},"${estado}"\n`;
+      const { estado, dias } = getEstado(l.vencimiento);
+      csv += `"${l.nombre}","${l.tipo||''}","${l.lote||''}",${l.cantidad},"${l.unidad||''}","${l.vencimiento ? formatFecha(l.vencimiento.toDate()) : ''}",${dias??''},"${estado}"\n`;
     });
     filename = `TamaraInventory_Vencimientos_${today()}.csv`;
   } else {
@@ -1943,15 +2075,15 @@ function exportarPDF(tipo) {
     titulo = 'Reporte de Inventario Actual';
     datos = getFilteredInventario();
     filas = datos.map(l => {
-      const { estado, dias } = getEstado(l.vencimiento.toDate());
-      return `<tr><td>${escHtml(l.nombre)}</td><td>${escHtml(l.lote)}</td><td align="right">${l.cantidad}</td><td>${escHtml(l.unidad||'uds')}</td><td>${formatFecha(l.vencimiento.toDate())}</td><td align="right">${dias}</td><td><span style="padding:1px 7px;border-radius:999px;font-size:10px;font-weight:700;${badgeStyle[estado]}">${badgeLbl[estado]||estado}</span></td></tr>`;
+      const { estado, dias } = getEstado(l.vencimiento);
+      return `<tr><td>${escHtml(l.nombre)}</td><td>${escHtml(l.tipo||'—')}</td><td>${escHtml(l.lote||'—')}</td><td align="right">${l.cantidad}</td><td>${escHtml(l.unidad||'uds')}</td><td>${l.vencimiento ? formatFecha(l.vencimiento.toDate()) : '—'}</td><td align="right">${dias??'—'}</td><td><span style="padding:1px 7px;border-radius:999px;font-size:10px;font-weight:700;${badgeStyle[estado]||''}">${badgeLbl[estado]||estado}</span></td></tr>`;
     }).join('');
-    cabeceras = ['Producto','Lote','Cant.','Unid.','Vencimiento','Días','Estado'];
+    cabeceras = ['Producto','Tipo','Lote','Cant.','Unid.','Vencimiento','Días','Estado'];
   } else if (tipo === 'vencimientos') {
     titulo = 'Reporte de Vencimientos';
     datos = getFilteredVencimientos();
     filas = datos.map(l => {
-      const { estado, dias } = getEstado(l.vencimiento.toDate());
+      const { estado, dias } = getEstado(l.vencimiento);
       const diasTxt = dias < 0 ? `Vencido ${Math.abs(dias)}d` : `${dias}d`;
       return `<tr><td>${escHtml(l.nombre)}</td><td>${escHtml(l.lote)}</td><td align="right">${l.cantidad} ${escHtml(l.unidad||'')}</td><td>${formatFecha(l.vencimiento.toDate())}</td><td>${diasTxt}</td><td><span style="padding:1px 7px;border-radius:999px;font-size:10px;font-weight:700;${badgeStyle[estado]}">${badgeLbl[estado]||estado}</span></td></tr>`;
     }).join('');
@@ -2147,22 +2279,31 @@ function closeAgregarModal() {
 }
 async function saveNuevoLote() {
   const nombre = document.getElementById('prod-name').value.trim();
+  const tipo = document.getElementById('prod-tipo').value;
   const descripcion = document.getElementById('prod-desc').value.trim();
   const cantidad = parseInt(document.getElementById('prod-qty').value);
   const unidad = document.getElementById('prod-unit').value;
   const lote = document.getElementById('batch-code').value.trim().toUpperCase();
   const expStr = document.getElementById('exp-date').value;
   const ubicacion = document.getElementById('prod-location').value.trim();
-  if (!nombre || !lote || !expStr || isNaN(cantidad) || cantidad < 1) {
-    alert('Completa los campos obligatorios (*)');
+  const scStr = document.getElementById('prod-stock-critico')?.value;
+  const saStr = document.getElementById('prod-stock-aceptable')?.value;
+  if (!nombre || isNaN(cantidad) || cantidad < 0) {
+    alert('Completa el nombre y la cantidad.');
     return;
   }
-  const vencimiento = Timestamp.fromDate(parseDateInput(expStr));
+  const stockCritico = scStr !== '' && scStr != null ? parseInt(scStr) : null;
+  const stockAceptable = saStr !== '' && saStr != null ? parseInt(saStr) : null;
+  if (stockCritico !== null && stockAceptable !== null && stockCritico >= stockAceptable) {
+    alert('El umbral crítico de stock debe ser menor que el aceptable.');
+    return;
+  }
+  const vencimiento = expStr ? Timestamp.fromDate(parseDateInput(expStr)) : null;
   const btn = document.getElementById('submit-product-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Guardando...</span>';
   try {
-    await addDoc(collection(db, `users/${currentUser.uid}/lotes`), { nombre, descripcion, cantidad, unidad, lote, vencimiento, ubicacion, creadoEn: Timestamp.now() });
+    await addDoc(collection(db, `users/${currentUser.uid}/lotes`), { nombre, tipo, descripcion, cantidad, unidad, lote, vencimiento, ubicacion, stockCritico, stockAceptable, creadoEn: Timestamp.now() });
     btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>¡Guardado!</span>';
     setTimeout(closeAgregarModal, 700);
   } catch (e) {
@@ -2178,13 +2319,15 @@ function showEditarModal(loteId) {
   const lote = allLotes.find(l => l.id === loteId);
   if (!lote) return;
   document.getElementById('prodName').value = lote.nombre || '';
-  document.getElementById('prodQty').value = lote.cantidad || '';
+  document.getElementById('prodQty').value = lote.cantidad ?? '';
   document.getElementById('prodUnit').value = lote.unidad || 'unidades';
   document.getElementById('batchCode').value = lote.lote || '';
-  document.getElementById('expiryDate').value = toInputDate(lote.vencimiento.toDate());
+  document.getElementById('expiryDate').value = lote.vencimiento ? toInputDate(lote.vencimiento.toDate()) : '';
   document.getElementById('observations').value = lote.ubicacion || lote.descripcion || '';
   document.getElementById('edit-lote-badge').textContent = lote.lote || '—';
-  const { estado, dias } = getEstado(lote.vencimiento.toDate());
+  const editTipo = document.getElementById('edit-prod-tipo');
+  if (editTipo) editTipo.value = lote.tipo || '';
+  const { estado, dias } = getEstado(lote.vencimiento);
   const labels = { vencido:'Vencido', 'critico-venc':'Crítico por vencer', 'por-vencer':'Por vencer', vigente:'Vigente' };
   const badgeClasses = {
     vencido: 'bg-error text-on-error', 'critico-venc': 'bg-error-container text-on-error-container',
@@ -2195,10 +2338,11 @@ function showEditarModal(loteId) {
   badgeEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-current"></span>${labels[estado]}`;
   document.getElementById('edit-status-badge2').className = badgeEl.className;
   document.getElementById('edit-status-badge2').innerHTML = badgeEl.innerHTML;
-  const diasTxt = dias < 0 ? `Venció hace ${Math.abs(dias)} días` : `Vence en ${dias} días`;
+  const diasTxt = dias === null ? 'Sin fecha asignada' : dias < 0 ? `Venció hace ${Math.abs(dias)} días` : `Vence en ${dias} días`;
   document.getElementById('edit-dias-text').textContent = diasTxt;
-  document.getElementById('edit-status-text').innerHTML = dias < 0
-    ? '<strong>Vencido — Requiere baja inmediata.</strong>'
+  document.getElementById('edit-status-text').innerHTML = dias === null
+    ? '<strong>Sin fecha de vencimiento.</strong>'
+    : dias < 0 ? '<strong>Vencido — Requiere baja inmediata.</strong>'
     : dias <= fefoSettings.venc_critico ? `<strong>Vence en ${dias} días — ¡Urgente! Prioridad FEFO Máxima.</strong>`
     : dias <= fefoSettings.venc_porVencer ? `<strong>Vence en ${dias} días. Planificar distribución.</strong>`
     : `<strong>Vence en ${dias} días. Estado óptimo.</strong>`;
@@ -2220,13 +2364,14 @@ async function saveEditarLote() {
   const lote = document.getElementById('batchCode').value.trim().toUpperCase();
   const expStr = document.getElementById('expiryDate').value;
   const ubicacion = document.getElementById('observations').value.trim();
-  if (!nombre || !lote || !expStr || isNaN(cantidad)) { alert('Completa los campos obligatorios'); return; }
-  const vencimiento = Timestamp.fromDate(parseDateInput(expStr));
+  const tipo = document.getElementById('edit-prod-tipo')?.value || '';
+  if (!nombre || isNaN(cantidad) || cantidad < 0) { alert('Completa el nombre y la cantidad.'); return; }
+  const vencimiento = expStr ? Timestamp.fromDate(parseDateInput(expStr)) : null;
   const btn = document.getElementById('saveBatchBtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Guardando...</span>';
   try {
-    await updateDoc(doc(db, `users/${currentUser.uid}/lotes`, editingLoteId), { nombre, cantidad, unidad, lote, vencimiento, ubicacion });
+    await updateDoc(doc(db, `users/${currentUser.uid}/lotes`, editingLoteId), { nombre, tipo, cantidad, unidad, lote, vencimiento, ubicacion });
     btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check</span><span>¡Actualizado!</span>';
     setTimeout(closeEditarModal, 500);
   } catch (e) {
@@ -2328,6 +2473,19 @@ document.getElementById('inv-search').addEventListener('input', e => {
   currentSearch = e.target.value.toLowerCase().trim();
   renderLotesList(currentFilter, currentSearch);
 });
+// ── UI: tipo filter ──
+document.querySelectorAll('.inv-tipo-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    currentTipoFilter = pill.dataset.tipo;
+    document.querySelectorAll('.inv-tipo-pill').forEach(p => {
+      const active = p.dataset.tipo === currentTipoFilter;
+      p.classList.toggle('bg-cta', active);
+      p.classList.toggle('text-on-primary', active);
+      p.classList.toggle('shadow-sm', active);
+    });
+    renderLotesList(currentFilter, currentSearch);
+  });
+});
 document.getElementById('select-sort').addEventListener('change', () => {
   renderLotesList(currentFilter, currentSearch);
 });
@@ -2372,6 +2530,13 @@ document.getElementById('header-theme-btn').addEventListener('click', () => { do
 document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
 
 // ── UI: modales ──
+document.getElementById('prod-tipo').addEventListener('change', function() {
+  const sc = document.getElementById('prod-stock-critico');
+  const sa = document.getElementById('prod-stock-aceptable');
+  if (!sc || !sa) return;
+  if (this.value === 'Control')    { sc.value = 6; sa.value = 7; }
+  else if (this.value === 'Calibrador') { sc.value = 3; sa.value = 4; }
+});
 document.getElementById('close-modal-btn').addEventListener('click', closeAgregarModal);
 document.getElementById('cancel-btn').addEventListener('click', closeAgregarModal);
 document.getElementById('modal-backdrop').addEventListener('click', closeAgregarModal);
